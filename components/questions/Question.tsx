@@ -124,6 +124,9 @@ export function Question({ nodeId, item, retry = false, hideWhy = false, tutor =
 
   return (
     <div className="space-y-4">
+      {item.tag && (
+        <span className="inline-block rounded-full border border-[var(--border)] px-2.5 py-0.5 text-xs text-[var(--muted)]">{item.tag}</span>
+      )}
       <MathText as="div" text={item.prompt} className="text-lg leading-relaxed" />
 
       {item.kind === "mc" ? (

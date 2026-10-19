@@ -35,21 +35,34 @@ export function rng(seed: number): Rng {
   };
 }
 
-type Gen = (r: Rng) => Item;
+export type Gen = (r: Rng) => Item;
 
-const v = (x: number | string, y: number | string) => `\\begin{bmatrix}${x}\\\\${y}\\end{bmatrix}`;
-const m = (a: number | string, b: number | string, c: number | string, d: number | string) =>
+export const v = (x: number | string, y: number | string) => `\\begin{bmatrix}${x}\\\\${y}\\end{bmatrix}`;
+export const m = (a: number | string, b: number | string, c: number | string, d: number | string) =>
   `\\begin{bmatrix}${a}&${b}\\\\${c}&${d}\\end{bmatrix}`;
-const r2 = (x: number) => Math.round(x * 100) / 100;
+export const r2 = (x: number) => Math.round(x * 100) / 100;
 /** Negative numbers in brackets inside a product: (−2)·3. */
-const par = (x: number) => (x < 0 ? `(${x})` : String(x));
-const same = (a: number[], b: number[]) => a.length === b.length && a.every((x, i) => Math.abs(x - b[i]) < 1e-9);
-const sameM = (a: number[][], b: number[][]) => a.every((row, i) => same(row, b[i]));
+export const par = (x: number) => (x < 0 ? `(${x})` : String(x));
+export const same = (a: number[], b: number[]) => a.length === b.length && a.every((x, i) => Math.abs(x - b[i]) < 1e-9);
+export const sameM = (a: number[][], b: number[][]) => a.every((row, i) => same(row, b[i]));
 
 /** Multiple choice from a correct value and labelled wrong values; drops duplicates of the answer. */
-function mcNumbers(prompt: string, correct: { text: string; why: string }, wrong: { text: string; why: string; misconception?: string }[]): McItem {
+export function mcNumbers(prompt: string, correct: { text: string; why: string }, wrong: { text: string; why: string; misconception?: string }[]): McItem {
   const seen = new Set([correct.text]);
   const opts = wrong.filter((w) => !seen.has(w.text) && seen.add(w.text));
+  // Every listed mistake can coincide with the answer (e.g. ReLU(3): "passes negatives" and "abs" both give 3).
+  // Keep at least two real choices by adding plain numeric neighbours.
+  const n = Number(correct.text);
+  if (opts.length === 0 && Number.isFinite(n)) {
+    for (const alt of [-n, n + 1, n - 1, 2 * n]) {
+      const t = String(r2(alt));
+      if (opts.length < 2 && !seen.has(t)) {
+        seen.add(t);
+        opts.push({ text: t, why: "Recheck the calculation." });
+      }
+    }
+  }
+  if (opts.length === 0) opts.push({ text: "None of these", why: "One of the other options is right." });
   return {
     kind: "mc",
     id: "",
@@ -611,7 +624,7 @@ export const GENERATORS: Record<string, Gen[]> = {
       const b = r.nonzero(-4, 4);
       const z = w[0] * x[0] + w[1] * x[1] + b;
       return mcNumbers(
-        `$\vec w = ${v(w[0], w[1])}$, $\vec x = ${v(x[0], x[1])}$, $b = ${b}$. What is $z = \vec w\cdot\vec x + b$?`,
+        `$\\vec w = ${v(w[0], w[1])}$, $\\vec x = ${v(x[0], x[1])}$, $b = ${b}$. What is $z = \\vec w\\cdot\\vec x + b$?`,
         { text: String(z), why: `${par(w[0])}·${par(x[0])} + ${par(w[1])}·${par(x[1])} + ${par(b)} = ${z}.` },
         [{ text: String(z - b), why: "Don't forget the bias.", misconception: "forget-bias" }],
       );
@@ -646,7 +659,7 @@ export const GENERATORS: Record<string, Gen[]> = {
       const y = w[0] * h[0] + w[1] * h[1] + b;
       const skip = w[0] * z[0] + w[1] * z[1] + b;
       return mcNumbers(
-        `A hidden layer's pre-activation is $${v(z[0], z[1])}$. Apply ReLU, then $\hat y = ${w[0]}h_1 + ${w[1]}h_2 ${b < 0 ? "-" : "+"} ${Math.abs(b)}$. What is $\hat y$?`,
+        `A hidden layer's pre-activation is $${v(z[0], z[1])}$. Apply ReLU, then $\\hat y = ${w[0]}h_1 + ${w[1]}h_2 ${b < 0 ? "-" : "+"} ${Math.abs(b)}$. What is $\\hat y$?`,
         { text: String(y), why: `h = (${h[0]}, ${h[1]}); ŷ = ${y}.` },
         [{ text: String(skip), why: "That skipped the ReLU.", misconception: "skip-activation" }],
       );
@@ -677,25 +690,3 @@ export const GENERATORS: Record<string, Gen[]> = {
     },
   ],
 };
-
-export function generatedId(nodeId: string, gen: number, seed: number) {
-  return `gen~${nodeId}~${gen}~${seed}`;
-}
-
-/** Rebuild a generated item from its id. Same id, same question. */
-export function fromGeneratedId(id: string): { nodeId: string; item: Item } | null {
-  const [tag, nodeId, g, s] = id.split("~");
-  if (tag !== "gen" || !nodeId) return null;
-  const gens = GENERATORS[nodeId];
-  const gen = gens?.[Number(g)];
-  const seed = Number(s);
-  if (!gen || !Number.isInteger(seed)) return null;
-  return { nodeId, item: { ...gen(rng(seed)), id } };
-}
-
-export function generate(nodeId: string, seed: number): Item | null {
-  const gens = GENERATORS[nodeId];
-  if (!gens?.length) return null;
-  const g = seed % gens.length;
-  return fromGeneratedId(generatedId(nodeId, g, seed))?.item ?? null;
-}

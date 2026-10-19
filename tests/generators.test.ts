@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { allNodes, findItem, getNode, misconceptionsOf, publicItem } from "@/lib/content";
-import { GENERATORS, generate } from "@/lib/content/generators";
+import { GENERATORS } from "@/lib/content/generators";
+import { generate, templatesFor, type Level } from "@/lib/content/templates";
 import { grade, type Response } from "@/lib/check";
 import type { Item } from "@/lib/content/types";
 import { apply, FRESH, PRACTICE_STREAK, type Progress } from "@/lib/learning/rules";
@@ -33,7 +34,10 @@ it("generators only exist for real concepts", () => {
 
 describe.each(Object.keys(GENERATORS).map((id) => [id] as const))("generators for %s", (nodeId) => {
   const node = getNode(nodeId)!;
-  const items = SEEDS.map((s) => generate(nodeId, s)!);
+  // Every template at every level.
+  const items = templatesFor(nodeId).flatMap((_, t) =>
+    ([1, 2, 3] as Level[]).flatMap((level) => SEEDS.slice(0, 90).map((s) => generate(nodeId, s, { template: t, level })!)),
+  );
 
   it("stated answers grade correct", () => {
     for (const i of items) expect(grade(i, correctResponse(i)).status, `${i.id}: ${i.prompt}`).toBe("correct");
@@ -73,6 +77,26 @@ describe.each(Object.keys(GENERATORS).map((id) => [id] as const))("generators fo
   it("produces some variety", () => {
     expect(new Set(items.map((i) => i.prompt)).size).toBeGreaterThan(5);
   });
+
+  it("every item is tagged with its question type", () => {
+    for (const i of items) expect(i.tag, i.id).toBeTruthy();
+  });
+
+  it("multiple choice always keeps at least two distinct options", () => {
+    for (const i of items) if (i.kind === "mc") expect(i.options.length, `${i.id}: ${i.prompt}`).toBeGreaterThanOrEqual(2);
+  });
+});
+
+it("old 4-part ids (before difficulty levels) still rebuild, as level 1", () => {
+  const old = "gen~determinant~0~12345";
+  const item = findItem(getNode("determinant")!, old)?.item;
+  expect(item?.id).toBe(old);
+  expect(item).toEqual(generate("determinant", 12345, { template: 0, level: 1 }) && { ...generate("determinant", 12345, { template: 0, level: 1 })!, id: old });
+});
+
+it("most core concepts offer several kinds of question", () => {
+  const multi = Object.keys(GENERATORS).filter((id) => new Set(templatesFor(id).map((t) => t.type)).size >= 2);
+  expect(multi.length).toBeGreaterThanOrEqual(25);
 });
 
 it("a generated id can't be graded as a different concept", () => {

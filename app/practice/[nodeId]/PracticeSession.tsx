@@ -70,8 +70,9 @@ export function PracticeSession({ nodeId, title, alreadySolid, tutor, need }: { 
           <p className="text-[var(--muted)]">Picking a question…</p>
         ) : (
           <div className="space-y-3">
-            <p className="text-xs uppercase tracking-widest text-[var(--muted)]">
-              {q.isTarget ? title : `Mixing in: ${q.title}`}
+            <p className="text-xs uppercase tracking-widest text-[var(--muted)] flex justify-between gap-2">
+              <span>{q.isTarget ? title : `Mixing in: ${q.title}`}</span>
+              {q.level && <span title="Difficulty adapts to how you're doing">{["", "● Easy", "●● Medium", "●●● Hard"][q.level]}</span>}
             </p>
             <Question key={q.item.id} nodeId={q.nodeId} item={q.item} retry tutor={tutor} onGraded={onGraded} />
           </div>

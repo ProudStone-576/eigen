@@ -2,7 +2,7 @@ import "server-only";
 import { randomInt } from "node:crypto";
 import { prisma } from "@/lib/db";
 import { getNode, misconceptionsOf, publicItem, type PublicItem } from "@/lib/content";
-import { generate } from "@/lib/content/generators";
+import { generate, parseGeneratedId, templatesFor, type Level } from "@/lib/content/templates";
 import { customItemsFor } from "@/lib/content/custom";
 import type { ConceptNode, Item } from "@/lib/content/types";
 import { loadProgress, statusIn, unlocked } from "./progress";
@@ -13,7 +13,7 @@ import { loadProgress, statusIn, unlocked } from "./progress";
  * from a prerequisite, so the session rebuilds the foundations as well as the node.
  */
 
-export type PracticeQuestion = { nodeId: string; title: string; isTarget: boolean; item: PublicItem };
+export type PracticeQuestion = { nodeId: string; title: string; isTarget: boolean; item: PublicItem; level?: Level };
 
 /** Prerequisites up to two levels down, nearest first. */
 function ancestors(node: ConceptNode): ConceptNode[] {
@@ -44,22 +44,53 @@ function staticPool(node: ConceptNode): Item[] {
   ];
 }
 
-async function pickFor(node: ConceptNode, misconception: string | null): Promise<Item> {
+/**
+ * Adaptive difficulty from the student's recent practice on this concept:
+ * two right in a row at a level moves up, two wrong in a row moves down.
+ * Also returns the last template used, so the next question is a different kind.
+ */
+async function practiceState(userId: string, nodeId: string): Promise<{ level: Level; lastTemplate: number | null }> {
+  const recent = await prisma.attempt.findMany({
+    where: { userId, nodeId, step: "practice" },
+    orderBy: { createdAt: "desc" },
+    take: 2,
+    select: { itemId: true, correct: true },
+  });
+  const parsed = recent.map((a) => ({ ...a, gen: parseGeneratedId(a.itemId) }));
+  const lastGen = parsed.find((a) => a.gen)?.gen ?? null;
+  let level: Level = lastGen?.level ?? 1;
+  if (parsed.length === 2 && parsed.every((a) => a.correct)) level = Math.min(3, level + 1) as Level;
+  if (parsed.length === 2 && parsed.every((a) => !a.correct)) level = Math.max(1, level - 1) as Level;
+  return { level, lastTemplate: lastGen?.template ?? null };
+}
+
+const freshSeed = () => randomInt(1, 2 ** 31 - 1);
+
+/** A template different from the last one, so practice comes at the idea from a new angle. */
+function nextTemplate(nodeId: string, last: number | null): number {
+  const n = templatesFor(nodeId).length;
+  if (n <= 1) return 0;
+  let t = randomInt(n);
+  if (t === last) t = (t + 1 + randomInt(n - 1)) % n;
+  return t;
+}
+
+async function pickFor(node: ConceptNode, misconception: string | null, level: Level, lastTemplate: number | null): Promise<Item> {
   // Teacher-written questions take a share of practice when they exist.
   const custom = await customItemsFor(node.id, "p");
   if (misconception) {
     const targetedCustom = custom.filter((i) => misconceptionsOf(i).includes(misconception));
     if (targetedCustom.length && randomInt(2) === 0) return targetedCustom[randomInt(targetedCustom.length)];
     // Aim straight at the mix-up: a variant whose traps catch exactly this misconception.
-    for (let tries = 0; tries < 20; tries++) {
-      const g = generate(node.id, randomInt(1, 2 ** 31 - 1));
+    for (let tries = 0; tries < 30; tries++) {
+      const g = generate(node.id, freshSeed(), { template: nextTemplate(node.id, null), level });
       if (g && misconceptionsOf(g).includes(misconception)) return g;
     }
     const targeted = staticPool(node).filter((i) => misconceptionsOf(i).includes(misconception));
     if (targeted.length) return targeted[randomInt(targeted.length)];
   }
   if (custom.length && randomInt(3) === 0) return custom[randomInt(custom.length)];
-  return generate(node.id, randomInt(1, 2 ** 31 - 1)) ?? staticPool(node)[randomInt(staticPool(node).length)];
+  return generate(node.id, freshSeed(), { template: nextTemplate(node.id, lastTemplate), level }) ?? staticPool(node)[randomInt(staticPool(node).length)];
 }
 
 export async function nextPracticeQuestion(userId: string, nodeId: string, index: number): Promise<PracticeQuestion | { error: string }> {
@@ -77,10 +108,24 @@ export async function nextPracticeQuestion(userId: string, nodeId: string, index
     const pool = weak.length ? weak : prereqs;
     const source = pool[randomInt(pool.length)];
     const p = map.get(source.id);
-    return { nodeId: source.id, title: source.title, isTarget: false, item: publicItem(await pickFor(source, p?.misconceptionId ?? null)) };
+    const st = await practiceState(userId, source.id);
+    return {
+      nodeId: source.id,
+      title: source.title,
+      isTarget: false,
+      level: st.level,
+      item: publicItem(await pickFor(source, p?.status === "MISCONCEPTION" ? p.misconceptionId : null, st.level, st.lastTemplate)),
+    };
   }
   const held = map.get(node.id);
-  return { nodeId: node.id, title: node.title, isTarget: true, item: publicItem(await pickFor(node, held?.status === "MISCONCEPTION" ? held.misconceptionId : null)) };
+  const st = await practiceState(userId, node.id);
+  return {
+    nodeId: node.id,
+    title: node.title,
+    isTarget: true,
+    level: st.level,
+    item: publicItem(await pickFor(node, held?.status === "MISCONCEPTION" ? held.misconceptionId : null, st.level, st.lastTemplate)),
+  };
 }
 
 /**

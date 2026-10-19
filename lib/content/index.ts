@@ -6,7 +6,7 @@ import { unit4 } from "./statistics/unit4";
 import { unit5 } from "./statistics/unit5";
 import { unit6 } from "./calculus/unit6";
 import { unit7 } from "./networks/unit7";
-import { fromGeneratedId } from "./generators";
+import { fromGeneratedId } from "./templates";
 
 export const course: Course = {
   id: "math-for-ml",
@@ -62,11 +62,12 @@ export const targets = (item: Item, misconception: string) => misconceptionsOf(i
 // ---------- What the browser is allowed to see ----------
 // Answers, traps and explanations stay on the server until a response is graded.
 
-export type PublicItem =
+export type PublicItem = { tag?: string } & (
   | { kind: "mc"; id: string; prompt: string; options: { id: string; text: string }[] }
   | { kind: "number" | "expression"; id: string; prompt: string }
   | { kind: "vector"; id: string; prompt: string; size: number }
-  | { kind: "matrix"; id: string; prompt: string; rows: number; cols: number };
+  | { kind: "matrix"; id: string; prompt: string; rows: number; cols: number }
+);
 
 /** Stable per-item shuffle, so the correct option isn't always first but the order never jumps around. */
 function shuffled<T>(xs: T[], seedText: string): T[] {
@@ -82,6 +83,11 @@ function shuffled<T>(xs: T[], seedText: string): T[] {
 }
 
 export function publicItem(item: Item): PublicItem {
+  const pub = publicItemBody(item);
+  return item.tag ? { ...pub, tag: item.tag } : pub;
+}
+
+function publicItemBody(item: Item): PublicItem {
   switch (item.kind) {
     case "mc":
       return {

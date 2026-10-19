@@ -22,9 +22,11 @@ export type McOption = {
   why: string;
 };
 
-export type McItem = { kind: "mc"; id: string; prompt: string; options: McOption[] };
+export type McItem = { kind: "mc"; id: string; prompt: string; options: McOption[]; tag?: string };
 
 export type NumberItem = {
+  /** Question type shown to students, e.g. "Spot the error". */
+  tag?: string;
   kind: "number";
   id: string;
   prompt: string;
@@ -35,6 +37,8 @@ export type NumberItem = {
 };
 
 export type VectorItem = {
+  /** Question type shown to students, e.g. "Spot the error". */
+  tag?: string;
   kind: "vector";
   id: string;
   prompt: string;
@@ -47,6 +51,8 @@ export type VectorItem = {
 };
 
 export type MatrixItem = {
+  /** Question type shown to students, e.g. "Spot the error". */
+  tag?: string;
   kind: "matrix";
   id: string;
   prompt: string;
@@ -63,6 +69,8 @@ export type ExpressionForm = {
 };
 
 export type ExpressionItem = {
+  /** Question type shown to students, e.g. "Spot the error". */
+  tag?: string;
   kind: "expression";
   id: string;
   prompt: string;
