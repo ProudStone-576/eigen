@@ -76,7 +76,7 @@ export default async function LearnPage() {
         );
       })}
 
-      <p className="text-sm text-[var(--muted)]">Next up: calculus for ML (gradients and gradient descent).</p>
+      <p className="text-sm text-[var(--muted)]">Three tracks, one story: data as vectors, uncertainty as probability, learning as gradient descent on a likelihood.</p>
     </div>
   );
 }

@@ -99,7 +99,13 @@ export type Widget =
   /** Likelihood of k heads in n flips as the coin's p varies. */
   | { kind: "likelihood"; heads: number; flips: number }
   /** Fit a line by hand: slope/intercept sliders, residuals, squared error. */
-  | { kind: "fitline"; points: Vec[] };
+  | { kind: "fitline"; points: Vec[] }
+  /** Secant through a and a+h; shrink h to get the tangent. */
+  | { kind: "tangent"; fn: "square" | "chain" | "cubic"; a: number }
+  /** Contours of f(x, y) = x² + 2y² with a draggable point and its gradient. */
+  | { kind: "gradient2d"; start: Vec }
+  /** Gradient descent on L(w) = (w − 3)² + 1 with a learning-rate slider. */
+  | { kind: "descent"; eta: number; start: number };
 
 // ---------- Lesson steps ----------
 
