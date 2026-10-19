@@ -16,11 +16,17 @@ async function Header() {
   const user = await currentUser();
   const due = user ? dueNodes(await loadProgress(user.id)).length : 0;
   return (
-    <header className="border-b border-[var(--border)] bg-[var(--surface)]">
-      <div className="mx-auto max-w-5xl px-4 h-14 flex items-center gap-4">
+    <header className="sticky top-0 z-50 border-b border-[color-mix(in_srgb,var(--border)_60%,transparent)] bg-[color-mix(in_srgb,var(--bg)_72%,transparent)] backdrop-blur-xl backdrop-saturate-150">
+      <div className="mx-auto max-w-5xl px-4 h-12 flex items-center gap-4">
         <Link href={user ? "/learn" : "/"} className="font-extrabold text-lg tracking-tight">
           eigen<span className="text-[var(--accent)]">.</span>
         </Link>
+        {!user && (
+          <nav className="flex items-center gap-5 text-xs ml-auto">
+            <Link href="/login" className="text-[var(--muted)] hover:text-[var(--fg)]">Log in</Link>
+            <Link href="/signup" className="rounded-full bg-[var(--accent)] text-white px-3.5 py-1 font-medium hover:brightness-110">Join</Link>
+          </nav>
+        )}
         {user && (
           <nav className="flex items-center gap-4 text-sm ml-auto">
             <Link href="/review" className="hover:text-[var(--accent)]">

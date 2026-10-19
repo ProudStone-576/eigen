@@ -20,8 +20,9 @@ function Slider({ label, value, min, max, step, onChange, show }: { label: React
 }
 
 function frame(w: number, h: number, x0: number, x1: number, y0: number, y1: number, pad = 26) {
-  const sx = (x: number) => pad + ((x - x0) / (x1 - x0)) * (w - 2 * pad);
-  const sy = (y: number) => h - pad - ((y - y0) / (y1 - y0)) * (h - 2 * pad);
+  // Rounded so server and browser render identical SVG (Math.exp etc. can differ in the last digits).
+  const sx = (x: number) => Math.round((pad + ((x - x0) / (x1 - x0)) * (w - 2 * pad)) * 100) / 100;
+  const sy = (y: number) => Math.round((h - pad - ((y - y0) / (y1 - y0)) * (h - 2 * pad)) * 100) / 100;
   return { sx, sy, w, h, pad };
 }
 

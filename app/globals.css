@@ -1,13 +1,17 @@
 @import "tailwindcss";
 @import "katex/dist/katex.min.css";
 
+@theme {
+  --font-sans: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
 :root {
-  --bg: #f7f7fb;
+  --bg: #fbfbfd;
   --surface: #ffffff;
-  --fg: #16161d;
-  --muted: #5d5f6e;
-  --border: #e3e4ec;
-  --accent: #6d4aff;
+  --fg: #1d1d1f;
+  --muted: #6e6e73;
+  --border: #e3e3e8;
+  --accent: #5b4bdb;
   --accent-fg: #ffffff;
   --plane: #ffffff;
   --grid: #c9cbe0;
@@ -40,13 +44,13 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg: #0f1016;
-    --surface: #181a23;
-    --fg: #ececf3;
-    --muted: #a0a3b8;
-    --border: #2b2e3d;
+    --bg: #000000;
+    --surface: #161618;
+    --fg: #f5f5f7;
+    --muted: #a1a1a6;
+    --border: #2c2c2e;
     --accent: #8f74ff;
-    --plane: #12131b;
+    --plane: #0d0d0f;
     --grid: #33364a;
     --grid-faint: #1c1e29;
     --axis: #6b6f8c;
@@ -72,13 +76,26 @@ body {
   background: var(--bg);
   color: var(--fg);
   -webkit-font-smoothing: antialiased;
+  /* Full-bleed sections use 100vw; never let them cause sideways scroll. */
+  overflow-x: clip;
+}
+
+h1,
+h2,
+h3 {
+  letter-spacing: -0.022em;
+}
+
+::selection {
+  background: color-mix(in srgb, var(--accent) 25%, transparent);
 }
 
 @layer components {
   .card {
-    @apply rounded-2xl border p-5 md:p-7;
+    @apply rounded-[22px] border p-5 md:p-7;
     background: var(--surface);
-    border-color: var(--border);
+    border-color: color-mix(in srgb, var(--border) 70%, transparent);
+    box-shadow: 0 1px 2px rgb(0 0 0 / 0.03), 0 8px 28px rgb(0 0 0 / 0.04);
   }
   .card-soft {
     @apply rounded-xl p-4;
@@ -90,7 +107,7 @@ body {
     background: color-mix(in srgb, var(--accent) 6%, var(--surface));
   }
   .btn {
-    @apply inline-flex items-center justify-center rounded-xl px-5 py-2.5 font-semibold transition disabled:opacity-40 disabled:cursor-not-allowed;
+    @apply inline-flex items-center justify-center rounded-full px-6 py-2.5 font-medium transition active:scale-[0.97] disabled:opacity-40 disabled:cursor-not-allowed;
     background: var(--accent);
     color: var(--accent-fg);
   }
@@ -98,8 +115,28 @@ body {
     filter: brightness(1.08);
   }
   .btn-ghost {
-    @apply inline-flex items-center justify-center rounded-xl px-5 py-2.5 font-semibold border transition disabled:opacity-30;
-    border-color: var(--border);
+    @apply inline-flex items-center justify-center rounded-full px-6 py-2.5 font-medium border transition active:scale-[0.97] disabled:opacity-30;
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+  .btn-ghost:hover:not(:disabled) {
+    background: color-mix(in srgb, var(--accent) 8%, transparent);
+  }
+  /* Text link with a chevron: "Learn more ›". */
+  .link-more {
+    @apply inline-flex items-center gap-1 font-medium;
+    color: var(--accent);
+  }
+  .link-more::after {
+    content: "›";
+    transition: transform 0.2s;
+  }
+  .link-more:hover::after {
+    transform: translateX(3px);
+  }
+  .full-bleed {
+    width: 100vw;
+    margin-left: calc(50% - 50vw);
   }
   .chip {
     @apply rounded-full border px-3 py-1 text-sm transition;
@@ -119,7 +156,7 @@ body {
     border-color: var(--accent);
   }
   .option {
-    @apply w-full text-left rounded-xl border-2 px-4 py-3 transition;
+    @apply w-full text-left rounded-2xl border-2 px-4 py-3 transition active:scale-[0.99];
     border-color: var(--border);
     background: var(--surface);
   }
@@ -184,4 +221,62 @@ body {
   overflow-x: auto;
   overflow-y: hidden;
   padding: 0.25rem 0;
+}
+
+/* Scroll reveal (components/landing/Reveal.tsx). */
+.reveal {
+  opacity: 0;
+  transform: translateY(32px);
+  transition: opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1), transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+.reveal.is-in {
+  opacity: 1;
+  transform: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+/* Headline gradient text. */
+.text-gradient {
+  background: linear-gradient(100deg, #7c6cff 0%, #c86dd7 45%, #ff8a5b 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  [class*="animate-"] {
+    animation: none !important;
+  }
+}
+
+/* A section that is always dark, whatever the page theme. */
+.theme-dark {
+  --bg: #000000;
+  --surface: #161618;
+  --fg: #f5f5f7;
+  --muted: #a1a1a6;
+  --border: #2c2c2e;
+  --accent: #9d8cff;
+  --plane: #0d0d0f;
+  --grid: #33364a;
+  --grid-faint: #1c1e29;
+  --axis: #6b6f8c;
+  color-scheme: dark;
 }
