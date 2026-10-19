@@ -46,6 +46,8 @@ function checkMath(text: string, where: string) {
     const words = (m[1] ?? m[2]).replace(/\\(text|mathrm|operatorname|begin|end)\{[^}]*\}/g, "").replace(/\\[a-zA-Z]+/g, "");
     // Lowercase only: vertex names such as ABCD are legitimate maths.
     expect(/[a-z]{4,}/.test(words), `${where}: prose inside maths: ${m[0]}`).toBe(false);
+    // "\neq" or "\nabla" written with one backslash becomes a newline.
+    expect((m[1] ?? m[2]).includes("\n"), `${where}: newline inside maths (lost backslash?): ${JSON.stringify(m[0])}`).toBe(false);
   }
   for (const m of plain.matchAll(/\$\$([\s\S]+?)\$\$|\$([^$]+?)\$/g)) {
     const src = m[1] ?? m[2];

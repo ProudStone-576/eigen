@@ -1,4 +1,6 @@
 import type { ConceptNode, Unit } from "@/lib/content/types";
+import { deepen } from "../deepen";
+import { UNIT2_DEPTH } from "./unit2.depth";
 
 const v = (x: number | string, y: number | string) => `\\begin{bmatrix}${x}\\\\${y}\\end{bmatrix}`;
 const m = (a: number | string, b: number | string, c: number | string, d: number | string) =>
@@ -646,5 +648,5 @@ export const unit2: Unit = {
   track: "Linear algebra",
   title: "Span, Determinants & Inverses",
   blurb: "What a set of vectors can reach, how much a matrix stretches space, and how to run it backwards.",
-  nodes: [span, independence, determinant, detZero, inverse, solving],
+  nodes: [span, independence, determinant, detZero, inverse, solving].map((n) => deepen(n, UNIT2_DEPTH[n.id])),
 };

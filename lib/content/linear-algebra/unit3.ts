@@ -1,4 +1,6 @@
 import type { ConceptNode, Unit, Vec } from "@/lib/content/types";
+import { deepen } from "../deepen";
+import { UNIT3_DEPTH } from "./unit3.depth";
 
 const v = (x: number | string, y: number | string) => `\\begin{bmatrix}${x}\\\\${y}\\end{bmatrix}`;
 const m = (a: number | string, b: number | string, c: number | string, d: number | string) =>
@@ -600,5 +602,5 @@ export const unit3: Unit = {
   track: "Linear algebra",
   title: "Eigenvectors & PCA",
   blurb: "The directions a matrix doesn't turn, and how they find the shape of data.",
-  nodes: [eigenvector, eigenvalue, findingValues, findingVectors, eigenbasis, pca],
+  nodes: [eigenvector, eigenvalue, findingValues, findingVectors, eigenbasis, pca].map((n) => deepen(n, UNIT3_DEPTH[n.id])),
 };
