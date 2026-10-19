@@ -34,6 +34,13 @@ export default async function LearnPage() {
         </Link>
       )}
 
+      <Link href="/exam" className="card-soft flex items-center justify-between gap-4 hover:opacity-90">
+        <span>
+          <strong>Test yourself.</strong> Unit tests and mock exams: every kind of question, graded together, with a breakdown of what to revisit.
+        </span>
+        <span className="btn-ghost">Tests</span>
+      </Link>
+
       {struggling.length > 0 && (
         <section className="card space-y-3 border-[var(--edge)]">
           <h2 className="font-bold">🎯 Needs practice</h2>

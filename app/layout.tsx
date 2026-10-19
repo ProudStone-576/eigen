@@ -26,6 +26,7 @@ async function Header() {
             <Link href="/review" className="hover:text-[var(--accent)]">
               Review{due > 0 && <span className="ml-1 rounded-full bg-[var(--accent)] text-white px-2 py-0.5 text-xs">{due}</span>}
             </Link>
+            <Link href="/exam" className="hover:text-[var(--accent)]">Tests</Link>
             <Link href="/glossary" className="hover:text-[var(--accent)] hidden sm:inline">Glossary</Link>
             {user.role === "TEACHER" && <Link href="/teacher" className="hover:text-[var(--accent)]">Students</Link>}
             {user.role === "TEACHER" && <Link href="/teacher/content" className="hover:text-[var(--accent)]">Questions</Link>}

@@ -9,6 +9,7 @@ import { submitAnswer, type GradeResult } from "@/lib/learning/progress";
 import type { Response } from "@/lib/check";
 import { hintFor, type HintResult } from "@/lib/tutor";
 import { nextPracticeQuestion, type PracticeQuestion } from "@/lib/learning/practice";
+import { buildExam, gradeExam, type ExamAnswer, type ExamPaper, type ExamResult } from "@/lib/learning/exam";
 
 export type FormState = { error: string | null };
 
@@ -71,6 +72,26 @@ export async function nextPractice(input: { nodeId: string; index: number }): Pr
   if (!user) return { error: "Your session ended. Log in again." };
   const index = Number.isInteger(input.index) && input.index >= 0 ? input.index : 0;
   return nextPracticeQuestion(user.id, String(input.nodeId), index);
+}
+
+export async function startExam(input: { scope: string }): Promise<ExamPaper> {
+  const user = await currentUser();
+  if (!user) return { error: "Your session ended. Log in again." };
+  const scope = String(input.scope);
+  return buildExam(user.id, scope === "mock" ? { kind: "mock" } : { kind: "unit", unitId: scope });
+}
+
+export async function submitExam(input: { answers: ExamAnswer[]; timeZone?: string }): Promise<ExamResult | { error: string }> {
+  const user = await currentUser();
+  if (!user) return { error: "Your session ended. Log in again." };
+  if (!Array.isArray(input.answers)) return { error: "That exam couldn't be read." };
+  const answers: ExamAnswer[] = [];
+  for (const a of input.answers.slice(0, 30)) {
+    const r = a?.response == null ? null : responseSchema.safeParse(a.response);
+    if (r && !r.success) return { error: "An answer couldn't be read." };
+    answers.push({ nodeId: String(a?.nodeId), itemId: String(a?.itemId), response: r ? r.data : null });
+  }
+  return gradeExam(user.id, answers, typeof input.timeZone === "string" ? input.timeZone.slice(0, 64) : undefined);
 }
 
 export async function askHint(input: { nodeId: string; itemId: string; response: Response }): Promise<HintResult> {
