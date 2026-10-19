@@ -72,7 +72,7 @@ export function TangentWidget({ fn, a: a0 }: { fn: keyof typeof FNS; a: number }
         <Tex src={`f(x) = ${F.tex}`} />. Secant slope <Tex src={`\\frac{f(a+h)-f(a)}{h}`} /> = <strong>{fmt(secant, 3)}</strong>
         {close ? (
           <span className="block feedback feedback-ok mt-2">
-            🎯 h is tiny: the secant has become the tangent. <Tex src={`f'(${fmt(a)}) = ${fmt(F.df(a), 3)}`} />
+            h is tiny: the secant has become the tangent. <Tex src={`f'(${fmt(a)}) = ${fmt(F.df(a), 3)}`} />
           </span>
         ) : (
           <span className="block text-[var(--muted)]">Shrink h. The dashed green line is where the yellow one is heading.</span>
@@ -214,8 +214,8 @@ export function DescentWidget({ eta: e0, start }: { eta: number; start: number }
         <Tex src={`L(w) = (w-3)^2 + 1`} />, update <Tex src={`w \\leftarrow w - \\eta \\cdot 2(w-3)`} />. Steps: {ws.length - 1}. w ={" "}
         <strong>{diverged ? "∞" : fmt(w, 3)}</strong>, L = <strong>{diverged ? "∞" : fmt(L(w), 3)}</strong>
       </p>
-      {diverged && <p className="feedback feedback-bad text-sm">💥 Diverged: each step overshot further than the last.</p>}
-      {!diverged && Math.abs(w - 3) < 0.01 && ws.length > 1 && <p className="feedback feedback-ok text-sm">🎯 Reached the minimum at w = 3 in {ws.length - 1} steps.</p>}
+      {diverged && <p className="feedback feedback-bad text-sm">Diverged: each step overshot further than the last.</p>}
+      {!diverged && Math.abs(w - 3) < 0.01 && ws.length > 1 && <p className="feedback feedback-ok text-sm">Reached the minimum at w = 3 in {ws.length - 1} steps.</p>}
     </div>
   );
 }

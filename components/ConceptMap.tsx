@@ -76,7 +76,7 @@ export function ConceptMap({ nodes, state }: { nodes: ConceptNode[]; state: Reco
                 ))}
               </text>
               <text x={x + 12} y={y + H - 12} fontSize={12} fill={st.stroke}>
-                {s === "LOCKED" ? "🔒 " : ""}
+                {s === "LOCKED" ? "" : ""}
                 {st.label}
               </text>
             </g>

@@ -1,141 +1,151 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { Lesson } from "@/components/Lesson";
 import { MathText } from "@/components/MathText";
+import { Section, STATUS_WORD } from "@/components/textbook/Section";
+import { FigurePlate } from "@/components/intro/FigurePlate";
 import { requireUser } from "@/lib/auth/session";
-import { allNodes, course, getNode, publicSteps } from "@/lib/content";
-import { introFor } from "@/lib/content/intro";
-import { LessonIntro } from "@/components/intro/LessonIntro";
-import {
-  loadProgress,
-  markOpened,
-  statusIn,
-  unlocked,
-} from "@/lib/learning/progress";
+import { allNodes, getNode, publicSteps } from "@/lib/content";
+import { introCaption, introFor } from "@/lib/content/intro";
+import { chapterNumber, locate, sectionNumber } from "@/lib/content/numbering";
+import { loadProgress, markOpened, statusIn, unlocked } from "@/lib/learning/progress";
 import { tutorEnabled } from "@/lib/tutor";
 
-export async function generateMetadata({
-  params,
-}: {
-  params: Promise<{ nodeId: string }>;
-}) {
-  const node = getNode((await params).nodeId);
-  return { title: node?.title ?? "Lesson" };
-}
-
-export default async function LessonPage({
-  params,
-}: {
-  params: Promise<{ nodeId: string }>;
-}) {
+export async function generateMetadata({ params }: { params: Promise<{ nodeId: string }> }) {
   const { nodeId } = await params;
   const node = getNode(nodeId);
-  if (!node) notFound();
+  return { title: node ? `§${sectionNumber(nodeId)} ${node.title}` : "Section" };
+}
+
+export default async function LessonPage({ params }: { params: Promise<{ nodeId: string }> }) {
+  const { nodeId } = await params;
+  const node = getNode(nodeId);
+  const at = node && locate(node.id);
+  if (!node || !at) notFound();
   const user = await requireUser();
   const progress = await loadProgress(user.id);
+  const status = statusIn(progress);
+
+  const crumbs = (
+    <p className="tb-label">
+      Part {at.part.roman} · {at.part.track} <span className="mx-1">/</span> Chapter {at.chapter} · {at.unit.title}
+    </p>
+  );
 
   if (!unlocked(node.id, progress)) {
-    const status = statusIn(progress);
     const missing = node.deps.flatMap((id) => {
       const d = getNode(id);
       return d && !["LANDED", "SOLID"].includes(status(id)) ? [d] : [];
     });
     return (
-      <div className="card max-w-lg mx-auto text-center space-y-4">
-        <p className="text-4xl">🔒</p>
-        <h1 className="text-2xl font-bold">{node.title}</h1>
-        <p className="text-[var(--muted)]">
-          This builds on ideas you haven&rsquo;t landed yet:
-        </p>
-        <div className="flex flex-col gap-2">
+      <div className="mx-auto max-w-2xl py-6">
+        {crumbs}
+        <h1 className="mt-3 font-serif text-4xl font-semibold">
+          §{at.number} {node.title}
+        </h1>
+        <p className="mt-6 tb">This section assumes the following. Learn them first:</p>
+        <ul className="mt-3 space-y-1 tb">
           {missing.map((d) => (
-            <Link key={d.id} href={`/learn/${d.id}`} className="btn-ghost">
-              {d.title}
-            </Link>
+            <li key={d.id}>
+              <Link href={`/learn/${d.id}`} className="text-[var(--accent)] hover:underline underline-offset-4">
+                §{sectionNumber(d.id)} {d.title}
+              </Link>
+            </li>
           ))}
-        </div>
+        </ul>
       </div>
     );
   }
 
-  // Returning to a concept they already have: open at the lesson, intro still above.
-  const returning = ["LANDED", "SOLID", "MISCONCEPTION"].includes(statusIn(progress)(node.id));
   await markOpened(user.id, node.id);
-  const status = statusIn(await loadProgress(user.id))(node.id);
+  const now = statusIn(await loadProgress(user.id))(node.id);
   const i = allNodes.findIndex((n) => n.id === node.id);
-  const next =
-    allNodes.slice(i + 1).find((n) => n.deps.includes(node.id)) ??
-    allNodes[i + 1] ??
-    null;
-
-  const unit = course.units.find((u) => u.nodes.some((n) => n.id === node.id))!;
-  const motivate = node.steps.find((s) => s.type === "motivate");
+  const next = allNodes.slice(i + 1).find((n) => n.deps.includes(node.id)) ?? allNodes[i + 1] ?? null;
+  const prev = i > 0 ? allNodes[i - 1] : null;
+  const counts = {
+    examples: node.steps.filter((s) => s.type === "example").length,
+    exercises: node.steps.reduce((k, s) => k + (s.type === "exercises" ? s.items.length : 0), 0),
+    checks: node.steps.filter((s) => s.type === "check" || s.type === "predict").length,
+  };
+  const spec = introFor(node);
 
   return (
-    <>
-      <LessonIntro
-        spec={introFor(node)}
-        kicker={`${unit.track} · ${unit.title}`}
-        title={node.title}
-        question={motivate?.type === "motivate" ? motivate.title : node.title}
-        questionBody={motivate?.type === "motivate" ? motivate.body : ""}
-        idea={node.summary}
-      startAtLesson={returning}
-      />
-      <div
-        id="lesson"
-        className="scroll-mt-20 grid gap-8 pt-10 lg:grid-cols-[1fr_240px]"
-      >
-        <a href="#" className="lg:col-span-2 -mb-4 text-sm text-[var(--muted)] hover:text-[var(--fg)]">
-          ↑ Watch the intro
-        </a>
-        <Lesson
+    <div className="mx-auto grid max-w-6xl gap-x-14 lg:grid-cols-[minmax(0,44rem)_15rem]">
+      <div>
+        {crumbs}
+        <h1 className="mt-3 font-serif text-[2.6rem] leading-tight font-semibold">
+          <span className="text-[var(--muted)]">§{at.number}</span> {node.title}
+        </h1>
+        <MathText as="p" text={node.summary} className="mt-4 block font-serif text-xl leading-relaxed text-[var(--muted)]" />
+        <Section
           nodeId={node.id}
+          number={at.number}
           title={node.title}
           steps={publicSteps(node)}
-          initialStatus={status}
-          nextNode={next ? { id: next.id, title: next.title } : null}
+          initialStatus={now}
+          nextNode={next ? { id: next.id, title: next.title, number: sectionNumber(next.id) } : null}
           tutor={tutorEnabled()}
+          figure={<FigurePlate spec={spec} number={`${at.number}.1`} caption={introCaption(spec)} />}
         />
-        <aside className="space-y-4 text-sm">
-          <Link
-            href={`/practice/${node.id}`}
-            className="card p-4! block hover:border-[var(--accent)]"
-          >
-            <p className="font-semibold">🎯 Practice</p>
-            <p className="text-[var(--muted)]">
-              Endless fresh questions on this, mixed with what it builds on.
-            </p>
-          </Link>
-          <div className="card p-4!">
-            <p className="font-semibold">New words</p>
-            <dl className="mt-2 space-y-2">
-              {node.glossary.map((g) => (
-                <div key={g.term}>
-                  <dt className="font-medium">{g.term}</dt>
-                  <dd className="text-[var(--muted)]">
-                    <MathText text={g.meaning} />
-                  </dd>
-                </div>
-              ))}
-            </dl>
+      </div>
+
+      <aside className="hidden lg:block">
+        <div className="sticky top-20 space-y-7 font-sans text-sm">
+          <div>
+            <p className="tb-label">Status</p>
+            <p className="mt-1 font-medium">{STATUS_WORD[now]}</p>
           </div>
+          <div>
+            <p className="tb-label">In this section</p>
+            <p className="mt-1 text-[var(--muted)]">
+              {[counts.examples && `${counts.examples} worked example${counts.examples === 1 ? "" : "s"}`, counts.checks && `${counts.checks} checks`, counts.exercises && `${counts.exercises} exercises`]
+                .filter(Boolean)
+                .join(" · ") || "Core reading"}
+            </p>
+          </div>
+          {node.glossary.length > 0 && (
+            <div>
+              <p className="tb-label">Terms</p>
+              <dl className="mt-2 space-y-2.5">
+                {node.glossary.map((g) => (
+                  <div key={g.term}>
+                    <dt className="font-medium">{g.term}</dt>
+                    <dd className="text-[var(--muted)]">
+                      <MathText text={g.meaning} />
+                    </dd>
+                  </div>
+                ))}
+              </dl>
+            </div>
+          )}
           {node.deps.length > 0 && (
-            <div className="card p-4!">
-              <p className="font-semibold">Builds on</p>
+            <div>
+              <p className="tb-label">Assumes</p>
               <ul className="mt-2 space-y-1">
                 {node.deps.map((d) => (
                   <li key={d}>
-                    <Link href={`/learn/${d}`} className="underline">
-                      {getNode(d)?.title}
+                    <Link href={`/learn/${d}`} className="hover:text-[var(--accent)]">
+                      §{sectionNumber(d)} {getNode(d)?.title}
                     </Link>
                   </li>
                 ))}
               </ul>
             </div>
           )}
-        </aside>
-      </div>
-    </>
+          <div className="space-y-1">
+            <p className="tb-label">Chapter {chapterNumber(at.unit)}</p>
+            {at.unit.nodes.map((n) => (
+              <Link key={n.id} href={`/learn/${n.id}`} className={`block ${n.id === node.id ? "font-medium text-[var(--fg)]" : "text-[var(--muted)] hover:text-[var(--fg)]"}`}>
+                §{sectionNumber(n.id)} {n.title}
+              </Link>
+            ))}
+          </div>
+          {prev && (
+            <Link href={`/learn/${prev.id}`} className="block text-[var(--muted)] hover:text-[var(--fg)]">
+              ← §{sectionNumber(prev.id)} {prev.title}
+            </Link>
+          )}
+        </div>
+      </aside>
+    </div>
   );
 }

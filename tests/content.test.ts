@@ -6,7 +6,7 @@ import type { ConceptNode, Item } from "@/lib/content/types";
 function itemsOf(n: ConceptNode): Item[] {
   return [
     ...n.steps.flatMap((s) =>
-      s.type === "check" ? [s.item] : s.type === "predict" ? [s.item, s.resolve] : s.type === "produce" ? s.items : [],
+      s.type === "check" ? [s.item] : s.type === "predict" ? [s.item, s.resolve] : s.type === "produce" ? s.items : s.type === "exercises" ? s.items.map((e) => e.item) : [],
     ),
     ...n.review,
   ];
@@ -129,4 +129,26 @@ it("'I'm not sure' grades as not-known, never as a misconception", () => {
   if (item.type !== "check") throw new Error();
   const r = grade(item.item, { kind: "mc", optionId: "idk" });
   expect([r.status, r.misconception, r.correctOptionId]).toEqual(["wrong", null, "a"]);
+});
+
+describe.each(allNodes.map((n) => [n.id, n] as const))("textbook blocks in %s", (_id, node) => {
+  it("worked examples have a multi-step solution and a stated result", () => {
+    for (const s of node.steps)
+      if (s.type === "example") {
+        expect(s.solution.length, s.problem).toBeGreaterThanOrEqual(2);
+        expect(s.result.trim().length, s.problem).toBeGreaterThan(0);
+      }
+  });
+  it("every exercise has a worked solution and a valid level", () => {
+    for (const s of node.steps)
+      if (s.type === "exercises")
+        for (const e of s.items) {
+          expect(e.solution.length, e.item.id).toBeGreaterThanOrEqual(1);
+          expect([1, 2, 3]).toContain(e.level);
+          expect(findItem(node, e.item.id)?.context, e.item.id).toBe("exercise");
+        }
+  });
+  it("theorems with proofs have non-empty proof steps", () => {
+    for (const s of node.steps) if (s.type === "theorem" && s.proof) expect(s.proof.every((p) => p.trim().length > 0)).toBe(true);
+  });
 });

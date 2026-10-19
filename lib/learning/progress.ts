@@ -1,7 +1,7 @@
 import "server-only";
 import type { NodeProgress, Prisma } from "@prisma/client";
 import { prisma } from "@/lib/db";
-import { allNodes, getNode, targets } from "@/lib/content";
+import { allNodes, getNode, targets, exerciseSolution } from "@/lib/content";
 import { resolveItem } from "@/lib/content/custom";
 import { grade, type Grade, type Response } from "@/lib/check";
 import { apply, FRESH, isDue, isUnlocked, localDay, nextStreak, PRACTICE_STREAK, XP, type LearningEvent, type Progress, type Status } from "./rules";
@@ -56,6 +56,8 @@ export async function markOpened(userId: string, nodeId: string): Promise<void> 
 export type GradeResult = Grade & {
   status_after: Status;
   xpGained: number;
+  /** Exercises only: the full worked solution, released once the student has attempted it. */
+  solution?: string[];
   /** Practice only: correct answers in a row on this concept, and whether this answer mastered it. */
   practiceStreak?: number;
   mastered?: boolean;
@@ -150,6 +152,7 @@ export async function submitAnswer(args: {
       case "review":
         event = { type: "review", correct };
         break;
+      case "exercise":
       case "practice": {
         // A wrong answer that springs a trap reveals a held misconception (never demotes a solid concept).
         if (!correct && result.misconception && before.status !== "SOLID") {
@@ -208,6 +211,7 @@ export async function submitAnswer(args: {
       data: { xp: { increment: xpGained }, lastActiveOn: today, streakDays: nextStreak(user.lastActiveOn, today, user.streakDays) },
     });
 
-    return { ...result, status_after: after.status, xpGained, practiceStreak, mastered };
+    const solution = found.context === "exercise" ? (exerciseSolution(node, args.itemId) ?? undefined) : undefined;
+    return { ...result, status_after: after.status, xpGained, practiceStreak, mastered, solution };
   });
 }

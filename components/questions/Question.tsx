@@ -225,7 +225,7 @@ export function Question({ nodeId, item, retry = false, hideWhy = false, tutor =
             <div className="mt-2 flex flex-wrap gap-4 text-sm">
               {tutor && !hint?.text && (
                 <button type="button" className="underline" disabled={hint?.loading} onClick={getHint}>
-                  {hint?.loading ? "Thinking…" : "💡 Ask the tutor for a hint"}
+                  {hint?.loading ? "Thinking…" : "Ask the tutor for a hint"}
                 </button>
               )}
               {misses >= 2 && !showSolution && (
@@ -243,6 +243,23 @@ export function Question({ nodeId, item, retry = false, hideWhy = false, tutor =
           )}
           {hint?.error && <p className="mt-2 text-sm">{hint.error}</p>}
         </div>
+      )}
+      {result?.solution && (result.status === "correct" || showSolution) && (
+        <div className="solution">
+          <p className="solution-label">Solution</p>
+          <ol>
+            {result.solution.map((s, i) => (
+              <li key={i}>
+                <MathText text={s} />
+              </li>
+            ))}
+          </ol>
+        </div>
+      )}
+      {result?.solution && result.status === "wrong" && !showSolution && (
+        <button type="button" className="text-sm underline underline-offset-4 text-[var(--muted)] hover:text-[var(--fg)]" onClick={() => setShowSolution(true)}>
+          Show the full solution
+        </button>
       )}
     </div>
   );

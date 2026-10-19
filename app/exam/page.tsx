@@ -22,7 +22,7 @@ export default async function ExamHome() {
 
       <section className="card flex flex-wrap items-center justify-between gap-4">
         <div>
-          <h2 className="text-xl font-bold">🎓 Mock exam</h2>
+          <h2 className="text-xl font-bold">Mock exam</h2>
           <p className="text-sm text-[var(--muted)]">20 questions across everything you&rsquo;ve learned, weighted towards your weakest concepts. Hard level.</p>
         </div>
         {learned >= 3 ? (
@@ -47,7 +47,7 @@ export default async function ExamHome() {
                 {open > 0 ? (
                   <Link href={`/exam/${u.id}`} className="btn-ghost">Take the test</Link>
                 ) : (
-                  <p className="text-sm text-[var(--muted)]">🔒 Unlock a concept first</p>
+                  <p className="text-sm text-[var(--muted)]">Unlock a concept first</p>
                 )}
               </div>
             );

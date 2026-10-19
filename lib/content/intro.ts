@@ -150,3 +150,53 @@ export function introFor(node: ConceptNode): IntroSpec {
   }
   return { kind: "lattice" };
 }
+
+/** Caption for a section's opening figure, in textbook voice. */
+export function introCaption(spec: IntroSpec): string {
+  switch (spec.kind) {
+    case "vectors":
+      return spec.op === "span"
+        ? "Every combination $a\vec v + b\vec w$ of two vectors. Independent vectors fill the plane; parallel ones collapse to a line."
+        : spec.op === "add"
+          ? "Vector addition, tip to tail: the sum is the single movement that does both."
+          : spec.op === "scale"
+            ? "Scalar multiplication stretches a vector along its own line; a negative scalar reverses it."
+            : spec.op === "combo"
+              ? "A linear combination: scale each vector, then add tip to tail."
+              : "A vector as a movement: so many units across, so many up.";
+    case "plane":
+      if (spec.then) return `${spec.firstName ?? "The first matrix"} acts on the plane, then ${spec.thenName ?? "the second"}. The composite is a single matrix.`;
+      if (spec.eigen) return "The matrix acting on the plane. Along the highlighted lines vectors are only stretched: these are the eigenvector directions.";
+      if (spec.target) return "Solving $A\vec x = \vec b$: the input $\vec x$ is moved until its image lands on the target $\vec b$.";
+      if (spec.area) return "The unit square under the matrix. Its area becomes $|\det A|$; a negative determinant also flips orientation.";
+      return "The matrix acting on the plane: the columns are where $\hat\imath$ and $\hat\jmath$ land, and every grid line follows.";
+    case "lattice":
+      return "A $3\times3$ matrix acting on a lattice of 4,096 points. The gold line is an eigenvector direction: points on it stay on it.";
+    case "cloud":
+      return spec.flatten ? "A cloud of data, its principal axes, and its projection onto the plane of the two largest." : "Two variables with increasing correlation: the cloud tilts and narrows along the line of best fit.";
+    case "bars":
+      return "A distribution built up one observation at a time; the readout shows its summary statistics.";
+    case "bell":
+      return "The standard normal curve with both tails beyond $\pm z$ shaded: their area is the two-sided p-value.";
+    case "intervals":
+      return "Forty 95% confidence intervals from forty samples. The gold line is the true mean; intervals that miss it are marked.";
+    case "people":
+      return "One thousand people, each a column of points. The readout gives the counts behind each probability.";
+    case "scatter":
+      return spec.fit === "wiggle"
+        ? "An interpolating polynomial through every point against a low-degree fit: training error and error on new data compared."
+        : spec.fit === "simpson"
+          ? "Two groups with the same downward trend inside each, and an upward trend when pooled (Simpson's paradox)."
+          : spec.fit === "plane"
+            ? "A least-squares plane through data with two features; vertical segments are residuals."
+            : "The least-squares line, with each residual drawn as a square: the line minimises their total area.";
+    case "curve":
+      return "Secant lines through $a$ and $a+h$ as $h \to 0$; their slopes converge to the derivative $f'(a)$.";
+    case "surface":
+      return "A loss surface and a gradient-descent path on it; each step moves against the gradient.";
+    case "network":
+      return spec.train ? "A small network: activations flow forward, then gradients flow back to every weight." : "A small network: each layer is a matrix followed by a nonlinearity.";
+    case "threshold":
+      return "Classifier scores for positives and negatives with a moving threshold; the readout gives precision and recall at each threshold.";
+  }
+}

@@ -22,7 +22,7 @@ const ACTS: Act[] = [
     title: "Eigen",
     body: (
       <>
-        The mathematics of machine learning, <span className="text-white">made visible.</span>
+        Exam-level mathematics, from first principles to the hardest problems. <span className="text-white">Made visible.</span>
       </>
     ),
     height: 170,

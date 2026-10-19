@@ -26,7 +26,7 @@ export function getNode(id: string): ConceptNode | undefined {
 }
 
 /** Where an item sits, so grading knows which progress rule applies. */
-export type ItemContext = "check" | "predict" | "resolve" | "produce" | "review" | "practice";
+export type ItemContext = "check" | "predict" | "resolve" | "produce" | "review" | "practice" | "exercise";
 
 export function findItem(node: ConceptNode, itemId: string): { item: Item; context: ItemContext; misconception?: string } | null {
   if (itemId.startsWith("gen~")) {
@@ -42,6 +42,10 @@ export function findItem(node: ConceptNode, itemId: string): { item: Item; conte
     if (step.type === "produce") {
       const item = step.items.find((i) => i.id === itemId);
       if (item) return { item, context: "produce" };
+    }
+    if (step.type === "exercises") {
+      const ex = step.items.find((e) => e.item.id === itemId);
+      if (ex) return { item: ex.item, context: "exercise" };
     }
   }
   const item = node.review.find((i) => i.id === itemId);
@@ -113,7 +117,7 @@ function publicItemBody(item: Item): PublicItem {
 const pubMc = (i: McItem) => publicItem(i) as Extract<PublicItem, { kind: "mc" }>;
 
 export type PublicStep =
-  | Exclude<Step, { type: "check" } | { type: "predict" } | { type: "produce" }>
+  | Exclude<Step, { type: "check" } | { type: "predict" } | { type: "produce" } | { type: "exercises" }>
   | { type: "check"; item: Extract<PublicItem, { kind: "mc" }> }
   | {
       type: "predict";
@@ -121,7 +125,14 @@ export type PublicStep =
       reveal: Extract<Step, { type: "predict" }>["reveal"];
       resolve: Extract<PublicItem, { kind: "mc" }>;
     }
-  | { type: "produce"; body: string; items: PublicItem[] };
+  | { type: "produce"; body: string; items: PublicItem[] }
+  | { type: "exercises"; items: { level: 1 | 2 | 3; item: PublicItem }[] };
+
+/** The worked solution of an exercise: sent only after the student has attempted it. */
+export function exerciseSolution(node: ConceptNode, itemId: string): string[] | null {
+  for (const s of node.steps) if (s.type === "exercises") for (const e of s.items) if (e.item.id === itemId) return e.solution;
+  return null;
+}
 
 export function publicSteps(node: ConceptNode): PublicStep[] {
   return node.steps.map((s): PublicStep => {
@@ -132,6 +143,8 @@ export function publicSteps(node: ConceptNode): PublicStep[] {
         return { type: "predict", item: pubMc(s.item), reveal: s.reveal, resolve: pubMc(s.resolve) };
       case "produce":
         return { type: "produce", body: s.body, items: s.items.map(publicItem) };
+      case "exercises":
+        return { type: "exercises", items: s.items.map((e) => ({ level: e.level, item: publicItem(e.item) })) };
       default:
         return s;
     }

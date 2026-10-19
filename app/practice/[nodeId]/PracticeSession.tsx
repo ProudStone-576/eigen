@@ -59,7 +59,7 @@ export function PracticeSession({ nodeId, title, alreadySolid, tutor, need }: { 
 
       {justMastered && (
         <div className="feedback feedback-ok">
-          <p className="font-semibold">🎉 {title} is solid.</p>
+          <p className="font-semibold">{title} is solid.</p>
           <p className="text-sm">{need} in a row on questions you&rsquo;d never seen. It&rsquo;s in your review queue now. Keep going to lock it in, or head back.</p>
           <Link href="/learn" className="underline text-sm">Back to the map</Link>
         </div>

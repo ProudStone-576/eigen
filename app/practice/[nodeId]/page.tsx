@@ -21,7 +21,6 @@ export default async function PracticePage({ params }: { params: Promise<{ nodeI
   if (!unlocked(node.id, progress)) {
     return (
       <div className="card max-w-lg mx-auto text-center space-y-4">
-        <p className="text-4xl">🔒</p>
         <p>Land the concepts this builds on first.</p>
         <Link href="/learn" className="btn">Back to the map</Link>
       </div>

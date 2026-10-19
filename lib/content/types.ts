@@ -135,7 +135,20 @@ export type Widget =
 
 // ---------- Lesson steps ----------
 
+/** Difficulty ladder for worked examples and exercises: I ≈ SAT / school boards, II ≈ JEE Main, III ≈ JEE Advanced. */
+export type Level = 1 | 2 | 3;
+
+/** An exam-style problem with a full worked solution (released only after an attempt). */
+export type Exercise = { level: Level; item: Item; solution: string[] };
+
 export type Step =
+  /** Textbook blocks, numbered and read like a book. */
+  | { type: "definition"; term: string; body: string }
+  | { type: "theorem"; kind?: "Theorem" | "Proposition" | "Corollary" | "Lemma" | "Formula" | "Rule"; name?: string; statement: string; proof?: string[] }
+  | { type: "example"; level: Level; title?: string; problem: string; solution: string[]; result: string }
+  | { type: "pitfalls"; items: { wrong: string; right: string }[] }
+  | { type: "formulas"; title?: string; rows: { label: string; tex: string }[] }
+  | { type: "exercises"; items: Exercise[] }
   | { type: "motivate"; title: string; body: string; realWorld: { title: string; body: string } }
   | { type: "explore"; title: string; body: string; widget: Widget; task: string }
   | { type: "truth"; statement: string; body: string }

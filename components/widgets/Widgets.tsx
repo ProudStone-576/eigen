@@ -445,7 +445,7 @@ function SolveWidget({ matrix, target, start }: { matrix: Mat; target: Vec; star
             Drag the <span className="text-[var(--a)] font-semibold">blue input</span> until the{" "}
             <span className="text-[var(--v)] font-semibold">yellow output</span> lands in the green ring at <Tex src={col(target)} />.
           </p>
-          {hit && <p className="feedback feedback-ok font-semibold">🎯 Hit! The input was <Tex src={col(x)} />.</p>}
+          {hit && <p className="feedback feedback-ok font-semibold">Hit! The input was <Tex src={col(x)} />.</p>}
         </>
       }
     />
@@ -489,7 +489,7 @@ function EigenWidget({ matrix, start }: { matrix: Mat; start: Vec }) {
           </p>
           {onLine ? (
             <p className="feedback feedback-ok font-semibold">
-              🎯 Av stayed on v&rsquo;s line: an eigenvector! <Tex src={`\\lambda \\approx ${fmt(Math.round(lambda * 100) / 100)}`} />
+              Av stayed on v&rsquo;s line: an eigenvector! <Tex src={`\\lambda \\approx ${fmt(Math.round(lambda * 100) / 100)}`} />
             </p>
           ) : (
             <p className="text-sm text-[var(--muted)]">Drag v around. Watch for the moment the yellow arrow lands on the dashed line.</p>
@@ -555,7 +555,7 @@ function SpreadWidget({ points }: { points: Vec[] }) {
           </div>
           {found ? (
             <p className="feedback feedback-ok text-sm">
-              🎯 Maximum spread: the first principal component. Its spread {r2(lambda1)} is the covariance matrix&rsquo;s biggest eigenvalue; the
+              Maximum spread: the first principal component. Its spread {r2(lambda1)} is the covariance matrix&rsquo;s biggest eigenvalue; the
               perpendicular direction keeps the rest, {r2(lambda2)}.
             </p>
           ) : (

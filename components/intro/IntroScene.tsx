@@ -10,7 +10,7 @@ export type IntroState = { p: number; visible: boolean };
 const MAX_ARROWS = 8;
 const MAX_LINES = 900;
 
-export default function IntroScene({ spec, state, hudId }: { spec: IntroSpec; state: MutableRefObject<IntroState>; hudId: string }) {
+export default function IntroScene({ spec, state, hudId, framing = "side" }: { spec: IntroSpec; state: MutableRefObject<IntroState>; hudId: string; framing?: "side" | "center" }) {
   const host = useRef<HTMLDivElement>(null);
   const specKey = JSON.stringify(spec);
 
@@ -121,7 +121,8 @@ export default function IntroScene({ spec, state, hudId }: { spec: IntroSpec; st
       camera.lookAt(0, 0, 0);
       parts.uniforms.uDist.value = dist;
       // Object to the right of the text on wide screens; above it on phones.
-      if (W / H >= 1.1) camera.setViewOffset(W, H, -0.2 * W, 0, W, H);
+      if (framing === "center") camera.clearViewOffset();
+      else if (W / H >= 1.1) camera.setViewOffset(W, H, -0.2 * W, 0, W, H);
       else camera.setViewOffset(W, H, 0, 0.2 * H, W, H);
 
       if (hud && frame % 4 === 0 && hud.textContent !== f.hud) hud.textContent = f.hud;
@@ -137,7 +138,7 @@ export default function IntroScene({ spec, state, hudId }: { spec: IntroSpec; st
       renderer.dispose();
       renderer.domElement.remove();
     };
-  }, [specKey, state, hudId]);
+  }, [specKey, state, hudId, framing]);
 
   return <div ref={host} className="absolute inset-0" style={{ touchAction: "pan-y" }} aria-hidden />;
 }

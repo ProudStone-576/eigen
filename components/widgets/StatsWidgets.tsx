@@ -284,7 +284,7 @@ export function LikelihoodWidget({ heads, flips }: { heads: number; flips: numbe
         Data: <strong>{heads}</strong> heads in <strong>{flips}</strong> flips. Likelihood <Tex src={`p^{${heads}}(1-p)^{${flips - heads}}`} /> at p = {fmt(p)}:{" "}
         <strong>{atPeak ? "the maximum" : `${pct(rel(p), 0)} of the maximum`}</strong>
       </p>
-      {atPeak && <p className="feedback feedback-ok text-sm">🎯 The peak: p = {fmt(best)}, exactly heads ÷ flips.</p>}
+      {atPeak && <p className="feedback feedback-ok text-sm">The peak: p = {fmt(best)}, exactly heads ÷ flips.</p>}
     </Box>
   );
 }
@@ -413,7 +413,7 @@ export function FitLineWidget({ points }: { points: Vec[] }) {
       </p>
       {found && (
         <p className="feedback feedback-ok text-sm">
-          🎯 That&rsquo;s the least-squares line: w ≈ {fmt(wBest)}, b ≈ {fmt(bBest)}.
+          That&rsquo;s the least-squares line: w ≈ {fmt(wBest)}, b ≈ {fmt(bBest)}.
         </p>
       )}
     </Box>

@@ -17,6 +17,12 @@ function texts(item: Item): string[] {
 function stepTexts(node: ConceptNode): string[] {
   const out: string[] = [node.summary, ...node.glossary.map((g) => g.meaning)];
   for (const s of node.steps) {
+    if (s.type === "definition") out.push(s.term, s.body);
+    if (s.type === "theorem") out.push(s.statement, ...(s.proof ?? []), s.name ?? "");
+    if (s.type === "example") out.push(s.problem, ...s.solution, s.result, s.title ?? "");
+    if (s.type === "pitfalls") out.push(...s.items.flatMap((p) => [p.wrong, p.right]));
+    if (s.type === "formulas") out.push(...s.rows.flatMap((r) => [r.label, `$${r.tex}$`]));
+    if (s.type === "exercises") out.push(...s.items.flatMap((e) => [...texts(e.item), ...e.solution]));
     if (s.type === "motivate") out.push(s.body, s.realWorld.body);
     if (s.type === "explore") out.push(s.body, s.task);
     if (s.type === "truth") out.push(s.statement, s.body);
@@ -31,13 +37,15 @@ function stepTexts(node: ConceptNode): string[] {
 
 function checkMath(text: string, where: string) {
   // Control characters mean a single backslash got eaten in a JS string (\v, \t, \b, \f…).
-  expect(/[\u0000-\u0008\u000b\u000c\u000e-\u001f]/.test(text), `${where}: control character in ${JSON.stringify(text)}`).toBe(false);
+  // Tabs count too: "\theta" in a plain JS string is a tab followed by "heta".
+  expect(/[\u0000-\u0009\u000b\u000c\u000e-\u001f]/.test(text), `${where}: control character in ${JSON.stringify(text)}`).toBe(false);
   // A stray "$" (a price written without \$) silently swallows prose into maths.
   const plain = text.replace(/\\\$/g, "");
   expect((plain.match(/\$/g) ?? []).length % 2, `${where}: unbalanced $ in ${JSON.stringify(text)}`).toBe(0);
   for (const m of plain.matchAll(/\$\$([\s\S]+?)\$\$|\$([^$]+?)\$/g)) {
     const words = (m[1] ?? m[2]).replace(/\\(text|mathrm|operatorname|begin|end)\{[^}]*\}/g, "").replace(/\\[a-zA-Z]+/g, "");
-    expect(/[a-zA-Z]{4,}/.test(words), `${where}: prose inside maths: ${m[0]}`).toBe(false);
+    // Lowercase only: vertex names such as ABCD are legitimate maths.
+    expect(/[a-z]{4,}/.test(words), `${where}: prose inside maths: ${m[0]}`).toBe(false);
   }
   for (const m of plain.matchAll(/\$\$([\s\S]+?)\$\$|\$([^$]+?)\$/g)) {
     const src = m[1] ?? m[2];

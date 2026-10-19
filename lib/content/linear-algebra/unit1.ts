@@ -1,4 +1,6 @@
 import type { ConceptNode, Unit } from "@/lib/content/types";
+import { deepen } from "../deepen";
+import { UNIT1_DEPTH } from "./unit1.depth";
 
 // LaTeX helpers. Column vector and 2x2 matrix.
 const v = (x: number | string, y: number | string) => `\\begin{bmatrix}${x}\\\\${y}\\end{bmatrix}`;
@@ -848,5 +850,5 @@ export const unit1: Unit = {
   track: "Linear algebra",
   title: "Vectors & Linear Transformations",
   blurb: "From arrows to matrices that move the whole plane: the language every ML model is written in.",
-  nodes: [vector, vectorAdd, scalar, linearCombination, basis, matrixTransform, matrixVector, composition],
+  nodes: [vector, vectorAdd, scalar, linearCombination, basis, matrixTransform, matrixVector, composition].map((n) => deepen(n, UNIT1_DEPTH[n.id])),
 };
