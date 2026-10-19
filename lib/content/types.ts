@@ -107,7 +107,11 @@ export type Widget =
   /** Contours of f(x, y) = x² + 2y² with a draggable point and its gradient. */
   | { kind: "gradient2d"; start: Vec }
   /** Gradient descent on L(w) = (w − 3)² + 1 with a learning-rate slider. */
-  | { kind: "descent"; eta: number; start: number };
+  | { kind: "descent"; eta: number; start: number }
+  /** One neuron: two inputs, weights, bias, activation. */
+  | { kind: "neuron" }
+  /** Train a 2 → hidden → 1 network in the browser and watch its decision boundary. */
+  | { kind: "playground"; dataset: "circle" | "xor"; hidden: number; activation: "tanh" | "linear" };
 
 // ---------- Lesson steps ----------
 

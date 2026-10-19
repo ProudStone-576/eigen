@@ -602,6 +602,80 @@ export const GENERATORS: Record<string, Gen[]> = {
       };
     },
   ],
+
+  // ---------- Neural networks ----------
+  neuron: [
+    (r) => {
+      const w = [r.int(-3, 3), r.int(-3, 3)];
+      const x = [r.int(-3, 3), r.int(-3, 3)];
+      const b = r.nonzero(-4, 4);
+      const z = w[0] * x[0] + w[1] * x[1] + b;
+      return mcNumbers(
+        `$\vec w = ${v(w[0], w[1])}$, $\vec x = ${v(x[0], x[1])}$, $b = ${b}$. What is $z = \vec w\cdot\vec x + b$?`,
+        { text: String(z), why: `${par(w[0])}·${par(x[0])} + ${par(w[1])}·${par(x[1])} + ${par(b)} = ${z}.` },
+        [{ text: String(z - b), why: "Don't forget the bias.", misconception: "forget-bias" }],
+      );
+    },
+  ],
+  activation: [
+    (r) => {
+      const z = r.pick([-6, -4, -2.5, -1, -0.5, 1.5, 3, 5]);
+      const relu = Math.max(0, z);
+      return mcNumbers(`ReLU(${z}) = ?`, { text: String(relu), why: z < 0 ? "Negatives become 0." : "Positives pass unchanged." }, [
+        { text: String(z), why: "ReLU blocks negatives.", misconception: "relu-passes-negatives" },
+        { text: String(Math.abs(z)), why: "ReLU isn't the absolute value.", misconception: "relu-abs" },
+      ]);
+    },
+  ],
+  layer: [
+    (r) => {
+      const mm = r.int(2, 9);
+      let n = r.int(2, 9);
+      if (n === mm) n = mm + 1;
+      return mcNumbers(`A layer has ${mm} neurons reading ${n} inputs. What shape is its weight matrix W?`, { text: `${mm} × ${n}`, why: "One row per neuron, one column per input." }, [
+        { text: `${n} × ${mm}`, why: "Rows are neurons, columns are inputs.", misconception: "shape-flip" },
+      ]);
+    },
+  ],
+  "forward-pass": [
+    (r) => {
+      const z = [r.int(-4, 4), r.int(-4, 4)];
+      const w = [r.nonzero(1, 3), r.nonzero(1, 3)];
+      const b = r.int(-2, 2);
+      const h = z.map((x) => Math.max(0, x));
+      const y = w[0] * h[0] + w[1] * h[1] + b;
+      const skip = w[0] * z[0] + w[1] * z[1] + b;
+      return mcNumbers(
+        `A hidden layer's pre-activation is $${v(z[0], z[1])}$. Apply ReLU, then $\hat y = ${w[0]}h_1 + ${w[1]}h_2 ${b < 0 ? "-" : "+"} ${Math.abs(b)}$. What is $\hat y$?`,
+        { text: String(y), why: `h = (${h[0]}, ${h[1]}); ŷ = ${y}.` },
+        [{ text: String(skip), why: "That skipped the ReLU.", misconception: "skip-activation" }],
+      );
+    },
+  ],
+  "training-loop": [
+    (r) => {
+      const batch = r.pick([10, 20, 25, 50, 100]);
+      const steps = r.int(2, 40);
+      const epochs = r.int(1, 5);
+      return {
+        kind: "number", id: "", answer: steps * epochs,
+        prompt: `${batch * steps} training examples, batch size ${batch}. How many gradient steps in ${epochs} epoch${epochs > 1 ? "s" : ""}?`,
+        explain: `${steps} steps per epoch × ${epochs}.`,
+      };
+    },
+  ],
+  "train-network": [
+    (r) => {
+      const i = r.int(2, 6);
+      const h = r.int(2, 12);
+      const o = r.int(1, 4);
+      return {
+        kind: "number", id: "", answer: i * h + h + h * o + o,
+        prompt: `How many parameters (weights and biases) does a ${i} → ${h} → ${o} network have?`,
+        explain: `${i}·${h} + ${h} = ${i * h + h}, then ${h}·${o} + ${o} = ${h * o + o}.`,
+      };
+    },
+  ],
 };
 
 export function generatedId(nodeId: string, gen: number, seed: number) {

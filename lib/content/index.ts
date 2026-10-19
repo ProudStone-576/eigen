@@ -5,12 +5,13 @@ import { unit3 } from "./linear-algebra/unit3";
 import { unit4 } from "./statistics/unit4";
 import { unit5 } from "./statistics/unit5";
 import { unit6 } from "./calculus/unit6";
+import { unit7 } from "./networks/unit7";
 import { fromGeneratedId } from "./generators";
 
 export const course: Course = {
   id: "math-for-ml",
   title: "Math for Machine Learning",
-  units: [unit1, unit2, unit3, unit4, unit5, unit6],
+  units: [unit1, unit2, unit3, unit4, unit5, unit6, unit7],
 };
 
 export const allNodes: ConceptNode[] = course.units.flatMap((u) => u.nodes);
