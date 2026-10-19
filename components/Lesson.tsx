@@ -27,7 +27,7 @@ const STATUS_COPY: Record<Status, { title: string; body: string }> = {
   UNKNOWN: { title: "Not started", body: "" },
 };
 
-function StepView({ nodeId, step, onDone }: { nodeId: string; step: PublicStep; onDone: (g?: Graded) => void }) {
+function StepView({ nodeId, step, tutor, onDone }: { nodeId: string; step: PublicStep; tutor: boolean; onDone: (g?: Graded) => void }) {
   const [predicted, setPredicted] = useState(false);
   const [producedOk, setProducedOk] = useState<Record<string, boolean>>({});
 
@@ -109,6 +109,7 @@ function StepView({ nodeId, step, onDone }: { nodeId: string; step: PublicStep; 
                 nodeId={nodeId}
                 item={item}
                 retry
+                tutor={tutor}
                 onGraded={(g) => {
                   if (g.status !== "correct") return;
                   const next = { ...producedOk, [item.id]: true };
@@ -125,7 +126,7 @@ function StepView({ nodeId, step, onDone }: { nodeId: string; step: PublicStep; 
 
 const needsAnswer = (s: PublicStep) => s.type === "check" || s.type === "predict" || s.type === "produce";
 
-export function Lesson({ nodeId, title, steps, initialStatus, nextNode }: { nodeId: string; title: string; steps: PublicStep[]; initialStatus: Status; nextNode: { id: string; title: string } | null }) {
+export function Lesson({ nodeId, title, steps, initialStatus, nextNode, tutor = false }: { nodeId: string; title: string; steps: PublicStep[]; initialStatus: Status; nextNode: { id: string; title: string } | null; tutor?: boolean }) {
   const [index, setIndex] = useState(0);
   const [done, setDone] = useState<Record<number, boolean>>({});
   const [status, setStatus] = useState<Status>(initialStatus);
@@ -184,6 +185,7 @@ export function Lesson({ nodeId, title, steps, initialStatus, nextNode }: { node
           key={index}
           nodeId={nodeId}
           step={step}
+          tutor={tutor}
           onDone={(g) => {
             setDone((d) => ({ ...d, [index]: true }));
             if (g) setStatus(g.status_after);

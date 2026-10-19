@@ -1,10 +1,11 @@
 import type { ConceptNode, Course, Item, McItem, Step } from "./types";
 import { unit1 } from "./linear-algebra/unit1";
+import { unit2 } from "./linear-algebra/unit2";
 
 export const course: Course = {
   id: "math-for-ml",
   title: "Math for Machine Learning",
-  units: [unit1],
+  units: [unit1, unit2],
 };
 
 export const allNodes: ConceptNode[] = course.units.flatMap((u) => u.nodes);

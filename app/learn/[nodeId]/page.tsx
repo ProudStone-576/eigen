@@ -5,6 +5,7 @@ import { MathText } from "@/components/MathText";
 import { requireUser } from "@/lib/auth/session";
 import { allNodes, getNode, publicSteps } from "@/lib/content";
 import { loadProgress, markOpened, statusIn, unlocked } from "@/lib/learning/progress";
+import { tutorEnabled } from "@/lib/tutor";
 
 export async function generateMetadata({ params }: { params: Promise<{ nodeId: string }> }) {
   const node = getNode((await params).nodeId);
@@ -53,6 +54,7 @@ export default async function LessonPage({ params }: { params: Promise<{ nodeId:
         steps={publicSteps(node)}
         initialStatus={status}
         nextNode={next ? { id: next.id, title: next.title } : null}
+        tutor={tutorEnabled()}
       />
       <aside className="space-y-4 text-sm">
         <div className="card p-4!">

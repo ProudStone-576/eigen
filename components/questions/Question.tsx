@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect, useState, useTransition } from "react";
-import { answer } from "@/app/actions";
+import { answer, askHint } from "@/app/actions";
 import { MathText, renderMath } from "@/components/MathText";
 import type { PublicItem } from "@/lib/content";
 import type { Response } from "@/lib/check";
@@ -19,6 +19,8 @@ type Props = {
   retry?: boolean;
   /** Predictions: show right/wrong but not why. The student resolves the conflict first. */
   hideWhy?: boolean;
+  /** Offer the AI tutor after a wrong answer. */
+  tutor?: boolean;
   onGraded?: (g: Graded) => void;
 };
 
@@ -69,9 +71,11 @@ function Grid({ rows, cols, values, onChange, disabled }: { rows: number; cols: 
   );
 }
 
-export function Question({ nodeId, item, retry = false, hideWhy = false, onGraded }: Props) {
+export function Question({ nodeId, item, retry = false, hideWhy = false, tutor = false, onGraded }: Props) {
   const router = useRouter();
   const [pending, start] = useTransition();
+  const [lastResponse, setLastResponse] = useState<Response | null>(null);
+  const [hint, setHint] = useState<{ text?: string; error?: string; loading?: boolean } | null>(null);
   const [result, setResult] = useState<Graded | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [chosen, setChosen] = useState<string | null>(null);
@@ -88,8 +92,17 @@ export function Question({ nodeId, item, retry = false, hideWhy = false, onGrade
 
   const locked = !!result && (result.status === "correct" || (result.status === "wrong" && !retry));
 
+  async function getHint() {
+    if (!lastResponse) return;
+    setHint({ loading: true });
+    const r = await askHint({ nodeId, itemId: item.id, response: lastResponse });
+    setHint("hint" in r ? { text: r.hint } : { error: r.error });
+  }
+
   function submit(response: Response) {
     setError(null);
+    setLastResponse(response);
+    setHint(null);
     start(async () => {
       const r = await answer({ nodeId, itemId: item.id, response, timeZone: tz() });
       if ("error" in r) return setError(r.error);
@@ -205,11 +218,27 @@ export function Question({ nodeId, item, retry = false, hideWhy = false, onGrade
           {item.kind !== "mc" && result.explain && (result.status === "correct" || !retry || showSolution) && (
             <MathText as="p" text={result.explain} className="mt-1" />
           )}
-          {retry && result.status === "wrong" && misses >= 2 && !showSolution && (
-            <button type="button" className="mt-2 text-sm underline" onClick={() => setShowSolution(true)}>
-              Show the solution
-            </button>
+          {retry && result.status === "wrong" && (
+            <div className="mt-2 flex flex-wrap gap-4 text-sm">
+              {tutor && !hint?.text && (
+                <button type="button" className="underline" disabled={hint?.loading} onClick={getHint}>
+                  {hint?.loading ? "Thinking…" : "💡 Ask the tutor for a hint"}
+                </button>
+              )}
+              {misses >= 2 && !showSolution && (
+                <button type="button" className="underline" onClick={() => setShowSolution(true)}>
+                  Show the solution
+                </button>
+              )}
+            </div>
           )}
+          {hint?.text && (
+            <div className="mt-3 rounded-lg border border-[var(--border)] bg-[var(--surface)] p-3 text-[var(--fg)]">
+              <p className="text-xs font-semibold uppercase tracking-wide text-[var(--accent)]">Tutor</p>
+              <MathText as="p" text={hint.text} className="mt-1" />
+            </div>
+          )}
+          {hint?.error && <p className="mt-2 text-sm">{hint.error}</p>}
         </div>
       )}
     </div>

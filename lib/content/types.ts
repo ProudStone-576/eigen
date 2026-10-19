@@ -78,8 +78,10 @@ export type Widget =
   | { kind: "vector-add"; a: Vec; b: Vec }
   | { kind: "scale"; v: Vec; k: number }
   | { kind: "combo"; v: Vec; w: Vec; a: number; b: number }
-  | { kind: "transform"; matrix: Mat; showVector?: Vec; lockMatrix?: boolean }
-  | { kind: "compose"; first: Mat; second: Mat };
+  | { kind: "transform"; matrix: Mat; showVector?: Vec; lockMatrix?: boolean; showArea?: boolean }
+  | { kind: "compose"; first: Mat; second: Mat; firstName?: string; secondName?: string }
+  /** Drag the input until A·x hits the target: solving A x = b by hand. */
+  | { kind: "solve"; matrix: Mat; target: Vec; start: Vec };
 
 // ---------- Lesson steps ----------
 

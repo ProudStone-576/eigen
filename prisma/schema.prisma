@@ -38,6 +38,19 @@ model User {
   sessions     Session[]
   progress     NodeProgress[]
   attempts     Attempt[]
+  hints        Hint[]
+}
+
+/// One row per AI tutor hint. Used for the daily cap and for seeing where students get stuck.
+model Hint {
+  id        String   @id @default(cuid())
+  userId    String
+  nodeId    String
+  itemId    String
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, createdAt])
 }
 
 model Session {

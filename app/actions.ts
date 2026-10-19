@@ -7,6 +7,7 @@ import { hashPassword, verifyPassword } from "@/lib/auth/password";
 import { createSession, currentUser, destroySession } from "@/lib/auth/session";
 import { submitAnswer, type GradeResult } from "@/lib/learning/progress";
 import type { Response } from "@/lib/check";
+import { hintFor, type HintResult } from "@/lib/tutor";
 
 export type FormState = { error: string | null };
 
@@ -63,6 +64,14 @@ const responseSchema: z.ZodType<Response> = z.discriminatedUnion("kind", [
   z.object({ kind: z.literal("vector"), values: z.array(cell).max(10) }),
   z.object({ kind: z.literal("matrix"), values: z.array(z.array(cell).max(10)).max(10) }),
 ]);
+
+export async function askHint(input: { nodeId: string; itemId: string; response: Response }): Promise<HintResult> {
+  const user = await currentUser();
+  if (!user) return { error: "Your session ended. Log in again." };
+  const response = responseSchema.safeParse(input.response);
+  if (!response.success) return { error: "That answer couldn't be read." };
+  return hintFor({ userId: user.id, nodeId: String(input.nodeId), itemId: String(input.itemId), response: response.data });
+}
 
 export async function answer(input: {
   nodeId: string;

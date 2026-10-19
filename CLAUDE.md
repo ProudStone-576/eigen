@@ -10,7 +10,10 @@ Next.js 16 (App Router) + Prisma 6.19 + Neon Postgres. Invite-only student accou
 - `lib/check/` — answer checking. Expressions are compared by evaluating at many random bindings (method studied from Khan Academy Perseus, MIT; spec in `../reverse engineer/docs/spec/perseus-answer-checking.md`). Numbers, vectors, matrices cellwise. `traps` / wrong `forms` catch specific misconceptions.
 - `lib/learning/rules.ts` — the learning system's rules (ported from `Desktop/learning/.claude/skills/teach`) as pure functions. UNKNOWN → EDGE → LANDED → SOLID; MISCONCEPTION must be dislodged. Only unaided production makes SOLID. Spaced review 1,2,4…90 days; a miss resets to 1 day and drops to EDGE.
 - `lib/learning/progress.ts` — the only write path for progress: grade → append Attempt → apply rule → XP/streak, in one transaction.
-- `components/widgets/Widgets.tsx` — interactive SVG plane: vector, vector-add, scale, combo, transform (draggable î/ĵ), compose.
+- `components/widgets/Widgets.tsx` — interactive SVG plane: vector, vector-add, scale, combo, transform (draggable î/ĵ, optional area/determinant), compose, solve (drag x until Ax hits b).
+- `lib/tutor.ts` — AI hint tutor (Claude Opus 5.5, effort low, server-side refusal fallback). Only on produce questions after a wrong answer, never reveals the answer, student input fenced as data, 40 hints/day per student (`Hint` table). Off unless `ANTHROPIC_API_KEY` is set.
+- Content: `lib/content/linear-algebra/unit1.ts` (vectors → composition), `unit2.ts` (span → solving Ax = b).
+- Live: https://eigen-green.vercel.app (Vercel project `eigen`). `/api/health` checks the DB. Set Vercel env vars with `printf '%s' "$VAL" | vercel env add` — piping from PowerShell adds a newline and breaks them.
 
 ## Rules for content
 

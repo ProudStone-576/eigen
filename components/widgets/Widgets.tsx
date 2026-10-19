@@ -12,6 +12,8 @@ const SIZE = 2 * R * U;
 
 const toPx = ([x, y]: Vec): [number, number] => [x * U, -y * U];
 const fmt = (n: number) => (Number.isInteger(n) ? String(n) : n.toFixed(2).replace(/0+$/, "").replace(/\.$/, ""));
+/** Negative numbers in brackets inside a product: (−1)·2, not −1·2. */
+const par = (n: number) => (n < 0 ? `(${fmt(n)})` : fmt(n));
 const snap = (n: number, step: number) => Math.round(n / step) * step;
 const LIMIT = Math.floor(R); // keep dragged points on whole units inside the visible grid
 const clamp = (n: number) => Math.max(-LIMIT, Math.min(LIMIT, n));
@@ -285,11 +287,18 @@ const PRESETS: { name: string; m: Mat }[] = [
   { name: "Squash flat", m: [[1, 2], [0.5, 1]] },
 ];
 
-function TransformWidget({ matrix, showVector, lockMatrix }: { matrix: Mat; showVector?: Vec; lockMatrix?: boolean }) {
+/** The unit square after the transformation: a parallelogram spanned by î and ĵ. */
+function AreaPatch({ i, j, det }: { i: Vec; j: Vec; det: number }) {
+  const pts = [[0, 0], i, [i[0] + j[0], i[1] + j[1]], j].map((p) => toPx(p as Vec).join(",")).join(" ");
+  return <polygon points={pts} fill={det < 0 ? "var(--j)" : "var(--accent)"} fillOpacity={0.22} />;
+}
+
+function TransformWidget({ matrix, showVector, lockMatrix, showArea }: { matrix: Mat; showVector?: Vec; lockMatrix?: boolean; showArea?: boolean }) {
   const [m, setM] = useState<Mat>(matrix);
   const i: Vec = [m[0][0], m[1][0]];
   const j: Vec = [m[0][1], m[1][1]];
   const out = showVector ? mul(m, showVector) : null;
+  const det = m[0][0] * m[1][1] - m[0][1] * m[1][0];
   return (
     <Panel
       plane={
@@ -307,6 +316,7 @@ function TransformWidget({ matrix, showVector, lockMatrix }: { matrix: Mat; show
             <>
               <Grid faint />
               <Grid m={m} />
+              {showArea && <AreaPatch i={i} j={j} det={det} />}
               {showVector && <Arrow to={showVector} color="var(--v)" dashed />}
               {out && <Arrow to={out} color="var(--v)" />}
               <Arrow to={i} color="var(--i)" label="î" />
@@ -340,7 +350,16 @@ function TransformWidget({ matrix, showVector, lockMatrix }: { matrix: Mat; show
               ))}
             </div>
           )}
-          {Math.abs(m[0][0] * m[1][1] - m[0][1] * m[1][0]) < 1e-9 && (
+          {showArea && (
+            <p className="text-lg">
+              <Tex src={`\\det = ${par(m[0][0])}\\cdot${par(m[1][1])} - ${par(m[0][1])}\\cdot${par(m[1][0])} = ${fmt(det)}`} />
+              <span className="block text-sm text-[var(--muted)]">
+                Shaded area = {fmt(Math.abs(det))}
+                {det < 0 ? " · flipped (î and ĵ swapped sides)" : ""}
+              </span>
+            </p>
+          )}
+          {Math.abs(det) < 1e-9 && (
             <p className="text-sm text-[var(--muted)]">î and ĵ landed on one line: the whole plane got squashed flat.</p>
           )}
         </>
@@ -349,7 +368,9 @@ function TransformWidget({ matrix, showVector, lockMatrix }: { matrix: Mat; show
   );
 }
 
-function ComposeWidget({ first, second }: { first: Mat; second: Mat }) {
+function ComposeWidget({ first, second, firstName = "Rotate", secondName = "shear" }: { first: Mat; second: Mat; firstName?: string; secondName?: string }) {
+  const cap = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
+  const low = (s: string) => (s === s.toUpperCase() ? s : s.charAt(0).toLowerCase() + s.slice(1));
   const [swapped, setSwapped] = useState(false);
   // "first then second" = second · first
   const product = swapped ? mmul(first, second) : mmul(second, first);
@@ -373,10 +394,10 @@ function ComposeWidget({ first, second }: { first: Mat; second: Mat }) {
         <>
           <div className="flex gap-2">
             <button type="button" className={`chip ${!swapped ? "chip-on" : ""}`} onClick={() => setSwapped(false)}>
-              Rotate, then shear
+              {cap(firstName)}, then {low(secondName)}
             </button>
             <button type="button" className={`chip ${swapped ? "chip-on" : ""}`} onClick={() => setSwapped(true)}>
-              Shear, then rotate
+              {cap(secondName)}, then {low(firstName)}
             </button>
           </div>
           <p className="text-lg">
@@ -385,6 +406,42 @@ function ComposeWidget({ first, second }: { first: Mat; second: Mat }) {
           <p className="text-sm">
             î ends at <Tex src={col(i)} />. The matrix on the <strong>right</strong> acts first.
           </p>
+        </>
+      }
+    />
+  );
+}
+
+function SolveWidget({ matrix, target, start }: { matrix: Mat; target: Vec; start: Vec }) {
+  const [x, setX] = useState<Vec>(start);
+  const out = mul(matrix, x);
+  const hit = Math.abs(out[0] - target[0]) < 1e-9 && Math.abs(out[1] - target[1]) < 1e-9;
+  const [tx, ty] = toPx(target);
+  return (
+    <Panel
+      plane={
+        <Plane onDrag={(_k, q) => setX([clamp(snap(q[0], 0.5)), clamp(snap(q[1], 0.5))])}>
+          {(drag) => (
+            <>
+              <Grid />
+              <circle cx={tx} cy={ty} r={9} fill="none" stroke="var(--sum)" strokeWidth={3} strokeDasharray="4 3" />
+              <Arrow to={x} color="var(--a)" label="x" />
+              <Arrow to={out} color="var(--v)" label="Ax" />
+              <Handle at={x} color="var(--a)" onDown={drag("x")} />
+            </>
+          )}
+        </Plane>
+      }
+      side={
+        <>
+          <p className="text-lg">
+            <Tex src={`${mat(matrix)}{\\color{#3b82f6}${col(x)}} = {\\color{#eab308}${col(out)}}`} />
+          </p>
+          <p className="text-sm">
+            Drag the <span className="text-[var(--a)] font-semibold">blue input</span> until the{" "}
+            <span className="text-[var(--v)] font-semibold">yellow output</span> lands in the green ring at <Tex src={col(target)} />.
+          </p>
+          {hit && <p className="feedback feedback-ok font-semibold">🎯 Hit! The input was <Tex src={col(x)} />.</p>}
         </>
       }
     />
@@ -402,8 +459,10 @@ export function WidgetView({ widget }: { widget: Widget }) {
     case "combo":
       return <ComboWidget v={widget.v} w={widget.w} a={widget.a} b={widget.b} />;
     case "transform":
-      return <TransformWidget matrix={widget.matrix} showVector={widget.showVector} lockMatrix={widget.lockMatrix} />;
+      return <TransformWidget matrix={widget.matrix} showVector={widget.showVector} lockMatrix={widget.lockMatrix} showArea={widget.showArea} />;
     case "compose":
-      return <ComposeWidget first={widget.first} second={widget.second} />;
+      return <ComposeWidget first={widget.first} second={widget.second} firstName={widget.firstName} secondName={widget.secondName} />;
+    case "solve":
+      return <SolveWidget matrix={widget.matrix} target={widget.target} start={widget.start} />;
   }
 }

@@ -72,7 +72,7 @@ export default async function LearnPage() {
         );
       })}
 
-      <p className="text-sm text-[var(--muted)]">Coming next: Unit 2 (span, determinants, inverses), then statistics for ML.</p>
+      <p className="text-sm text-[var(--muted)]">Coming next: eigenvectors, then probability and statistics for ML.</p>
     </div>
   );
 }
