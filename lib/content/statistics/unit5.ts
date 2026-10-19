@@ -1,4 +1,6 @@
 import type { ConceptNode, Unit, Vec } from "@/lib/content/types";
+import { deepen } from "../deepen";
+import { UNIT5_DEPTH } from "./unit5.depth";
 
 const m = (a: number | string, b: number | string, c: number | string, d: number | string) =>
   `\\begin{bmatrix}${a}&${b}\\\\${c}&${d}\\end{bmatrix}`;
@@ -742,5 +744,5 @@ export const unit5: Unit = {
   track: "Statistics",
   title: "Spread, Normal & Regression",
   blurb: "How data spreads, the bell curve, and why training a model is maximum likelihood.",
-  nodes: [variance, covariance, pcaPractice, normal, mle, leastSquares, losses],
+  nodes: [variance, covariance, pcaPractice, normal, mle, leastSquares, losses].map((n) => deepen(n, UNIT5_DEPTH[n.id])),
 };

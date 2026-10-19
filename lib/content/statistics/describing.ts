@@ -1,4 +1,6 @@
 import type { ConceptNode, Unit } from "@/lib/content/types";
+import { deepen } from "../deepen";
+import { DESCRIBING_DEPTH } from "./describing.depth";
 
 const centre: ConceptNode = {
   id: "mean-median-mode",
@@ -633,5 +635,5 @@ export const describingUnit: Unit = {
   track: "Statistics",
   title: "Describing Data",
   blurb: "Centre, spread and shape; how samples are drawn and how they go wrong.",
-  nodes: [centre, quartiles, shape, sampling, bias],
+  nodes: [centre, quartiles, shape, sampling, bias].map((n) => deepen(n, DESCRIBING_DEPTH[n.id])),
 };
