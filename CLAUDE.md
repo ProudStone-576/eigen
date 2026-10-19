@@ -12,7 +12,7 @@ Next.js 16 (App Router) + Prisma 6.19 + Neon Postgres. Invite-only student accou
 - `lib/learning/progress.ts` — the only write path for progress: grade → append Attempt → apply rule → XP/streak, in one transaction.
 - `components/widgets/Widgets.tsx` — interactive SVG plane: vector, vector-add, scale, combo, transform (draggable î/ĵ, optional area/determinant), compose, solve (drag x until Ax hits b).
 - `lib/tutor.ts` — AI hint tutor (Claude Opus 5.5, effort low, server-side refusal fallback). Only on produce questions after a wrong answer, never reveals the answer, student input fenced as data, 40 hints/day per student (`Hint` table). Off unless `ANTHROPIC_API_KEY` is set.
-- Content: `lib/content/linear-algebra/unit1.ts` (vectors → composition), `unit2.ts` (span → solving Ax = b).
+- Content: `lib/content/linear-algebra/unit1.ts` (vectors → composition), `unit2.ts` (span → solving Ax = b), `unit3.ts` (eigenvectors → PCA). Vector items with `upToScale` accept any non-zero multiple (eigenvectors, directions). Widgets `eigen` (hunt for Av ∥ v) and `spread` (PCA projections).
 - Live: https://eigen-green.vercel.app (Vercel project `eigen`). `/api/health` checks the DB. Set Vercel env vars with `printf '%s' "$VAL" | vercel env add` — piping from PowerShell adds a newline and breaks them.
 
 ## Rules for content

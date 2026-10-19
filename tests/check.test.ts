@@ -85,6 +85,18 @@ describe("vectors and matrices (AC-6)", () => {
   it("catches traps", () => {
     expect(grade(vec, { kind: "vector", values: ["-10", "-12"] }).misconception).toBe("mult");
   });
+  it("up-to-scale vectors accept any non-zero multiple, never zero", () => {
+    const eig: VectorItem = { kind: "vector", id: "e", prompt: "", answer: [1, -2], explain: "", upToScale: true };
+    const g = (values: string[]) => grade(eig, { kind: "vector", values }).status;
+    expect(g(["1", "-2"])).toBe("correct");
+    expect(g(["-3", "6"])).toBe("correct");
+    expect(g(["0.5", "-1"])).toBe("correct");
+    expect(g(["1", "2"])).toBe("wrong");
+    expect(g(["0", "0"])).toBe("wrong");
+    const axis: VectorItem = { kind: "vector", id: "a", prompt: "", answer: [0, 1], explain: "", upToScale: true };
+    expect(grade(axis, { kind: "vector", values: ["0", "-4"] }).status).toBe("correct");
+    expect(grade(axis, { kind: "vector", values: ["1", "4"] }).status).toBe("wrong");
+  });
   it("empty cell is invalid", () => {
     expect(grade(vec, { kind: "vector", values: ["-3", ""] }).status).toBe("invalid");
   });

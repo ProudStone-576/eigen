@@ -40,6 +40,8 @@ export type VectorItem = {
   prompt: string;
   answer: Vec;
   explain: string;
+  /** Accept any non-zero multiple of the answer (eigenvectors, directions). */
+  upToScale?: boolean;
   /** Specific wrong answers worth catching, with the misconception behind them. */
   traps?: { answer: Vec; misconception: string; message: string }[];
 };
@@ -81,7 +83,11 @@ export type Widget =
   | { kind: "transform"; matrix: Mat; showVector?: Vec; lockMatrix?: boolean; showArea?: boolean }
   | { kind: "compose"; first: Mat; second: Mat; firstName?: string; secondName?: string }
   /** Drag the input until A·x hits the target: solving A x = b by hand. */
-  | { kind: "solve"; matrix: Mat; target: Vec; start: Vec };
+  | { kind: "solve"; matrix: Mat; target: Vec; start: Vec }
+  /** Drag v and watch Av: find the directions A doesn't knock off their own line. */
+  | { kind: "eigen"; matrix: Mat; start: Vec }
+  /** Rotate a direction through a data cloud and maximise the spread of the projections (PCA). */
+  | { kind: "spread"; points: Vec[] };
 
 // ---------- Lesson steps ----------
 

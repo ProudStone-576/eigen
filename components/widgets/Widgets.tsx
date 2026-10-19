@@ -448,6 +448,121 @@ function SolveWidget({ matrix, target, start }: { matrix: Mat; target: Vec; star
   );
 }
 
+function EigenWidget({ matrix, start }: { matrix: Mat; start: Vec }) {
+  const [v, setV] = useState<Vec>(start);
+  const out = mul(matrix, v);
+  const lenV = Math.hypot(v[0], v[1]);
+  const lenOut = Math.hypot(out[0], out[1]);
+  const cross = v[0] * out[1] - v[1] * out[0];
+  const onLine = lenV > 1e-9 && (lenOut < 1e-9 || Math.abs(cross) < 0.035 * lenV * lenOut);
+  const lambda = lenV > 1e-9 ? (out[0] * v[0] + out[1] * v[1]) / (lenV * lenV) : 0;
+  // The span of v: a long line through the origin.
+  const far: Vec = lenV > 1e-9 ? [(v[0] / lenV) * 20, (v[1] / lenV) * 20] : [0, 0];
+  const [x1, y1] = toPx([-far[0], -far[1]]);
+  const [x2, y2] = toPx(far);
+  return (
+    <Panel
+      plane={
+        <Plane onDrag={(_k, q) => setV([clamp(snap(q[0], 0.25)), clamp(snap(q[1], 0.25))])}>
+          {(drag) => (
+            <>
+              <Grid />
+              <line x1={x1} y1={y1} x2={x2} y2={y2} stroke={onLine ? "var(--solid)" : "var(--a)"} strokeOpacity={0.5} strokeWidth={2} strokeDasharray="6 5" />
+              <Arrow to={out} color="var(--v)" label="Av" />
+              <Arrow to={v} color="var(--a)" label="v" />
+              <Handle at={v} color="var(--a)" onDown={drag("v")} />
+            </>
+          )}
+        </Plane>
+      }
+      side={
+        <>
+          <p className="text-lg">
+            <Tex src={`${mat(matrix)}{\\color{#3b82f6}${col(v)}} = {\\color{#eab308}${col(out)}}`} />
+          </p>
+          <p className="text-sm">
+            The dashed line is the span of <span className="text-[var(--a)] font-semibold">v</span>. Most vectors get knocked off it.
+          </p>
+          {onLine ? (
+            <p className="feedback feedback-ok font-semibold">
+              🎯 Av stayed on v&rsquo;s line: an eigenvector! <Tex src={`\\lambda \\approx ${fmt(Math.round(lambda * 100) / 100)}`} />
+            </p>
+          ) : (
+            <p className="text-sm text-[var(--muted)]">Drag v around. Watch for the moment the yellow arrow lands on the dashed line.</p>
+          )}
+        </>
+      }
+    />
+  );
+}
+
+function SpreadWidget({ points }: { points: Vec[] }) {
+  const n = points.length;
+  const mean: Vec = [points.reduce((s, p) => s + p[0], 0) / n, points.reduce((s, p) => s + p[1], 0) / n];
+  const pts = points.map((p): Vec => [p[0] - mean[0], p[1] - mean[1]]);
+  const cxx = pts.reduce((s, p) => s + p[0] * p[0], 0) / n;
+  const cxy = pts.reduce((s, p) => s + p[0] * p[1], 0) / n;
+  const cyy = pts.reduce((s, p) => s + p[1] * p[1], 0) / n;
+  const lambda1 = (cxx + cyy) / 2 + Math.hypot((cxx - cyy) / 2, cxy);
+  const lambda2 = cxx + cyy - lambda1;
+  const best = ((((Math.atan2(2 * cxy, cxx - cyy) / 2) * 180) / Math.PI) + 180) % 180;
+  const [deg, setDeg] = useState(150);
+  const t = (deg * Math.PI) / 180;
+  const u: Vec = [Math.cos(t), Math.sin(t)];
+  const proj = pts.map((p) => p[0] * u[0] + p[1] * u[1]);
+  const variance = proj.reduce((s, x) => s + x * x, 0) / n;
+  const gap = Math.min(Math.abs(deg - best), 180 - Math.abs(deg - best));
+  const found = gap <= 2;
+  const [x1, y1] = toPx([-u[0] * 20, -u[1] * 20]);
+  const [x2, y2] = toPx([u[0] * 20, u[1] * 20]);
+  const r2 = (x: number) => Math.round(x * 100) / 100;
+  return (
+    <Panel
+      plane={
+        <Plane>
+          {() => (
+            <>
+              <Grid />
+              <line x1={x1} y1={y1} x2={x2} y2={y2} stroke={found ? "var(--solid)" : "var(--accent)"} strokeWidth={2.5} />
+              {pts.map((p, i) => {
+                const q: Vec = [proj[i] * u[0], proj[i] * u[1]];
+                const [px, py] = toPx(p);
+                const [qx, qy] = toPx(q);
+                return (
+                  <g key={i}>
+                    <line x1={px} y1={py} x2={qx} y2={qy} stroke="var(--muted)" strokeOpacity={0.35} />
+                    <circle cx={px} cy={py} r={4.5} fill="var(--a)" />
+                    <circle cx={qx} cy={qy} r={3.5} fill="var(--v)" />
+                  </g>
+                );
+              })}
+            </>
+          )}
+        </Plane>
+      }
+      side={
+        <>
+          <Slider label="Direction (degrees)" value={deg} min={0} max={179} step={1} onChange={setDeg} />
+          <p className="text-lg">
+            Spread of the <span className="text-[var(--v)] font-semibold">yellow shadows</span>: <strong>{r2(variance)}</strong>
+          </p>
+          <div className="h-2 rounded-full bg-[var(--border)] overflow-hidden">
+            <div className="h-full bg-[var(--accent)]" style={{ width: `${Math.min(100, (variance / lambda1) * 100)}%` }} />
+          </div>
+          {found ? (
+            <p className="feedback feedback-ok text-sm">
+              🎯 Maximum spread: the first principal component. Its spread {r2(lambda1)} is the covariance matrix&rsquo;s biggest eigenvalue; the
+              perpendicular direction keeps the rest, {r2(lambda2)}.
+            </p>
+          ) : (
+            <p className="text-sm text-[var(--muted)]">Turn the line until the shadows of the blue points spread out as far as possible.</p>
+          )}
+        </>
+      }
+    />
+  );
+}
+
 export function WidgetView({ widget }: { widget: Widget }) {
   switch (widget.kind) {
     case "vector":
@@ -464,5 +579,9 @@ export function WidgetView({ widget }: { widget: Widget }) {
       return <ComposeWidget first={widget.first} second={widget.second} firstName={widget.firstName} secondName={widget.secondName} />;
     case "solve":
       return <SolveWidget matrix={widget.matrix} target={widget.target} start={widget.start} />;
+    case "eigen":
+      return <EigenWidget matrix={widget.matrix} start={widget.start} />;
+    case "spread":
+      return <SpreadWidget points={widget.points} />;
   }
 }

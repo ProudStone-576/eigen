@@ -58,6 +58,15 @@ function parseGrid(values: string[][]): Mat | null {
   return out;
 }
 
+/** u = k·v for some non-zero k. */
+function parallel(u: number[], v: number[]): boolean {
+  if (u.length !== v.length) return false;
+  const k = v.findIndex((x) => !numbersEqual(x, 0));
+  if (k < 0 || numbersEqual(u[k], 0)) return false;
+  const scale = u[k] / v[k];
+  return u.every((x, i) => numbersEqual(x, scale * v[i]));
+}
+
 function sameGrid(a: Mat, b: Mat): boolean {
   return a.length === b.length && a.every((row, i) => row.length === b[i].length && row.every((x, j) => numbersEqual(x, b[i][j])));
 }
@@ -113,9 +122,19 @@ export function grade(item: Item, response: Response): Grade {
         return { status: "wrong", message: "That has the wrong size.", misconception: null, explain: item.explain };
       }
       if (sameGrid(grid, answer)) return { status: "correct", message: null, misconception: null, explain: item.explain };
+      // Traps first: a specific wrong answer carries its misconception.
       for (const trap of item.traps ?? []) {
         const t: Mat = item.kind === "vector" ? (trap.answer as number[]).map((x) => [x]) : (trap.answer as Mat);
         if (sameGrid(grid, t)) return { status: "wrong", message: trap.message, misconception: trap.misconception, explain: item.explain };
+      }
+      if (item.kind === "vector" && item.upToScale) {
+        const v = grid.map((r) => r[0]);
+        if (v.every((x) => numbersEqual(x, 0))) {
+          return { status: "wrong", message: "The zero vector never counts: it has no direction.", misconception: null, explain: item.explain };
+        }
+        if (parallel(v, item.answer)) {
+          return { status: "correct", message: "Any non-zero multiple works; this is one of them.", misconception: null, explain: item.explain };
+        }
       }
       return { status: "wrong", message: null, misconception: null, explain: item.explain };
     }
