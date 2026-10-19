@@ -11,7 +11,8 @@ const escape = (s: string) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").rep
 function inlineMarkup(s: string): string {
   return escape(s)
     .replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")
-    .replace(/\*(.+?)\*/g, "<em>$1</em>");
+    // *emphasis* only when it starts after a space/bracket with a letter, so "2*3 - 1*4" stays maths.
+    .replace(/(^|[\s(])\*([A-Za-z][^*\n]*?)\*(?=[\s.,;:!?)]|$)/g, "$1<em>$2</em>");
 }
 
 function tex(src: string, displayMode: boolean): string {

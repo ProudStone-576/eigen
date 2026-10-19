@@ -1,7 +1,8 @@
 import "server-only";
 import Anthropic from "@anthropic-ai/sdk";
 import { grade, type Response } from "@/lib/check";
-import { findItem, getNode } from "@/lib/content";
+import { getNode } from "@/lib/content";
+import { resolveItem } from "@/lib/content/custom";
 import type { Item } from "@/lib/content/types";
 import { prisma } from "@/lib/db";
 
@@ -71,7 +72,7 @@ export type HintResult = { hint: string } | { error: string };
 export async function hintFor(args: { userId: string; nodeId: string; itemId: string; response: Response }): Promise<HintResult> {
   if (!tutorEnabled()) return { error: "The tutor isn't switched on yet." };
   const node = getNode(args.nodeId);
-  const found = node && findItem(node, args.itemId);
+  const found = node && (await resolveItem(node, args.itemId));
   if (!node || !found) return { error: "Unknown question." };
   // Hints are for practice, not for the diagnostic questions that decide status.
   if (found.context !== "produce" && found.context !== "practice") return { error: "Hints are available on produce and practice questions." };

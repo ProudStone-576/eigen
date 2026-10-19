@@ -17,6 +17,7 @@ Next.js 16 (App Router) + Prisma 6.19 + Neon Postgres. Invite-only student accou
 - Calculus track: `lib/content/calculus/unit6.ts` (derivative → backprop). Widgets in `components/widgets/CalcWidgets.tsx`: `tangent` (secant → tangent for x², (3x+1)², x³−3x), `gradient2d` (bowl x²+2y²), `descent` (L=(w−3)²+1; η>1 diverges).
 - Neural networks track: `lib/content/networks/unit7.ts` (neuron → train a network). Widgets in `components/widgets/NNWidgets.tsx`: `neuron`, `playground` (real 2→H→1 net trained live with backprop; `tests/network.test.ts` checks it learns circle/XOR with tanh and can't without an activation).
 - Practice: `lib/content/generators.ts` has question generators for every concept (a test enforces coverage); `lib/learning/practice.ts` mixes target variants with prerequisites, steers towards held misconceptions, and `PRACTICE_STREAK` (3) in a row makes a concept solid. Generated ids are `gen~node~gen~seed`.
+- Teacher question editor: `/teacher/content` (teacher only). `CustomItem` rows hold editor input; `lib/content/customSchema.ts` validates and self-grades before save; `lib/content/custom.ts` serves them in practice (`cust~id~p`) and review (`cust~id~r`) via `resolveItem`. Archive instead of delete.
 - Live: https://eigen-green.vercel.app (Vercel project `eigen`). `/api/health` checks the DB. Set Vercel env vars with `printf '%s' "$VAL" | vercel env add` — piping from PowerShell adds a newline and breaks them.
 
 ## Rules for content

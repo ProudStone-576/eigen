@@ -3,6 +3,7 @@ import { randomInt } from "node:crypto";
 import { prisma } from "@/lib/db";
 import { getNode, misconceptionsOf, publicItem, type PublicItem } from "@/lib/content";
 import { generate } from "@/lib/content/generators";
+import { customItemsFor } from "@/lib/content/custom";
 import type { ConceptNode, Item } from "@/lib/content/types";
 import { loadProgress, statusIn, unlocked } from "./progress";
 
@@ -43,8 +44,12 @@ function staticPool(node: ConceptNode): Item[] {
   ];
 }
 
-function pickFor(node: ConceptNode, misconception: string | null): Item {
+async function pickFor(node: ConceptNode, misconception: string | null): Promise<Item> {
+  // Teacher-written questions take a share of practice when they exist.
+  const custom = await customItemsFor(node.id, "p");
   if (misconception) {
+    const targetedCustom = custom.filter((i) => misconceptionsOf(i).includes(misconception));
+    if (targetedCustom.length && randomInt(2) === 0) return targetedCustom[randomInt(targetedCustom.length)];
     // Aim straight at the mix-up: a variant whose traps catch exactly this misconception.
     for (let tries = 0; tries < 20; tries++) {
       const g = generate(node.id, randomInt(1, 2 ** 31 - 1));
@@ -53,6 +58,7 @@ function pickFor(node: ConceptNode, misconception: string | null): Item {
     const targeted = staticPool(node).filter((i) => misconceptionsOf(i).includes(misconception));
     if (targeted.length) return targeted[randomInt(targeted.length)];
   }
+  if (custom.length && randomInt(3) === 0) return custom[randomInt(custom.length)];
   return generate(node.id, randomInt(1, 2 ** 31 - 1)) ?? staticPool(node)[randomInt(staticPool(node).length)];
 }
 
@@ -71,10 +77,10 @@ export async function nextPracticeQuestion(userId: string, nodeId: string, index
     const pool = weak.length ? weak : prereqs;
     const source = pool[randomInt(pool.length)];
     const p = map.get(source.id);
-    return { nodeId: source.id, title: source.title, isTarget: false, item: publicItem(pickFor(source, p?.misconceptionId ?? null)) };
+    return { nodeId: source.id, title: source.title, isTarget: false, item: publicItem(await pickFor(source, p?.misconceptionId ?? null)) };
   }
   const held = map.get(node.id);
-  return { nodeId: node.id, title: node.title, isTarget: true, item: publicItem(pickFor(node, held?.status === "MISCONCEPTION" ? held.misconceptionId : null)) };
+  return { nodeId: node.id, title: node.title, isTarget: true, item: publicItem(await pickFor(node, held?.status === "MISCONCEPTION" ? held.misconceptionId : null)) };
 }
 
 /**

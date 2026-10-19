@@ -1,7 +1,8 @@
 import "server-only";
 import type { NodeProgress, Prisma } from "@prisma/client";
 import { prisma } from "@/lib/db";
-import { allNodes, findItem, getNode, targets } from "@/lib/content";
+import { allNodes, getNode, targets } from "@/lib/content";
+import { resolveItem } from "@/lib/content/custom";
 import { grade, type Grade, type Response } from "@/lib/check";
 import { apply, FRESH, isDue, isUnlocked, localDay, nextStreak, PRACTICE_STREAK, XP, type LearningEvent, type Progress, type Status } from "./rules";
 
@@ -85,7 +86,7 @@ export async function submitAnswer(args: {
 }): Promise<GradeResult | { error: string }> {
   const node = getNode(args.nodeId);
   if (!node) return { error: "Unknown concept." };
-  const found = findItem(node, args.itemId);
+  const found = await resolveItem(node, args.itemId);
   if (!found) return { error: "Unknown question." };
 
   const map = await loadProgress(args.userId);

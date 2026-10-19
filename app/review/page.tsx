@@ -2,6 +2,7 @@ import Link from "next/link";
 import { requireUser } from "@/lib/auth/session";
 import { getNode, publicItem } from "@/lib/content";
 import { dueNodes, loadProgress } from "@/lib/learning/progress";
+import { customItemsFor } from "@/lib/content/custom";
 import { ReviewSession } from "./ReviewSession";
 
 export const metadata = { title: "Review" };
@@ -26,11 +27,14 @@ export default async function ReviewPage() {
   }
 
   // Rotate through each node's review pool so repeat reviews aren't the same question.
-  const cards = due.map((id) => {
-    const node = getNode(id)!;
-    const streak = progress.get(id)?.reviewStreak ?? 0;
-    return { nodeId: id, title: node.title, item: publicItem(node.review[streak % node.review.length]) };
-  });
+  const cards = await Promise.all(
+    due.map(async (id) => {
+      const node = getNode(id)!;
+      const streak = progress.get(id)?.reviewStreak ?? 0;
+      const pool = [...node.review, ...(await customItemsFor(id, "r"))];
+      return { nodeId: id, title: node.title, item: publicItem(pool[streak % pool.length]) };
+    }),
+  );
 
   return (
     <div className="max-w-2xl mx-auto space-y-6">

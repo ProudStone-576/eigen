@@ -28,6 +28,7 @@ async function Header() {
             </Link>
             <Link href="/glossary" className="hover:text-[var(--accent)] hidden sm:inline">Glossary</Link>
             {user.role === "TEACHER" && <Link href="/teacher" className="hover:text-[var(--accent)]">Students</Link>}
+            {user.role === "TEACHER" && <Link href="/teacher/content" className="hover:text-[var(--accent)]">Questions</Link>}
             <span title="Day streak">🔥 {user.streakDays}</span>
             <span title="Experience points" className="font-semibold">{user.xp} XP</span>
             <form action={logout}>

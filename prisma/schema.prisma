@@ -39,6 +39,26 @@ model User {
   progress     NodeProgress[]
   attempts     Attempt[]
   hints        Hint[]
+  customItems  CustomItem[]
+}
+
+/// A question the teacher wrote in the app, attached to one concept. `data` is
+/// an Item without its id (see lib/content/types.ts), validated on save so its
+/// stated answer always grades correct.
+model CustomItem {
+  id         String   @id @default(cuid())
+  nodeId     String
+  authorId   String
+  kind       String
+  data       Json
+  inPractice Boolean  @default(true)
+  inReview   Boolean  @default(true)
+  archived   Boolean  @default(false)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  author     User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
+
+  @@index([nodeId, archived])
 }
 
 /// One row per AI tutor hint. Used for the daily cap and for seeing where students get stuck.
