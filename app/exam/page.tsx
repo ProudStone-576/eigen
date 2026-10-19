@@ -1,12 +1,12 @@
 import Link from "next/link";
-import { requireUser } from "@/lib/auth/session";
+import { requireOrg } from "@/lib/auth/context";
 import { course } from "@/lib/content";
 import { loadProgress, statusIn, unlocked } from "@/lib/learning/progress";
 
 export const metadata = { title: "Tests" };
 
 export default async function ExamHome() {
-  const user = await requireUser();
+  const user = (await requireOrg()).user;
   const map = await loadProgress(user.id);
   const status = statusIn(map);
   const learned = course.units.flatMap((u) => u.nodes).filter((n) => unlocked(n.id, map) && status(n.id) !== "UNKNOWN").length;

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { requireTeacher } from "@/lib/auth/session";
+import { requireStaff } from "@/lib/auth/context";
 import { prisma } from "@/lib/db";
 import { course } from "@/lib/content";
 
@@ -7,8 +7,8 @@ export const metadata = { title: "Questions" };
 
 /** Every concept, with how many questions the teacher has added to it. */
 export default async function ContentPage() {
-  await requireTeacher();
-  const counts = await prisma.customItem.groupBy({ by: ["nodeId"], where: { archived: false }, _count: { _all: true } });
+  const ctx = await requireStaff();
+  const counts = await prisma.customItem.groupBy({ by: ["nodeId"], where: { archived: false, orgId: ctx.org.id }, _count: { _all: true } });
   const countOf = new Map(counts.map((c) => [c.nodeId, c._count._all]));
 
   return (

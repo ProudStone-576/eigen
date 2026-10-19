@@ -8,9 +8,130 @@ datasource db {
   directUrl = env("DIRECT_URL")
 }
 
+/// Legacy global role, kept for compatibility. Permissions come from
+/// Membership.role (per organisation) and Enrollment.role (per class).
 enum Role {
   TEACHER
   STUDENT
+}
+
+/// A person's role inside one organisation (a school, coaching institute or company).
+enum OrgRole {
+  OWNER
+  ADMIN
+  TEACHER
+  STUDENT
+}
+
+enum ClassRole {
+  TEACHER
+  STUDENT
+}
+
+/// A tenant. Every class, assignment, custom question and audit event belongs to one.
+model Organization {
+  id          String       @id @default(cuid())
+  name        String
+  /// URL-safe unique handle.
+  slug        String       @unique
+  /// Maximum number of student members; null = unlimited.
+  seatLimit   Int?
+  archived    Boolean      @default(false)
+  createdAt   DateTime     @default(now())
+  memberships Membership[]
+  classrooms  Classroom[]
+  invitations Invitation[]
+  auditEvents AuditEvent[]
+  customItems CustomItem[]
+}
+
+model Membership {
+  id        String       @id @default(cuid())
+  orgId     String
+  userId    String
+  role      OrgRole      @default(STUDENT)
+  createdAt DateTime     @default(now())
+  org       Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  user      User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([orgId, userId])
+  @@index([userId])
+}
+
+/// A class (cohort) inside an organisation. Students join with its code.
+model Classroom {
+  id          String       @id @default(cuid())
+  orgId       String
+  name        String
+  /// Short code students type to join, e.g. K7Q-4MZ. Unique across the platform.
+  joinCode    String       @unique
+  archived    Boolean      @default(false)
+  createdAt   DateTime     @default(now())
+  org         Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  enrollments Enrollment[]
+  assignments Assignment[]
+
+  @@index([orgId, archived])
+}
+
+model Enrollment {
+  id          String    @id @default(cuid())
+  classroomId String
+  userId      String
+  role        ClassRole @default(STUDENT)
+  createdAt   DateTime  @default(now())
+  classroom   Classroom @relation(fields: [classroomId], references: [id], onDelete: Cascade)
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([classroomId, userId])
+  @@index([userId])
+}
+
+/// A shareable invite link. Only the SHA-256 of its token is stored.
+model Invitation {
+  id          String       @id @default(cuid())
+  orgId       String
+  /// Optional class the invitee is enrolled in on joining.
+  classroomId String?
+  role        OrgRole      @default(STUDENT)
+  tokenHash   String       @unique
+  /// Short label for the admin list, e.g. "Physics staff".
+  label       String?
+  maxUses     Int          @default(1)
+  uses        Int          @default(0)
+  expiresAt   DateTime
+  revokedAt   DateTime?
+  createdById String
+  createdAt   DateTime     @default(now())
+  org         Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
+
+  @@index([orgId, createdAt])
+}
+
+/// Append-only record of security-relevant actions, shown to organisation admins.
+model AuditEvent {
+  id         String        @id @default(cuid())
+  orgId      String?
+  actorId    String?
+  /// Dotted verb, e.g. "member.role_changed", "class.created", "auth.locked".
+  action     String
+  targetType String?
+  targetId   String?
+  meta       Json?
+  ip         String?
+  createdAt  DateTime      @default(now())
+  /// SetNull: the trail outlives a deleted organisation.
+  org        Organization? @relation(fields: [orgId], references: [id], onDelete: SetNull)
+
+  @@index([orgId, createdAt])
+  @@index([actorId, createdAt])
+}
+
+/// Fixed-window counters for rate limiting (login, signup, answers, hints).
+model RateLimit {
+  key     String   @id
+  count   Int
+  resetAt DateTime
 }
 
 /// Where a concept sits in a student's head. Mirrors the learning system's
@@ -39,6 +160,8 @@ model User {
   /// Brute-force protection: consecutive failed logins and a temporary lock.
   failedLogins       Int            @default(0)
   lockedUntil        DateTime?
+  /// Operator of the whole platform: can create organisations.
+  platformAdmin      Boolean        @default(false)
   createdAt          DateTime       @default(now())
   sessions           Session[]
   assignments        Assignment[]
@@ -47,25 +170,31 @@ model User {
   attempts           Attempt[]
   hints              Hint[]
   customItems        CustomItem[]
+  memberships        Membership[]
+  enrollments        Enrollment[]
 }
 
 /// A question the teacher wrote in the app, attached to one concept. `data` is
 /// an Item without its id (see lib/content/types.ts), validated on save so its
 /// stated answer always grades correct.
 model CustomItem {
-  id         String   @id @default(cuid())
+  id         String        @id @default(cuid())
   nodeId     String
+  /// Organisation whose students see it. Null = platform-wide.
+  orgId      String?
   authorId   String
   kind       String
   data       Json
-  inPractice Boolean  @default(true)
-  inReview   Boolean  @default(true)
-  archived   Boolean  @default(false)
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-  author     User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  inPractice Boolean       @default(true)
+  inReview   Boolean       @default(true)
+  archived   Boolean       @default(false)
+  createdAt  DateTime      @default(now())
+  updatedAt  DateTime      @updatedAt
+  author     User          @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  org        Organization? @relation(fields: [orgId], references: [id], onDelete: Cascade)
 
   @@index([nodeId, archived])
+  @@index([orgId, nodeId])
 }
 
 /// One row per AI tutor hint. Used for the daily cap and for seeing where students get stuck.
@@ -85,6 +214,8 @@ model Session {
   userId    String
   /// SHA-256 of the cookie token. The raw token is never stored.
   tokenHash String   @unique
+  /// Organisation the session is acting in (a user can belong to several).
+  orgId     String?
   expiresAt DateTime
   createdAt DateTime @default(now())
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -129,11 +260,12 @@ model Attempt {
 
   @@index([userId, nodeId])
   @@index([nodeId, itemId])
+  @@index([userId, createdAt])
 }
 
 /// Work a teacher sets for the class: concepts to land, and optionally a unit test.
 model Assignment {
-  id          String    @id @default(cuid())
+  id          String     @id @default(cuid())
   title       String
   /// Concept ids (lib/content). Done when the student has the concept LANDED or SOLID.
   nodeIds     String[]
@@ -141,12 +273,16 @@ model Assignment {
   unitId      String?
   note        String?
   dueAt       DateTime?
-  archived    Boolean   @default(false)
+  archived    Boolean    @default(false)
+  /// Class the assignment is set for.
+  classroomId String?
   createdById String
-  createdAt   DateTime  @default(now())
-  createdBy   User      @relation(fields: [createdById], references: [id], onDelete: Cascade)
+  createdAt   DateTime   @default(now())
+  createdBy   User       @relation(fields: [createdById], references: [id], onDelete: Cascade)
+  classroom   Classroom? @relation(fields: [classroomId], references: [id], onDelete: Cascade)
 
   @@index([archived, dueAt])
+  @@index([classroomId, archived])
 }
 
 /// One row per submitted test (unit test or mock exam). The per-question detail is in Attempt (step "exam").

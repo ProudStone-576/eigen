@@ -2,7 +2,8 @@ import type { Metadata, Viewport } from "next";
 import { Source_Serif_4 } from "next/font/google";
 import Link from "next/link";
 import "./globals.css";
-import { currentUser } from "@/lib/auth/session";
+import { currentContext } from "@/lib/auth/context";
+import { isAdmin, isStaff } from "@/lib/auth/permissions";
 import { dueNodes, loadProgress } from "@/lib/learning/progress";
 import { logout } from "./actions";
 import { course } from "@/lib/content";
@@ -23,7 +24,9 @@ export const metadata: Metadata = {
 export const viewport: Viewport = { width: "device-width", initialScale: 1 };
 
 async function Header() {
-  const user = await currentUser();
+  const ctx = await currentContext();
+  const user = ctx?.user ?? null;
+  const role = ctx?.role ?? null;
   const due = user ? dueNodes(await loadProgress(user.id)).length : 0;
   const links: NavLink[] = user
     ? [
@@ -31,7 +34,9 @@ async function Header() {
         { href: "/review", label: "Review", badge: due },
         { href: "/exam", label: "Tests" },
         { href: "/glossary", label: "Glossary" },
-        ...(user.role === "TEACHER" ? [{ href: "/teacher", label: "Class" }] : []),
+        ...(role && isStaff(role) ? [{ href: "/teacher", label: "Classes" }] : []),
+        ...(role && isAdmin(role) ? [{ href: "/admin", label: "Admin" }] : []),
+        ...(user.platformAdmin ? [{ href: "/platform", label: "Platform" }] : []),
         { href: "/account", label: "Account" },
       ]
     : [];
@@ -41,6 +46,11 @@ async function Header() {
         <Link href={user ? "/learn" : "/"} className="font-serif text-[1.05rem] font-semibold tracking-[0.18em] uppercase">
           Eigen
         </Link>
+        {ctx?.org && ctx.memberships.length > 0 && (
+          <span className="hidden lg:inline text-sm text-[var(--muted)] border-l border-[var(--border)] pl-4 truncate max-w-[16rem]" title="Organisation">
+            {ctx.org.name}
+          </span>
+        )}
         {!user && (
           <nav className="flex items-center gap-5 text-sm ml-auto">
             <Link href="/login" className="text-[var(--muted)] hover:text-[var(--fg)]">Log in</Link>

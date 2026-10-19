@@ -1,6 +1,6 @@
 import Link from "next/link";
+import { requireOrg } from "@/lib/auth/context";
 import { ConceptMap, STATUS_STYLE } from "@/components/ConceptMap";
-import { requireUser } from "@/lib/auth/session";
 import { course } from "@/lib/content";
 import { chapterNumber } from "@/lib/content/numbering";
 import { loadProgress, statusIn, unlocked } from "@/lib/learning/progress";
@@ -10,7 +10,7 @@ export const metadata = { title: "Dependency map" };
 
 /** The prerequisite graph of every chapter, for students who like to see how sections connect. */
 export default async function MapPage() {
-  const user = await requireUser();
+  const user = (await requireOrg()).user;
   const progress = await loadProgress(user.id);
   const status = statusIn(progress);
   return (

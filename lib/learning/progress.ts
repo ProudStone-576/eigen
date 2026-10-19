@@ -81,6 +81,8 @@ function safeTimeZone(tz: string | undefined): string {
  */
 export async function submitAnswer(args: {
   userId: string;
+  /** Organisation the student is acting in: decides which custom questions exist. */
+  orgId: string | null;
   nodeId: string;
   itemId: string;
   response: Response;
@@ -88,7 +90,7 @@ export async function submitAnswer(args: {
 }): Promise<GradeResult | { error: string }> {
   const node = getNode(args.nodeId);
   if (!node) return { error: "Unknown concept." };
-  const found = await resolveItem(node, args.itemId);
+  const found = await resolveItem(node, args.itemId, args.orgId);
   if (!found) return { error: "Unknown question." };
 
   const map = await loadProgress(args.userId);

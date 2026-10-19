@@ -291,6 +291,76 @@ h3 {
     border-bottom: 1px dotted var(--rule);
     margin: 0 0.5rem 0.35rem;
   }
+
+  /* Registers and consoles: ruled tables like a school ledger, not card grids. */
+  .ledger {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.875rem;
+  }
+  .ledger th {
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-align: left;
+    padding: 0.5rem 0.75rem 0.5rem 0;
+    border-bottom: 1px solid var(--fg);
+    white-space: nowrap;
+  }
+  .ledger td {
+    padding: 0.6rem 0.75rem 0.6rem 0;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+  .ledger td.num,
+  .ledger th.num {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+  }
+  .ledger tbody tr:hover td {
+    background: color-mix(in srgb, var(--accent) 4%, transparent);
+  }
+  /* A figure in a report: big serif number over a small-caps label. */
+  .stat-num {
+    font-family: var(--font-serif);
+    font-size: 2rem;
+    line-height: 1.1;
+    font-variant-numeric: tabular-nums;
+  }
+  /* A hairline progress meter. */
+  .meter {
+    height: 3px;
+    background: var(--border);
+    position: relative;
+    overflow: hidden;
+  }
+  .meter > span {
+    position: absolute;
+    inset: 0 auto 0 0;
+    background: var(--fg);
+  }
+  .console-nav a {
+    color: var(--muted);
+    padding-bottom: 0.4rem;
+    border-bottom: 2px solid transparent;
+  }
+  .console-nav a:hover {
+    color: var(--fg);
+  }
+  .console-nav a[aria-current="page"] {
+    color: var(--fg);
+    border-bottom-color: var(--fg);
+  }
+  .code-chip {
+    font-family: ui-monospace, "Cascadia Mono", Menlo, Consolas, monospace;
+    letter-spacing: 0.08em;
+    border: 1px solid var(--rule);
+    padding: 0.1rem 0.45rem;
+    border-radius: 2px;
+    background: var(--surface);
+  }
 }
 
 .xp-pop {

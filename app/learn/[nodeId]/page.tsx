@@ -1,9 +1,9 @@
 import Link from "next/link";
+import { requireOrg } from "@/lib/auth/context";
 import { notFound } from "next/navigation";
 import { MathText } from "@/components/MathText";
 import { Section, STATUS_WORD } from "@/components/textbook/Section";
 import { FigurePlate } from "@/components/intro/FigurePlate";
-import { requireUser } from "@/lib/auth/session";
 import { allNodes, getNode, publicSteps } from "@/lib/content";
 import { introCaption, introFor } from "@/lib/content/intro";
 import { chapterNumber, locate, sectionNumber } from "@/lib/content/numbering";
@@ -21,7 +21,7 @@ export default async function LessonPage({ params }: { params: Promise<{ nodeId:
   const node = getNode(nodeId);
   const at = node && locate(node.id);
   if (!node || !at) notFound();
-  const user = await requireUser();
+  const user = (await requireOrg()).user;
   const progress = await loadProgress(user.id);
   const status = statusIn(progress);
 

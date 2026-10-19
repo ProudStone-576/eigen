@@ -1,4 +1,4 @@
-import { requireUser } from "@/lib/auth/session";
+import { requireOrg } from "@/lib/auth/context";
 import { allNodes } from "@/lib/content";
 import { dueNodes, loadProgress, statusIn, unlocked } from "@/lib/learning/progress";
 import { strugglingNodes } from "@/lib/learning/practice";
@@ -9,12 +9,13 @@ import { SyllabusView } from "@/components/textbook/SyllabusView";
 export const metadata = { title: "Syllabus" };
 
 export default async function SyllabusPage() {
-  const user = await requireUser();
+  const ctx = await requireOrg();
+  const user = ctx.user;
   const progress = await loadProgress(user.id);
   const status = statusIn(progress);
   const [struggling, assignments, exams] = await Promise.all([
     strugglingNodes(user.id),
-    prisma.assignment.findMany({ where: { archived: false }, orderBy: [{ dueAt: { sort: "asc", nulls: "last" } }, { createdAt: "desc" }] }),
+    prisma.assignment.findMany({ where: { archived: false, classroomId: { in: ctx.learnsIn } }, orderBy: [{ dueAt: { sort: "asc", nulls: "last" } }, { createdAt: "desc" }] }),
     prisma.examRecord.findMany({ where: { userId: user.id }, select: { scope: true, createdAt: true, score: true, total: true } }),
   ]);
   const rows = [...progress.entries()].map(([nodeId, p]) => ({ nodeId, status: p.status, misconceptionId: p.misconceptionId }));

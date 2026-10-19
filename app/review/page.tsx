@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { requireUser } from "@/lib/auth/session";
+import { requireOrg } from "@/lib/auth/context";
+import { currentSession } from "@/lib/auth/session";
 import { getNode, publicItem } from "@/lib/content";
 import { dueNodes, loadProgress } from "@/lib/learning/progress";
 import { customItemsFor } from "@/lib/content/custom";
@@ -9,14 +10,14 @@ export const metadata = { title: "Review" };
 const MAX_PER_SESSION = 10;
 
 export default async function ReviewPage() {
-  const user = await requireUser();
+  const user = (await requireOrg()).user;
+  const orgId = (await currentSession())?.orgId ?? null;
   const progress = await loadProgress(user.id);
   const due = dueNodes(progress).slice(0, MAX_PER_SESSION);
 
   if (due.length === 0) {
     return (
       <div className="card max-w-lg mx-auto text-center space-y-4">
-        <p className="text-4xl">✨</p>
         <h1 className="text-2xl font-bold">Nothing due</h1>
         <p className="text-[var(--muted)]">Solid concepts come back on their own schedule. Learn something new meanwhile.</p>
         <Link href="/learn" className="btn">
@@ -31,7 +32,7 @@ export default async function ReviewPage() {
     due.map(async (id) => {
       const node = getNode(id)!;
       const streak = progress.get(id)?.reviewStreak ?? 0;
-      const pool = [...node.review, ...(await customItemsFor(id, "r"))];
+      const pool = [...node.review, ...(await customItemsFor(id, "r", orgId))];
       return { nodeId: id, title: node.title, item: publicItem(pool[streak % pool.length]) };
     }),
   );

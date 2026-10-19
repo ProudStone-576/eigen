@@ -1,7 +1,8 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { STATUS_STYLE } from "@/components/ConceptMap";
-import { requireTeacher } from "@/lib/auth/session";
+import { requireStaff } from "@/lib/auth/context";
+import { canManageClass } from "@/lib/auth/permissions";
 import { prisma } from "@/lib/db";
 import { getNode } from "@/lib/content";
 import type { Status } from "@/lib/learning/rules";
@@ -11,14 +12,16 @@ import { ArchiveButton } from "./ArchiveButton";
 export const metadata = { title: "Assignment" };
 
 export default async function AssignmentPage({ params }: { params: Promise<{ id: string }> }) {
-  await requireTeacher();
+  const ctx = await requireStaff();
   const { id } = await params;
-  const a = await prisma.assignment.findUnique({ where: { id } });
-  if (!a) notFound();
-  const [students, exams] = await Promise.all([
-    prisma.user.findMany({ where: { role: "STUDENT" }, orderBy: { name: "asc" }, select: { id: true, name: true, progress: { select: { nodeId: true, status: true, misconceptionId: true } } } }),
-    a.unitId ? prisma.examRecord.findMany({ where: { scope: a.unitId, createdAt: { gte: a.createdAt } } }) : Promise.resolve([]),
-  ]);
+  const a = await prisma.assignment.findFirst({ where: { id, classroom: { orgId: ctx.org.id } }, include: { classroom: { select: { id: true, name: true } } } });
+  if (!a || !a.classroom || !canManageClass(ctx.role, ctx.teaches.includes(a.classroom.id))) notFound();
+  const students = await prisma.user.findMany({
+    where: { enrollments: { some: { classroomId: a.classroom.id, role: "STUDENT" } } },
+    orderBy: { name: "asc" },
+    select: { id: true, name: true, progress: { select: { nodeId: true, status: true, misconceptionId: true } } },
+  });
+  const exams = a.unitId ? await prisma.examRecord.findMany({ where: { scope: a.unitId, createdAt: { gte: a.createdAt }, userId: { in: students.map((s) => s.id) } } }) : [];
   const nodes = a.nodeIds.flatMap((nid) => {
     const n = getNode(nid);
     return n ? [n] : [];
@@ -28,7 +31,7 @@ export default async function AssignmentPage({ params }: { params: Promise<{ id:
 
   return (
     <div className="space-y-6">
-      <Link href="/teacher" className="text-sm text-[var(--muted)] hover:text-[var(--fg)]">← Class</Link>
+      <Link href={`/teacher/classes/${a.classroom.id}`} className="text-sm text-[var(--muted)] hover:text-[var(--fg)]">← {a.classroom.name}</Link>
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">{a.title}</h1>

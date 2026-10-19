@@ -1,6 +1,6 @@
 import Link from "next/link";
+import { requireOrg } from "@/lib/auth/context";
 import { notFound } from "next/navigation";
-import { requireUser } from "@/lib/auth/session";
 import { getNode } from "@/lib/content";
 import { loadProgress, statusIn, unlocked } from "@/lib/learning/progress";
 import { PRACTICE_STREAK } from "@/lib/learning/rules";
@@ -16,7 +16,7 @@ export default async function PracticePage({ params }: { params: Promise<{ nodeI
   const { nodeId } = await params;
   const node = getNode(nodeId);
   if (!node) notFound();
-  const user = await requireUser();
+  const user = (await requireOrg()).user;
   const progress = await loadProgress(user.id);
   if (!unlocked(node.id, progress)) {
     return (

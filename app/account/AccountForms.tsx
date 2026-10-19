@@ -1,7 +1,7 @@
 "use client";
 
 import { useActionState } from "react";
-import { changePassword, updateProfile, type AccountState } from "@/app/actions";
+import { changePassword, deleteAccount, updateProfile, type AccountState } from "@/app/actions";
 
 const initial: AccountState = { error: null };
 
@@ -14,8 +14,8 @@ function Status({ state }: { state: AccountState }) {
 export function NameForm({ name }: { name: string }) {
   const [state, action, pending] = useActionState(updateProfile, initial);
   return (
-    <form action={action} className="card space-y-3">
-      <h2 className="text-lg font-semibold">Your name</h2>
+    <form action={action} className="space-y-3">
+      <p className="tb-label">Your name</p>
       <input name="name" defaultValue={name} maxLength={60} className="field w-full" autoComplete="name" aria-label="Your name" />
       <Status state={state} />
       <button className="btn" disabled={pending}>{pending ? "Saving…" : "Save"}</button>
@@ -26,8 +26,8 @@ export function NameForm({ name }: { name: string }) {
 export function PasswordForm() {
   const [state, action, pending] = useActionState(changePassword, initial);
   return (
-    <form action={action} className="card space-y-3">
-      <h2 className="text-lg font-semibold">Change password</h2>
+    <form action={action} className="space-y-3">
+      <p className="tb-label">Change password</p>
       <label className="block text-sm">
         Current password
         <input name="current" type="password" className="field mt-1 w-full" autoComplete="current-password" required />
@@ -42,6 +42,29 @@ export function PasswordForm() {
       </label>
       <Status state={state} />
       <button className="btn" disabled={pending}>{pending ? "Changing…" : "Change password"}</button>
+    </form>
+  );
+}
+
+export function DeleteAccountForm() {
+  const [state, action, pending] = useActionState(deleteAccount, initial);
+  return (
+    <form action={action} className="space-y-3 max-w-md">
+      <p className="text-sm text-[var(--muted)]">
+        Deletes your account, progress, answers and test records permanently. Questions and assignments you wrote stay with your organisation. This cannot be undone.
+      </p>
+      <label className="block text-sm">
+        Password
+        <input name="password" type="password" className="field mt-1 w-full" autoComplete="current-password" required />
+      </label>
+      <label className="block text-sm">
+        Type DELETE to confirm
+        <input name="confirm" className="field mt-1 w-full" autoComplete="off" required />
+      </label>
+      <Status state={state} />
+      <button className="btn-ghost text-[var(--mis)]" disabled={pending}>
+        {pending ? "Deleting…" : "Delete my account"}
+      </button>
     </form>
   );
 }

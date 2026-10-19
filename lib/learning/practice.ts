@@ -75,9 +75,9 @@ function nextTemplate(nodeId: string, last: number | null): number {
   return t;
 }
 
-async function pickFor(node: ConceptNode, misconception: string | null, level: Level, lastTemplate: number | null): Promise<Item> {
+async function pickFor(node: ConceptNode, misconception: string | null, level: Level, lastTemplate: number | null, orgId: string | null): Promise<Item> {
   // Teacher-written questions take a share of practice when they exist.
-  const custom = await customItemsFor(node.id, "p");
+  const custom = await customItemsFor(node.id, "p", orgId);
   if (misconception) {
     const targetedCustom = custom.filter((i) => misconceptionsOf(i).includes(misconception));
     if (targetedCustom.length && randomInt(2) === 0) return targetedCustom[randomInt(targetedCustom.length)];
@@ -93,7 +93,7 @@ async function pickFor(node: ConceptNode, misconception: string | null, level: L
   return generate(node.id, freshSeed(), { template: nextTemplate(node.id, lastTemplate), level }) ?? staticPool(node)[randomInt(staticPool(node).length)];
 }
 
-export async function nextPracticeQuestion(userId: string, nodeId: string, index: number): Promise<PracticeQuestion | { error: string }> {
+export async function nextPracticeQuestion(userId: string, nodeId: string, index: number, orgId: string | null): Promise<PracticeQuestion | { error: string }> {
   const node = getNode(nodeId);
   if (!node) return { error: "Unknown concept." };
   const map = await loadProgress(userId);
@@ -114,7 +114,7 @@ export async function nextPracticeQuestion(userId: string, nodeId: string, index
       title: source.title,
       isTarget: false,
       level: st.level,
-      item: publicItem(await pickFor(source, p?.status === "MISCONCEPTION" ? p.misconceptionId : null, st.level, st.lastTemplate)),
+      item: publicItem(await pickFor(source, p?.status === "MISCONCEPTION" ? p.misconceptionId : null, st.level, st.lastTemplate, orgId)),
     };
   }
   const held = map.get(node.id);
@@ -124,7 +124,7 @@ export async function nextPracticeQuestion(userId: string, nodeId: string, index
     title: node.title,
     isTarget: true,
     level: st.level,
-    item: publicItem(await pickFor(node, held?.status === "MISCONCEPTION" ? held.misconceptionId : null, st.level, st.lastTemplate)),
+    item: publicItem(await pickFor(node, held?.status === "MISCONCEPTION" ? held.misconceptionId : null, st.level, st.lastTemplate, orgId)),
   };
 }
 

@@ -69,10 +69,10 @@ function solutionText(item: Item): string {
 
 export type HintResult = { hint: string } | { error: string };
 
-export async function hintFor(args: { userId: string; nodeId: string; itemId: string; response: Response }): Promise<HintResult> {
+export async function hintFor(args: { userId: string; orgId: string | null; nodeId: string; itemId: string; response: Response }): Promise<HintResult> {
   if (!tutorEnabled()) return { error: "The tutor isn't switched on yet." };
   const node = getNode(args.nodeId);
-  const found = node && (await resolveItem(node, args.itemId));
+  const found = node && (await resolveItem(node, args.itemId, args.orgId));
   if (!node || !found) return { error: "Unknown question." };
   // Hints are for practice, not for the diagnostic questions that decide status.
   if (found.context !== "produce" && found.context !== "practice") return { error: "Hints are available on produce and practice questions." };

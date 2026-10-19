@@ -90,7 +90,7 @@ export async function gradeExam(userId: string, answers: ExamAnswer[], timeZone:
   const items: ExamResultItem[] = [];
   for (const a of answers) {
     const node = getNode(a.nodeId);
-    const found = node && a.itemId.startsWith("gen~") ? await resolveItem(node, a.itemId) : null;
+    const found = node && a.itemId.startsWith("gen~") ? await resolveItem(node, a.itemId, null) : null;
     if (!node || !found) return { error: "That exam contains a question that no longer exists." };
     if (!a.response) {
       items.push({ nodeId: node.id, itemId: a.itemId, status: "blank", grade: null, misconceptionText: null });

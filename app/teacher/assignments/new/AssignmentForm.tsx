@@ -6,8 +6,9 @@ import { createAssignment } from "@/app/teacher/actions";
 
 type UnitOption = { id: string; track: string; title: string; nodes: { id: string; title: string }[] };
 
-export function AssignmentForm({ units }: { units: UnitOption[] }) {
+export function AssignmentForm({ units, classes, initialClass }: { units: UnitOption[]; classes: { id: string; name: string }[]; initialClass: string }) {
   const router = useRouter();
+  const [classroomId, setClassroomId] = useState(initialClass);
   const [title, setTitle] = useState("");
   const [picked, setPicked] = useState<Set<string>>(new Set());
   const [unitId, setUnitId] = useState("");
@@ -28,7 +29,7 @@ export function AssignmentForm({ units }: { units: UnitOption[] }) {
       setError(null);
       // A date-only due date means the end of that day, local time.
       const dueAt = due ? new Date(`${due}T23:59:00`).toISOString() : null;
-      const r = await createAssignment({ title, nodeIds: [...picked], unitId: unitId || null, note: note || null, dueAt });
+      const r = await createAssignment({ classroomId, title, nodeIds: [...picked], unitId: unitId || null, note: note || null, dueAt });
       if (!r.ok) return setError(r.error);
       router.push(`/teacher/assignments/${r.id}`);
     });
@@ -36,6 +37,16 @@ export function AssignmentForm({ units }: { units: UnitOption[] }) {
   return (
     <div className="space-y-6">
       <div className="card space-y-4">
+        <label className="block text-sm font-medium">
+          Class
+          <select value={classroomId} onChange={(e) => setClassroomId(e.target.value)} className="field mt-1 w-full">
+            {classes.map((c) => (
+              <option key={c.id} value={c.id}>
+                {c.name}
+              </option>
+            ))}
+          </select>
+        </label>
         <label className="block text-sm font-medium">
           Title
           <input value={title} onChange={(e) => setTitle(e.target.value)} maxLength={120} placeholder="e.g. Week 3: eigenvectors" className="field mt-1 w-full" />

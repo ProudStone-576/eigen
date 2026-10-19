@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { MathText } from "@/components/MathText";
-import { requireTeacher } from "@/lib/auth/session";
+import { requireStaff } from "@/lib/auth/context";
 import { prisma } from "@/lib/db";
 import { getNode } from "@/lib/content";
 import { customId } from "@/lib/content/custom";
@@ -14,12 +14,12 @@ export const metadata = { title: "Edit questions" };
 const KIND_LABEL: Record<string, string> = { mc: "Multiple choice", number: "Number", vector: "Vector", matrix: "Matrix", expression: "Expression" };
 
 export default async function ContentNodePage({ params }: { params: Promise<{ nodeId: string }> }) {
-  await requireTeacher();
+  const ctx = await requireStaff();
   const { nodeId } = await params;
   const node = getNode(nodeId);
   if (!node) notFound();
 
-  const rows = await prisma.customItem.findMany({ where: { nodeId }, orderBy: [{ archived: "asc" }, { createdAt: "desc" }] });
+  const rows = await prisma.customItem.findMany({ where: { nodeId, orgId: ctx.org.id }, orderBy: [{ archived: "asc" }, { createdAt: "desc" }] });
   const ids = rows.flatMap((r) => [customId(r.id, "p"), customId(r.id, "r")]);
   const stats = ids.length
     ? await prisma.attempt.groupBy({ by: ["itemId", "correct"], where: { itemId: { in: ids } }, _count: { _all: true } })
