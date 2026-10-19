@@ -3,6 +3,7 @@
 import { useRef, useState, type PointerEvent as ReactPointerEvent, type ReactNode } from "react";
 import type { Mat, Vec, Widget } from "@/lib/content/types";
 import { renderMath } from "@/components/MathText";
+import { BayesWidget, FitLineWidget, LikelihoodWidget, NormalWidget, Points1dWidget, SimWidget } from "./StatsWidgets";
 
 // ---------- Plane: a coordinate grid you can drag on ----------
 
@@ -583,5 +584,17 @@ export function WidgetView({ widget }: { widget: Widget }) {
       return <EigenWidget matrix={widget.matrix} start={widget.start} />;
     case "spread":
       return <SpreadWidget points={widget.points} />;
+    case "sim":
+      return <SimWidget die={widget.die} />;
+    case "bayes":
+      return <BayesWidget prevalence={widget.prevalence} sensitivity={widget.sensitivity} falsePositive={widget.falsePositive} />;
+    case "points1d":
+      return <Points1dWidget values={widget.values} />;
+    case "normal":
+      return <NormalWidget mu={widget.mu} sigma={widget.sigma} />;
+    case "likelihood":
+      return <LikelihoodWidget heads={widget.heads} flips={widget.flips} />;
+    case "fitline":
+      return <FitLineWidget points={widget.points} />;
   }
 }

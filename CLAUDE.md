@@ -13,6 +13,7 @@ Next.js 16 (App Router) + Prisma 6.19 + Neon Postgres. Invite-only student accou
 - `components/widgets/Widgets.tsx` — interactive SVG plane: vector, vector-add, scale, combo, transform (draggable î/ĵ, optional area/determinant), compose, solve (drag x until Ax hits b).
 - `lib/tutor.ts` — AI hint tutor (Claude Opus 5.5, effort low, server-side refusal fallback). Only on produce questions after a wrong answer, never reveals the answer, student input fenced as data, 40 hints/day per student (`Hint` table). Off unless `ANTHROPIC_API_KEY` is set.
 - Content: `lib/content/linear-algebra/unit1.ts` (vectors → composition), `unit2.ts` (span → solving Ax = b), `unit3.ts` (eigenvectors → PCA). Vector items with `upToScale` accept any non-zero multiple (eigenvectors, directions). Widgets `eigen` (hunt for Av ∥ v) and `spread` (PCA projections).
+- Statistics track: `lib/content/statistics/unit4.ts` (probability → Bayes, independence), `unit5.ts` (variance → covariance matrix, normal, MLE, least squares, losses as likelihoods). Stats widgets live in `components/widgets/StatsWidgets.tsx`: `sim`, `bayes`, `points1d`, `normal`, `likelihood`, `fitline`. Units carry a `track` label; `/learn` groups by it.
 - Live: https://eigen-green.vercel.app (Vercel project `eigen`). `/api/health` checks the DB. Set Vercel env vars with `printf '%s' "$VAL" | vercel env add` — piping from PowerShell adds a newline and breaks them.
 
 ## Rules for content

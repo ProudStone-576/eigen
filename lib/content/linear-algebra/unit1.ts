@@ -845,6 +845,7 @@ const composition: ConceptNode = {
 
 export const unit1: Unit = {
   id: "la-1",
+  track: "Linear algebra",
   title: "Vectors & Linear Transformations",
   blurb: "From arrows to matrices that move the whole plane: the language every ML model is written in.",
   nodes: [vector, vectorAdd, scalar, linearCombination, basis, matrixTransform, matrixVector, composition],

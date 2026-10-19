@@ -597,6 +597,7 @@ const pca: ConceptNode = {
 
 export const unit3: Unit = {
   id: "la-3",
+  track: "Linear algebra",
   title: "Eigenvectors & PCA",
   blurb: "The directions a matrix doesn't turn, and how they find the shape of data.",
   nodes: [eigenvector, eigenvalue, findingValues, findingVectors, eigenbasis, pca],

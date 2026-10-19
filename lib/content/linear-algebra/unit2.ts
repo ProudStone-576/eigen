@@ -643,6 +643,7 @@ const solving: ConceptNode = {
 
 export const unit2: Unit = {
   id: "la-2",
+  track: "Linear algebra",
   title: "Span, Determinants & Inverses",
   blurb: "What a set of vectors can reach, how much a matrix stretches space, and how to run it backwards.",
   nodes: [span, independence, determinant, detZero, inverse, solving],

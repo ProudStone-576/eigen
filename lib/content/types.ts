@@ -87,7 +87,19 @@ export type Widget =
   /** Drag v and watch Av: find the directions A doesn't knock off their own line. */
   | { kind: "eigen"; matrix: Mat; start: Vec }
   /** Rotate a direction through a data cloud and maximise the spread of the projections (PCA). */
-  | { kind: "spread"; points: Vec[] };
+  | { kind: "spread"; points: Vec[] }
+  /** Flip coins or roll a die many times; watch the running fraction / average settle. */
+  | { kind: "sim"; die: boolean }
+  /** 1,000 people: prevalence, test sensitivity, false-positive rate -> who tests positive. */
+  | { kind: "bayes"; prevalence: number; sensitivity: number; falsePositive: number }
+  /** Draggable values on a number line: mean, deviations, variance. */
+  | { kind: "points1d"; values: number[] }
+  /** Bell curve with mean and standard deviation sliders. */
+  | { kind: "normal"; mu: number; sigma: number }
+  /** Likelihood of k heads in n flips as the coin's p varies. */
+  | { kind: "likelihood"; heads: number; flips: number }
+  /** Fit a line by hand: slope/intercept sliders, residuals, squared error. */
+  | { kind: "fitline"; points: Vec[] };
 
 // ---------- Lesson steps ----------
 
@@ -129,5 +141,5 @@ export type ConceptNode = {
   misconceptions: Record<string, string>;
 };
 
-export type Unit = { id: string; title: string; blurb: string; nodes: ConceptNode[] };
+export type Unit = { id: string; track: string; title: string; blurb: string; nodes: ConceptNode[] };
 export type Course = { id: string; title: string; units: Unit[] };

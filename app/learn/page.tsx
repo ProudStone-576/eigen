@@ -32,14 +32,17 @@ export default async function LearnPage() {
         </Link>
       )}
 
-      {course.units.map((unit) => {
+      {course.units.map((unit, i) => {
+        const trackStart = i === 0 || course.units[i - 1].track !== unit.track;
         const state: Record<string, Status | "LOCKED"> = Object.fromEntries(
           unit.nodes.map((n) => [n.id, unlocked(n.id, progress) ? status(n.id) : "LOCKED"]),
         );
         const solid = unit.nodes.filter((n) => status(n.id) === "SOLID").length;
         const next = unit.nodes.find((n) => state[n.id] !== "LOCKED" && state[n.id] !== "SOLID");
         return (
-          <section key={unit.id} className="card space-y-5">
+          <div key={unit.id} className="space-y-3">
+          {trackStart && <h2 className="text-sm font-semibold uppercase tracking-widest text-[var(--accent)] pt-2">{unit.track}</h2>}
+          <section className="card space-y-5">
             <div className="flex flex-wrap items-end justify-between gap-3">
               <div>
                 <h2 className="text-xl font-bold">{unit.title}</h2>
@@ -69,10 +72,11 @@ export default async function LearnPage() {
               ))}
             </ul>
           </section>
+          </div>
         );
       })}
 
-      <p className="text-sm text-[var(--muted)]">Linear algebra track complete. Coming next: probability and statistics for ML.</p>
+      <p className="text-sm text-[var(--muted)]">Next up: calculus for ML (gradients and gradient descent).</p>
     </div>
   );
 }
