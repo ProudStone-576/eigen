@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, type MutableRefObject } from "react";
 import * as THREE from "three";
+import { HEAD, makeArrow, POINTS_FRAG as FRAG, POINTS_VERT as VERT, SHAFT } from "@/components/three/kit";
 import {
   ACT_COUNT,
   ACT_VIEW,
@@ -23,61 +24,6 @@ import {
 } from "./filmMath";
 
 export type FilmState = { act: number; local: number; visible: boolean };
-
-const VERT = /* glsl */ `
-attribute vec3 aColor;
-attribute float aSize;
-uniform float uScale;
-uniform float uPixelRatio;
-uniform float uDist;
-varying vec3 vColor;
-varying float vFade;
-void main() {
-  vec4 mv = modelViewMatrix * vec4(position, 1.0);
-  gl_Position = projectionMatrix * mv;
-  float depth = -mv.z;
-  gl_PointSize = aSize * uScale * uPixelRatio / depth;
-  vColor = aColor;
-  // Depth cue relative to the object centre, so pulling the camera back doesn't dim everything.
-  vFade = clamp(1.0 - (depth - uDist) * 0.28, 0.35, 1.0);
-}`;
-const FRAG = /* glsl */ `
-varying vec3 vColor;
-varying float vFade;
-void main() {
-  float d = length(gl_PointCoord - 0.5);
-  if (d > 0.5) discard;
-  float a = pow(smoothstep(0.5, 0.0, d), 1.7);
-  gl_FragColor = vec4(vColor * a * vFade, a);
-}`;
-
-const UP = new THREE.Vector3(0, 1, 0);
-const SHAFT = new THREE.CylinderGeometry(0.014, 0.014, 1, 14).translate(0, 0.5, 0);
-const HEAD = new THREE.ConeGeometry(0.05, 0.16, 24);
-
-function makeArrow(color: number) {
-  const mat = new THREE.MeshStandardMaterial({ color, emissive: color, emissiveIntensity: 0.5, roughness: 0.3, metalness: 0.25, transparent: true });
-  const shaft = new THREE.Mesh(SHAFT, mat);
-  const head = new THREE.Mesh(HEAD, mat);
-  const g = new THREE.Group();
-  g.add(shaft, head);
-  const dir = new THREE.Vector3();
-  return {
-    g,
-    set(v: number[], opacity: number) {
-      dir.set(v[0], v[1], v[2]);
-      const len = dir.length();
-      g.visible = opacity > 0.01 && len > 1e-3;
-      if (!g.visible) return;
-      mat.opacity = opacity;
-      const hl = Math.min(0.16, len * 0.4);
-      shaft.scale.set(1, Math.max(1e-3, len - hl), 1);
-      head.scale.set(1, hl / 0.16, 1);
-      head.position.y = len - hl / 2;
-      g.quaternion.setFromUnitVectors(UP, dir.normalize());
-    },
-  };
-}
 
 const f2 = (x: number) => (Math.abs(x) < 0.005 ? "0.00" : x.toFixed(2)).padStart(5, " ");
 
@@ -128,7 +74,7 @@ export default function FilmScene({ state }: { state: MutableRefObject<FilmState
     basis.forEach((a) => scene.add(a.g));
     const eigenMat = new THREE.MeshBasicMaterial({ color: 0xffc35a, transparent: true, opacity: 0 });
     const eigenLine = new THREE.Mesh(new THREE.CylinderGeometry(0.006, 0.006, 7, 8), eigenMat);
-    eigenLine.quaternion.setFromUnitVectors(UP, new THREE.Vector3(...EIGEN.vectors[0]).normalize());
+    eigenLine.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), new THREE.Vector3(...EIGEN.vectors[0]).normalize());
     scene.add(eigenLine);
     const pca = [makeArrow(0xffffff), makeArrow(0x93c5fd), makeArrow(0xf9a8d4)];
     pca.forEach((a) => scene.add(a.g));

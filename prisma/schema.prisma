@@ -24,22 +24,29 @@ enum NodeStatus {
 }
 
 model User {
-  id           String         @id @default(cuid())
-  email        String         @unique
-  name         String
-  passwordHash String
-  role         Role           @default(STUDENT)
-  xp           Int            @default(0)
+  id                 String         @id @default(cuid())
+  email              String         @unique
+  name               String
+  passwordHash       String
+  role               Role           @default(STUDENT)
+  xp                 Int            @default(0)
   /// Consecutive days with at least one graded answer.
-  streakDays   Int            @default(0)
+  streakDays         Int            @default(0)
   /// Local calendar day (YYYY-MM-DD) of the last graded answer.
-  lastActiveOn String?
-  createdAt    DateTime       @default(now())
-  sessions     Session[]
-  progress     NodeProgress[]
-  attempts     Attempt[]
-  hints        Hint[]
-  customItems  CustomItem[]
+  lastActiveOn       String?
+  /// Set when a teacher resets the password: the student must pick a new one.
+  mustChangePassword Boolean        @default(false)
+  /// Brute-force protection: consecutive failed logins and a temporary lock.
+  failedLogins       Int            @default(0)
+  lockedUntil        DateTime?
+  createdAt          DateTime       @default(now())
+  sessions           Session[]
+  assignments        Assignment[]
+  examRecords        ExamRecord[]
+  progress           NodeProgress[]
+  attempts           Attempt[]
+  hints              Hint[]
+  customItems        CustomItem[]
 }
 
 /// A question the teacher wrote in the app, attached to one concept. `data` is
@@ -122,4 +129,38 @@ model Attempt {
 
   @@index([userId, nodeId])
   @@index([nodeId, itemId])
+}
+
+/// Work a teacher sets for the class: concepts to land, and optionally a unit test.
+model Assignment {
+  id          String    @id @default(cuid())
+  title       String
+  /// Concept ids (lib/content). Done when the student has the concept LANDED or SOLID.
+  nodeIds     String[]
+  /// Optional unit test (unit id) to take after the assignment was set.
+  unitId      String?
+  note        String?
+  dueAt       DateTime?
+  archived    Boolean   @default(false)
+  createdById String
+  createdAt   DateTime  @default(now())
+  createdBy   User      @relation(fields: [createdById], references: [id], onDelete: Cascade)
+
+  @@index([archived, dueAt])
+}
+
+/// One row per submitted test (unit test or mock exam). The per-question detail is in Attempt (step "exam").
+model ExamRecord {
+  id          String   @id @default(cuid())
+  userId      String
+  /// Unit id, or "mock".
+  scope       String
+  score       Int
+  total       Int
+  durationSec Int?
+  createdAt   DateTime @default(now())
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, createdAt])
+  @@index([scope, createdAt])
 }

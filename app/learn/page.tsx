@@ -5,6 +5,9 @@ import { course } from "@/lib/content";
 import { dueNodes, loadProgress, statusIn, unlocked } from "@/lib/learning/progress";
 import { PRACTICE_STREAK, type Status } from "@/lib/learning/rules";
 import { strugglingNodes } from "@/lib/learning/practice";
+import { prisma } from "@/lib/db";
+import { getNode } from "@/lib/content";
+import { assignmentProgress } from "@/lib/learning/summary";
 
 export const metadata = { title: "Learn" };
 
@@ -13,7 +16,13 @@ export default async function LearnPage() {
   const progress = await loadProgress(user.id);
   const status = statusIn(progress);
   const due = dueNodes(progress);
-  const struggling = await strugglingNodes(user.id);
+  const [struggling, assignments, exams] = await Promise.all([
+    strugglingNodes(user.id),
+    prisma.assignment.findMany({ where: { archived: false }, orderBy: [{ dueAt: { sort: "asc", nulls: "last" } }, { createdAt: "desc" }] }),
+    prisma.examRecord.findMany({ where: { userId: user.id }, select: { scope: true, createdAt: true, score: true, total: true } }),
+  ]);
+  const rows = [...progress.entries()].map(([nodeId, p]) => ({ nodeId, status: p.status, misconceptionId: p.misconceptionId }));
+  const assigned = assignments.map((a) => ({ a, pr: assignmentProgress(a, rows, exams) })).filter(({ pr }) => !pr.complete);
 
   return (
     <div className="space-y-8">
@@ -21,6 +30,41 @@ export default async function LearnPage() {
         <p className="text-[var(--muted)]">Hi {user.name.split(" ")[0]} 👋</p>
         <h1 className="text-3xl font-extrabold">{course.title}</h1>
       </div>
+
+      {assigned.length > 0 && (
+        <section className="card space-y-4">
+          <h2 className="font-semibold">Assigned to you</h2>
+          {assigned.map(({ a, pr }) => {
+            const next = pr.next ? getNode(pr.next) : null;
+            return (
+              <div key={a.id} className="space-y-2">
+                <div className="flex flex-wrap items-baseline justify-between gap-2">
+                  <p className="font-medium">{a.title}</p>
+                  <p className={`text-sm ${pr.overdue ? "text-[var(--mis)]" : "text-[var(--muted)]"}`}>
+                    {a.dueAt ? `${pr.overdue ? "Was due" : "Due"} ${a.dueAt.toLocaleDateString("en-CA", { weekday: "short", month: "short", day: "numeric" })}` : "No due date"}
+                  </p>
+                </div>
+                {a.note && <p className="text-sm text-[var(--muted)]">{a.note}</p>}
+                <div className="h-1.5 rounded-full bg-[var(--border)] overflow-hidden">
+                  <div className="h-full bg-[var(--landed)]" style={{ width: `${pr.fraction * 100}%` }} />
+                </div>
+                <div className="flex flex-wrap items-center gap-3 text-sm">
+                  <span className="text-[var(--muted)]">
+                    {pr.conceptsDone} of {pr.concepts} concepts landed{a.unitId ? (pr.exam ? " · test done" : " · plus a unit test") : ""}
+                  </span>
+                  {next && unlocked(next.id, progress) && (
+                    <Link href={`/learn/${next.id}`} className="link-more">Next: {next.title}</Link>
+                  )}
+                  {next && !unlocked(next.id, progress) && <span className="text-[var(--muted)]">Next: {next.title} (unlock its foundations first)</span>}
+                  {!next && a.unitId && !pr.exam && (
+                    <Link href={`/exam/${a.unitId}`} className="link-more">Take the unit test</Link>
+                  )}
+                </div>
+              </div>
+            );
+          })}
+        </section>
+      )}
 
       {due.length > 0 && (
         <Link href="/review" className="card-soft flex items-center justify-between gap-4 hover:opacity-90">

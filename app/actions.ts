@@ -4,7 +4,10 @@ import { redirect } from "next/navigation";
 import { z } from "zod";
 import { prisma } from "@/lib/db";
 import { hashPassword, verifyPassword } from "@/lib/auth/password";
-import { createSession, currentUser, destroySession } from "@/lib/auth/session";
+import { createSession, currentUser, destroyAllSessions, destroySession } from "@/lib/auth/session";
+import { afterFailedLogin, isLocked, minutesLeft } from "@/lib/auth/lockout";
+import { revalidatePath } from "next/cache";
+import { course } from "@/lib/content";
 import { submitAnswer, type GradeResult } from "@/lib/learning/progress";
 import type { Response } from "@/lib/check";
 import { hintFor, type HintResult } from "@/lib/tutor";
@@ -45,10 +48,15 @@ export async function login(_prev: FormState, form: FormData): Promise<FormState
   const parsed = loginSchema.safeParse(Object.fromEntries(form));
   if (!parsed.success) return { error: "Enter your email and password." };
   const user = await prisma.user.findUnique({ where: { email: parsed.data.email } });
+  if (user && isLocked(user.lockedUntil)) {
+    return { error: `Too many wrong passwords. Try again in ${minutesLeft(user.lockedUntil!)} minutes, or ask your teacher to reset it.` };
+  }
   // Same message either way: don't reveal which emails have accounts.
   if (!user || !(await verifyPassword(parsed.data.password, user.passwordHash))) {
+    if (user) await prisma.user.update({ where: { id: user.id }, data: afterFailedLogin(user.failedLogins) });
     return { error: "Email or password is wrong." };
   }
+  if (user.failedLogins > 0 || user.lockedUntil) await prisma.user.update({ where: { id: user.id }, data: { failedLogins: 0, lockedUntil: null } });
   await createSession(user.id);
   redirect("/learn");
 }
@@ -81,7 +89,7 @@ export async function startExam(input: { scope: string }): Promise<ExamPaper> {
   return buildExam(user.id, scope === "mock" ? { kind: "mock" } : { kind: "unit", unitId: scope });
 }
 
-export async function submitExam(input: { answers: ExamAnswer[]; timeZone?: string }): Promise<ExamResult | { error: string }> {
+export async function submitExam(input: { scope?: string; durationSec?: number; answers: ExamAnswer[]; timeZone?: string }): Promise<ExamResult | { error: string }> {
   const user = await currentUser();
   if (!user) return { error: "Your session ended. Log in again." };
   if (!Array.isArray(input.answers)) return { error: "That exam couldn't be read." };
@@ -91,7 +99,13 @@ export async function submitExam(input: { answers: ExamAnswer[]; timeZone?: stri
     if (r && !r.success) return { error: "An answer couldn't be read." };
     answers.push({ nodeId: String(a?.nodeId), itemId: String(a?.itemId), response: r ? r.data : null });
   }
-  return gradeExam(user.id, answers, typeof input.timeZone === "string" ? input.timeZone.slice(0, 64) : undefined);
+  const result = await gradeExam(user.id, answers, typeof input.timeZone === "string" ? input.timeZone.slice(0, 64) : undefined);
+  const scope = String(input.scope ?? "");
+  if (!("error" in result) && (scope === "mock" || course.units.some((u) => u.id === scope))) {
+    const durationSec = Number.isFinite(input.durationSec) ? Math.max(0, Math.min(86_400, Math.round(Number(input.durationSec)))) : null;
+    await prisma.examRecord.create({ data: { userId: user.id, scope, score: result.score, total: result.total, durationSec } });
+  }
+  return result;
 }
 
 export async function askHint(input: { nodeId: string; itemId: string; response: Response }): Promise<HintResult> {
@@ -119,4 +133,43 @@ export async function answer(input: {
     response: response.data,
     timeZone: typeof input.timeZone === "string" ? input.timeZone.slice(0, 64) : undefined,
   });
+}
+
+export type AccountState = { error: string | null; ok?: string };
+
+export async function updateProfile(_prev: AccountState, form: FormData): Promise<AccountState> {
+  const user = await currentUser();
+  if (!user) return { error: "Your session ended. Log in again." };
+  const name = z.string().trim().min(1, "Enter your name.").max(60).safeParse(form.get("name"));
+  if (!name.success) return { error: name.error.issues[0].message };
+  await prisma.user.update({ where: { id: user.id }, data: { name: name.data } });
+  revalidatePath("/account");
+  return { error: null, ok: "Saved." };
+}
+
+const passwordSchema = z
+  .object({
+    current: z.string().min(1, "Enter your current password."),
+    next: z.string().min(8, "Your new password needs at least 8 characters.").max(200),
+    confirm: z.string(),
+  })
+  .refine((v) => v.next === v.confirm, { message: "The two new passwords don't match." })
+  .refine((v) => v.next !== v.current, { message: "Choose a password different from the current one." });
+
+/** Change password, then sign out every other device by starting a fresh session. */
+export async function changePassword(_prev: AccountState, form: FormData): Promise<AccountState> {
+  const user = await currentUser();
+  if (!user) return { error: "Your session ended. Log in again." };
+  const parsed = passwordSchema.safeParse(Object.fromEntries(form));
+  if (!parsed.success) return { error: parsed.error.issues[0].message };
+  const row = await prisma.user.findUniqueOrThrow({ where: { id: user.id }, select: { passwordHash: true } });
+  if (!(await verifyPassword(parsed.data.current, row.passwordHash))) return { error: "Your current password isn't right." };
+  await prisma.user.update({
+    where: { id: user.id },
+    data: { passwordHash: await hashPassword(parsed.data.next), mustChangePassword: false, failedLogins: 0, lockedUntil: null },
+  });
+  await destroyAllSessions(user.id);
+  await createSession(user.id);
+  revalidatePath("/", "layout");
+  return { error: null, ok: "Password changed. Other devices have been signed out." };
 }

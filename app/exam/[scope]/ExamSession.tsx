@@ -48,6 +48,8 @@ export function ExamSession({ scope }: { scope: string }) {
   function submit() {
     start(async () => {
       const r = await submitExam({
+        scope,
+        durationSec: elapsed,
         answers: questions!.map((q, i) => ({ nodeId: q.nodeId, itemId: q.item.id, response: isAnswered(answers[i]) ? answers[i] : null })),
         timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
       });

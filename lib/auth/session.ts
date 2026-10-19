@@ -9,7 +9,7 @@ import { prisma } from "@/lib/db";
 export const SESSION_COOKIE = "eigen_session";
 const SESSION_DAYS = 30;
 
-export type SessionUser = { id: string; email: string; name: string; role: Role; xp: number; streakDays: number };
+export type SessionUser = { id: string; email: string; name: string; role: Role; xp: number; streakDays: number; mustChangePassword: boolean };
 
 const hashToken = (token: string) => createHash("sha256").update(token).digest("hex");
 
@@ -41,16 +41,27 @@ export const currentUser = cache(async (): Promise<SessionUser | null> => {
   if (!token) return null;
   const session = await prisma.session.findUnique({
     where: { tokenHash: hashToken(token) },
-    include: { user: { select: { id: true, email: true, name: true, role: true, xp: true, streakDays: true } } },
+    include: { user: { select: { id: true, email: true, name: true, role: true, xp: true, streakDays: true, mustChangePassword: true } } },
   });
   if (!session || session.expiresAt < new Date()) return null;
   return session.user;
 });
 
-export async function requireUser(): Promise<SessionUser> {
+/**
+ * The signed-in user, or a redirect to log in. After a teacher resets a
+ * password, every page except the account page sends the student to choose a
+ * new one first.
+ */
+export async function requireUser(opts: { allowPasswordChange?: boolean } = {}): Promise<SessionUser> {
   const user = await currentUser();
   if (!user) redirect("/login");
+  if (user.mustChangePassword && !opts.allowPasswordChange) redirect("/account?reset=1");
   return user;
+}
+
+/** End every session a user has (after a password change or reset). */
+export async function destroyAllSessions(userId: string): Promise<void> {
+  await prisma.session.deleteMany({ where: { userId } });
 }
 
 export async function requireTeacher(): Promise<SessionUser> {
