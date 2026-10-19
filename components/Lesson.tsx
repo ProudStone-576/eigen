@@ -92,7 +92,7 @@ function StepView({ nodeId, step, tutor, onDone }: { nodeId: string; step: Publi
           {predicted && (
             <div className="space-y-4 border-t border-[var(--border)] pt-5">
               <p className="text-sm font-semibold uppercase tracking-wide text-[var(--accent)]">What actually happens</p>
-              <WidgetView widget={step.reveal.widget} />
+              {step.reveal.widget && <WidgetView widget={step.reveal.widget} />}
               <MathText as="p" text={step.reveal.body} className="text-lg" />
               <Question nodeId={nodeId} item={step.resolve} onGraded={(g) => onDone(g)} />
             </div>

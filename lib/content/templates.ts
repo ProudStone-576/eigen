@@ -1,4 +1,5 @@
 import type { Item } from "./types";
+import { BATCH1 } from "./templates-batch1";
 import { GENERATORS, mcNumbers, par, r2, rng, same, sameM, m, v, type Rng } from "./generators";
 
 /**
@@ -311,7 +312,7 @@ const EXTRA: Record<string, Template[]> = {
         const K = r.int(2, 10 * L);
         return {
           kind: "vector", id: "", answer: [A, K],
-          prompt: `Adult tickets cost $${adult}, child tickets $${child}. ${A + K} tickets were sold for $${adult * A + child * K}. How many of each? Give $\\begin{bmatrix}\\text{adults}\\\\\\text{children}\\end{bmatrix}$.`,
+          prompt: `Adult tickets cost \\$${adult}, child tickets \\$${child}. ${A + K} tickets were sold for \\$${adult * A + child * K}. How many of each? Give $\\begin{bmatrix}\\text{adults}\\\\\\text{children}\\end{bmatrix}$.`,
           explain: `a + c = ${A + K} and ${adult}a + ${child}c = ${adult * A + child * K} give a = ${A}, c = ${K}.`,
           traps: A === K ? [] : [{ answer: [K, A], misconception: "columns-are-equations", message: "Swapped: adults first." }],
         };
@@ -483,11 +484,11 @@ const EXTRA: Record<string, Template[]> = {
         const p = r.pick(L === 1 ? [0.1, 0.2, 0.5] : [0.05, 0.02, 0.25, 0.04]);
         const e = r2(prize * p - cost);
         return mcNumbers(
-          `A game costs $${cost} to play and pays $${prize} with probability ${p}. Expected profit per game?`,
-          { text: `$${e}`, why: `${prize} × ${p} − ${cost} = ${e}.` },
+          `A game costs \\$${cost} to play and pays \\$${prize} with probability ${p}. Expected profit per game?`,
+          { text: `\\$${e}`, why: `${prize} × ${p} − ${cost} = ${e}.` },
           [
-            { text: `$${prize - cost}`, why: "You only win with probability " + p + ".", misconception: "ignore-probabilities" },
-            { text: `$${r2(prize * p)}`, why: "Subtract the cost of playing." },
+            { text: `\\$${prize - cost}`, why: "You only win with probability " + p + ".", misconception: "ignore-probabilities" },
+            { text: `\\$${r2(prize * p)}`, why: "Subtract the cost of playing." },
           ],
         );
       },
@@ -750,7 +751,7 @@ const EXTRA: Record<string, Template[]> = {
         const z = wi * inc + wd * debt + b;
         return {
           kind: "number", id: "", answer: Math.max(0, z),
-          prompt: `A loan-scoring neuron weighs income (in $10k) by ${wi} and debt (in $10k) by ${wd}, with bias ${b}, then applies ReLU. Income ${inc}, debt ${debt}. Its output?`,
+          prompt: `A loan-scoring neuron weighs income (in \\$10k) by ${wi} and debt (in \\$10k) by ${wd}, with bias ${b}, then applies ReLU. Income ${inc}, debt ${debt}. Its output?`,
           explain: `z = ${wi}·${inc} + ${par(wd)}·${debt} + ${par(b)} = ${z}; ReLU gives ${Math.max(0, z)}.`,
         };
       },
@@ -796,10 +797,13 @@ const EXTRA: Record<string, Template[]> = {
   ],
 };
 
+/** Concepts that have practice templates of any kind. */
+export const TEMPLATED: string[] = [...new Set([...Object.keys(GENERATORS), ...Object.keys(EXTRA), ...Object.keys(BATCH1)])];
+
 /** All templates for a concept: the original compute generators first, then the extra kinds. */
 export function templatesFor(nodeId: string): Template[] {
   const base: Template[] = (GENERATORS[nodeId] ?? []).map((g) => ({ type: "compute" as const, make: (r: Rng) => g(r) }));
-  return [...base, ...(EXTRA[nodeId] ?? [])];
+  return [...base, ...(EXTRA[nodeId] ?? []), ...(BATCH1[nodeId] ?? [])];
 }
 
 export function generatedId(nodeId: string, template: number, level: Level, seed: number) {

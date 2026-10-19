@@ -10,6 +10,11 @@ describe("content text rendering", () => {
     expect(renderMath("This rests on *a vector is a movement*.")).toContain("<em>a vector is a movement</em>");
     expect(renderMath("turns **solid**")).toContain("<strong>solid</strong>");
   });
+  it("\\$ is a literal dollar sign, not maths", () => {
+    const h = renderMath("costs \\$12 and \\$5, and $x^2$");
+    expect(h).toContain("costs $12 and $5, and ");
+    expect(h.match(/class="katex"/g)).toHaveLength(1);
+  });
   it("escapes HTML in plain text", () => {
     expect(renderMath("<script>x</script>")).not.toContain("<script>");
   });

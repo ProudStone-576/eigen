@@ -32,7 +32,14 @@ function stepTexts(node: ConceptNode): string[] {
 function checkMath(text: string, where: string) {
   // Control characters mean a single backslash got eaten in a JS string (\v, \t, \b, \f…).
   expect(/[\u0000-\u0008\u000b\u000c\u000e-\u001f]/.test(text), `${where}: control character in ${JSON.stringify(text)}`).toBe(false);
-  for (const m of text.matchAll(/\$\$([\s\S]+?)\$\$|\$([^$]+?)\$/g)) {
+  // A stray "$" (a price written without \$) silently swallows prose into maths.
+  const plain = text.replace(/\\\$/g, "");
+  expect((plain.match(/\$/g) ?? []).length % 2, `${where}: unbalanced $ in ${JSON.stringify(text)}`).toBe(0);
+  for (const m of plain.matchAll(/\$\$([\s\S]+?)\$\$|\$([^$]+?)\$/g)) {
+    const words = (m[1] ?? m[2]).replace(/\\(text|mathrm|operatorname|begin|end)\{[^}]*\}/g, "").replace(/\\[a-zA-Z]+/g, "");
+    expect(/[a-zA-Z]{4,}/.test(words), `${where}: prose inside maths: ${m[0]}`).toBe(false);
+  }
+  for (const m of plain.matchAll(/\$\$([\s\S]+?)\$\$|\$([^$]+?)\$/g)) {
     const src = m[1] ?? m[2];
     expect(() => katex.renderToString(src, { throwOnError: true, strict: "ignore" }), `${where}: ${src}`).not.toThrow();
   }

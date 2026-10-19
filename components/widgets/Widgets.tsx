@@ -6,6 +6,7 @@ import { renderMath } from "@/components/MathText";
 import { BayesWidget, FitLineWidget, LikelihoodWidget, NormalWidget, PcaPipeWidget, Points1dWidget, SimWidget } from "./StatsWidgets";
 import { DescentWidget, Gradient2dWidget, TangentWidget } from "./CalcWidgets";
 import { NeuronWidget, PlaygroundWidget } from "./NNWidgets";
+import { BinomialWidget, CiSimWidget, CltWidget, PValueWidget, Summary1dWidget, ThresholdWidget } from "./InferenceWidgets";
 
 // ---------- Plane: a coordinate grid you can drag on ----------
 
@@ -606,6 +607,18 @@ export function WidgetView({ widget }: { widget: Widget }) {
       return <Gradient2dWidget start={widget.start} />;
     case "descent":
       return <DescentWidget eta={widget.eta} start={widget.start} />;
+    case "summary1d":
+      return <Summary1dWidget values={widget.values} max={widget.max} />;
+    case "binomial":
+      return <BinomialWidget n={widget.n} p={widget.p} />;
+    case "clt":
+      return <CltWidget />;
+    case "cisim":
+      return <CiSimWidget />;
+    case "pvalue":
+      return <PValueWidget z={widget.z} />;
+    case "threshold":
+      return <ThresholdWidget imbalanced={widget.imbalanced} />;
     case "neuron":
       return <NeuronWidget />;
     case "playground":

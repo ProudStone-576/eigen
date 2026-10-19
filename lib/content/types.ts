@@ -116,6 +116,18 @@ export type Widget =
   | { kind: "gradient2d"; start: Vec }
   /** Gradient descent on L(w) = (w − 3)² + 1 with a learning-rate slider. */
   | { kind: "descent"; eta: number; start: number }
+  /** Draggable data with mean, median, quartiles, box plot and IQR outlier fences. */
+  | { kind: "summary1d"; values: number[]; max: number }
+  /** Binomial(n, p) bar chart with sliders. */
+  | { kind: "binomial"; n: number; p: number }
+  /** Sample means from a skewed population pile up into a bell (central limit theorem). */
+  | { kind: "clt" }
+  /** Many 95% confidence intervals: how often do they catch the true mean? */
+  | { kind: "cisim" }
+  /** Standard normal with both tails beyond |z| shaded: the two-sided p-value. */
+  | { kind: "pvalue"; z: number }
+  /** A classifier's scores, a threshold slider, the confusion matrix and the ROC curve. */
+  | { kind: "threshold"; imbalanced?: boolean }
   /** One neuron: two inputs, weights, bias, activation. */
   | { kind: "neuron" }
   /** Train a 2 → hidden → 1 network in the browser and watch its decision boundary. */
@@ -136,7 +148,7 @@ export type Step =
       /** 1. Commit to a prediction. */
       item: McItem;
       /** 2. See reality. No explanation yet. */
-      reveal: { body: string; widget: Widget };
+      reveal: { body: string; widget?: Widget };
       /** 3. Student resolves what had to give. */
       resolve: McItem;
     }

@@ -16,10 +16,14 @@ function inlineMarkup(s: string): string {
 }
 
 function tex(src: string, displayMode: boolean): string {
-  return katex.renderToString(src, { displayMode, throwOnError: false, strict: "ignore" });
+  return katex.renderToString(src.replaceAll(DOLLAR, "\\$"), { displayMode, throwOnError: false, strict: "ignore" });
 }
 
+const DOLLAR = "\u0001";
+
+/** `\$` is a literal dollar sign (prices), not the start of maths. */
 export function renderMath(text: string): string {
+  text = text.replace(/\\\$/g, DOLLAR);
   let html = "";
   const re = /\$\$([\s\S]+?)\$\$|\$([^$]+?)\$/g;
   let last = 0;
@@ -28,7 +32,7 @@ export function renderMath(text: string): string {
     html += m[1] !== undefined ? tex(m[1], true) : tex(m[2], false);
     last = m.index + m[0].length;
   }
-  return html + inlineMarkup(text.slice(last));
+  return (html + inlineMarkup(text.slice(last))).replaceAll(DOLLAR, "$");
 }
 
 export function MathText({ text, className, as: Tag = "span" }: { text: string; className?: string; as?: "span" | "p" | "div" }) {

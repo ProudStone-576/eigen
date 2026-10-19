@@ -85,7 +85,7 @@ const span: ConceptNode = {
         id: "span-check-2",
         prompt: `What is the span of the single vector $${v(1, 1)}$?`,
         options: [
-          { id: "a", text: "The whole line through it", correct: true, why: "All multiples $k${v(1, 1)}$, forwards and backwards." },
+          { id: "a", text: "The whole line through it", correct: true, why: `All multiples $k${v(1, 1)}$, forwards and backwards.` },
           { id: "b", text: "Just the arrow itself", misconception: "span-is-just-vectors", why: "Scaling it by any number is allowed." },
           { id: "c", text: "The whole plane", misconception: "any-two-span", why: "One direction only gives a line." },
         ],

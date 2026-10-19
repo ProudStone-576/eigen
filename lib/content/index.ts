@@ -6,12 +6,16 @@ import { unit4 } from "./statistics/unit4";
 import { unit5 } from "./statistics/unit5";
 import { unit6 } from "./calculus/unit6";
 import { unit7 } from "./networks/unit7";
+import { describingUnit } from "./statistics/describing";
+import { distributionsUnit } from "./statistics/distributions";
+import { inferenceUnit } from "./statistics/inference";
+import { evaluationUnit } from "./ml/evaluation";
 import { fromGeneratedId } from "./templates";
 
 export const course: Course = {
   id: "math-for-ml",
   title: "Math for Machine Learning",
-  units: [unit1, unit2, unit3, unit4, unit5, unit6, unit7],
+  units: [unit1, unit2, unit3, describingUnit, unit4, unit5, distributionsUnit, inferenceUnit, unit6, unit7, evaluationUnit],
 };
 
 export const allNodes: ConceptNode[] = course.units.flatMap((u) => u.nodes);

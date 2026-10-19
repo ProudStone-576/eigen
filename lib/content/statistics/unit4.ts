@@ -198,7 +198,7 @@ const expectation: ConceptNode = {
     {
       type: "motivate",
       title: "Is this game worth playing?",
-      body: "A $2 ticket wins $100 with probability 1/100. Play it once and you'll probably lose. Play it 10,000 times: what happens on average?",
+      body: "A \\$2 ticket wins \\$100 with probability 1/100. Play it once and you'll probably lose. Play it 10,000 times: what happens on average?",
       realWorld: { title: "Casinos and insurers", body: "They never know what one customer will do, but they know the average per customer very precisely. That average is the expected value." },
     },
     {
@@ -258,11 +258,11 @@ const expectation: ConceptNode = {
       item: {
         kind: "mc",
         id: "exp-check-2",
-        prompt: "The $2 ticket wins $100 with probability 0.01. What is the expected profit per ticket?",
+        prompt: "The \\$2 ticket wins \\$100 with probability 0.01. What is the expected profit per ticket?",
         options: [
-          { id: "a", text: "−$1", correct: true, why: "100 × 0.01 − 2 = 1 − 2." },
-          { id: "b", text: "+$98", misconception: "ignore-probabilities", why: "You only win 1% of the time." },
-          { id: "c", text: "$0", why: "The ticket costs more than its expected winnings." },
+          { id: "a", text: "−\\$1", correct: true, why: "100 × 0.01 − 2 = 1 − 2." },
+          { id: "b", text: "+\\$98", misconception: "ignore-probabilities", why: "You only win 1% of the time." },
+          { id: "c", text: "\\$0", why: "The ticket costs more than its expected winnings." },
         ],
       },
     },
@@ -296,7 +296,7 @@ const expectation: ConceptNode = {
     },
   ],
   review: [
-    { kind: "number", id: "exp-review-1", prompt: "Flip a fair coin: win $10 on heads, lose $4 on tails. Expected winnings?", answer: 3, explain: "10·0.5 − 4·0.5 = 3." },
+    { kind: "number", id: "exp-review-1", prompt: "Flip a fair coin: win \\$10 on heads, lose \\$4 on tails. Expected winnings?", answer: 3, explain: "10·0.5 − 4·0.5 = 3." },
   ],
 };
 

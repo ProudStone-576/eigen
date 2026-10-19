@@ -1,7 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { allNodes, findItem, getNode, misconceptionsOf, publicItem } from "@/lib/content";
-import { GENERATORS } from "@/lib/content/generators";
-import { generate, templatesFor, type Level } from "@/lib/content/templates";
+import { generate, TEMPLATED, templatesFor, type Level } from "@/lib/content/templates";
 import { grade, type Response } from "@/lib/check";
 import type { Item } from "@/lib/content/types";
 import { apply, FRESH, PRACTICE_STREAK, type Progress } from "@/lib/learning/rules";
@@ -24,15 +23,15 @@ function correctResponse(item: Item): Response {
 }
 
 it("every concept has at least one practice generator", () => {
-  const missing = allNodes.filter((n) => !GENERATORS[n.id]?.length).map((n) => n.id);
+  const missing = allNodes.filter((n) => !templatesFor(n.id).length).map((n) => n.id);
   expect(missing).toEqual([]);
 });
 
 it("generators only exist for real concepts", () => {
-  for (const id of Object.keys(GENERATORS)) expect(getNode(id), id).toBeTruthy();
+  for (const id of TEMPLATED) expect(getNode(id), id).toBeTruthy();
 });
 
-describe.each(Object.keys(GENERATORS).map((id) => [id] as const))("generators for %s", (nodeId) => {
+describe.each(TEMPLATED.map((id) => [id] as const))("generators for %s", (nodeId) => {
   const node = getNode(nodeId)!;
   // Every template at every level.
   const items = templatesFor(nodeId).flatMap((_, t) =>
@@ -95,7 +94,7 @@ it("old 4-part ids (before difficulty levels) still rebuild, as level 1", () => 
 });
 
 it("most core concepts offer several kinds of question", () => {
-  const multi = Object.keys(GENERATORS).filter((id) => new Set(templatesFor(id).map((t) => t.type)).size >= 2);
+  const multi = TEMPLATED.filter((id) => new Set(templatesFor(id).map((t) => t.type)).size >= 2);
   expect(multi.length).toBeGreaterThanOrEqual(25);
 });
 
