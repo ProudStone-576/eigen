@@ -3,7 +3,7 @@
 import { useRef, useState, type PointerEvent as ReactPointerEvent, type ReactNode } from "react";
 import type { Mat, Vec, Widget } from "@/lib/content/types";
 import { renderMath } from "@/components/MathText";
-import { BayesWidget, FitLineWidget, LikelihoodWidget, NormalWidget, Points1dWidget, SimWidget } from "./StatsWidgets";
+import { BayesWidget, FitLineWidget, LikelihoodWidget, NormalWidget, PcaPipeWidget, Points1dWidget, SimWidget } from "./StatsWidgets";
 import { DescentWidget, Gradient2dWidget, TangentWidget } from "./CalcWidgets";
 
 // ---------- Plane: a coordinate grid you can drag on ----------
@@ -597,6 +597,8 @@ export function WidgetView({ widget }: { widget: Widget }) {
       return <LikelihoodWidget heads={widget.heads} flips={widget.flips} />;
     case "fitline":
       return <FitLineWidget points={widget.points} />;
+    case "pcapipe":
+      return <PcaPipeWidget points={widget.points} />;
     case "tangent":
       return <TangentWidget fn={widget.fn} a={widget.a} />;
     case "gradient2d":

@@ -119,7 +119,7 @@ const covariance: ConceptNode = {
   title: "Covariance & correlation",
   summary: "Covariance measures whether two variables move together; the covariance matrix is what PCA diagonalises.",
   deps: ["variance"],
-  pos: { x: 1, y: 0 },
+  pos: { x: 1, y: 0.4 },
   glossary: [
     { term: "covariance", meaning: "Cov(X, Y) = E[(X − μx)(Y − μy)]: positive when X and Y rise together, negative when one rises as the other falls." },
     { term: "correlation", meaning: "Covariance with the units removed: Cov / (σx σy), always between −1 and 1." },
@@ -210,6 +210,136 @@ const covariance: ConceptNode = {
   ],
   review: [
     { kind: "number", id: "cov-review-1", prompt: "Cov(X, Y) = 6, σx = 2, σy = 5. Correlation?", answer: 0.6, explain: "6 / 10." },
+  ],
+};
+
+// The PCA lesson's cloud, moved off the origin so centring visibly matters.
+const OFFSET_CLOUD: Vec[] = CLOUD.map(([x, y]) => [x + 1.5, y + 1.5]);
+
+const pcaPractice: ConceptNode = {
+  id: "pca-practice",
+  title: "PCA in practice",
+  summary: "Centre the data, build its covariance matrix, take the top eigenvectors, project onto them, and measure what's lost.",
+  deps: ["covariance", "pca"],
+  pos: { x: 2, y: 0 },
+  glossary: [
+    { term: "score", meaning: "A point's coordinate along a principal component: its projection onto that direction." },
+    { term: "reconstruction", meaning: "Rebuilding a point from its kept scores. What's missing is the information PCA threw away." },
+  ],
+  misconceptions: {
+    "skip-centering": "Runs PCA without subtracting the mean first.",
+    "pca-keeps-all": "Thinks projecting onto fewer components loses nothing.",
+  },
+  steps: [
+    {
+      type: "motivate",
+      title: "From idea to recipe",
+      body: "The PCA lesson found the direction of greatest spread. Now we run the full recipe on raw data, the way `sklearn` does it, and see exactly what dropping a dimension costs.",
+      realWorld: {
+        title: "Compressing sensor data",
+        body: "A wearable records 50 correlated sensor channels. PCA keeps 5 component scores per moment and still reconstructs 95% of the signal: 10× less to send.",
+      },
+    },
+    {
+      type: "explore",
+      title: "Run the pipeline",
+      body: "Step through each stage of PCA.",
+      widget: { kind: "pcapipe", points: OFFSET_CLOUD },
+      task: "Go stage by stage. At stage 5, what fraction of the variance survived? Where are the red bars longest?",
+    },
+    {
+      type: "truth",
+      statement: "**PCA recipe:** (1) centre: subtract the mean; (2) covariance matrix $C$; (3) eigenvectors of $C$, sorted by eigenvalue; (4) **project**: score $= \\vec x\\cdot\\vec u_k$ for each kept unit eigenvector $\\vec u_k$; (5) **reconstruct**: $\\sum_k \\text{score}_k\\,\\vec u_k$ (+ the mean).",
+      body: "Variance kept by the first $k$ components = (sum of their eigenvalues) ÷ (sum of all eigenvalues). What's dropped is the variance along the components you didn't keep.",
+    },
+    { type: "connect", body: "*Covariance* builds $C$; the *PCA* lesson said its top eigenvectors are the directions of spread; *basis vectors* say a score is just a coordinate in a new basis." },
+    {
+      type: "check",
+      item: {
+        kind: "mc",
+        id: "pcap-check-1",
+        prompt: "Why centre the data before PCA?",
+        options: [
+          { id: "a", text: "Otherwise the first component points at the data's mean instead of along its spread", correct: true, why: "Covariance is about spread around the mean." },
+          { id: "b", text: "It's optional tidying; the components come out the same", misconception: "skip-centering", why: "Uncentred data is dominated by its distance from the origin." },
+        ],
+      },
+    },
+    {
+      type: "check",
+      item: {
+        kind: "mc",
+        id: "pcap-check-2",
+        prompt: "A dataset sits around (100, 100) and spreads mostly along the x-axis. Run PCA *without* centring. The first \"component\" points:",
+        options: [
+          { id: "a", text: "Roughly towards (100, 100)", correct: true, why: "Distance from the origin swamps the real spread." },
+          { id: "b", text: "Along the x-axis", misconception: "skip-centering", why: "That's what centred PCA would find." },
+        ],
+      },
+    },
+    {
+      type: "check",
+      item: {
+        kind: "mc",
+        id: "pcap-check-3",
+        prompt: "Project 2D data onto PC1 only, then reconstruct. Do you get the original data back?",
+        options: [
+          { id: "a", text: "Only the part along PC1; the PC2 part is lost", correct: true, why: "That loss is the red bars." },
+          { id: "b", text: "Yes, exactly", misconception: "pca-keeps-all", why: "One number per point can't hold two numbers' worth of information." },
+        ],
+      },
+    },
+    {
+      type: "ml",
+      title: "In machine learning",
+      body: "`PCA(n_components=0.95)` in sklearn keeps just enough components for 95% of the variance. It's used to speed up training, to visualise high-dimensional data in 2D, and to strip noise that lives in the small components.",
+    },
+    {
+      type: "produce",
+      body: "Unaided. All four right turns this **solid**. Use $C = \\begin{bmatrix}5&2\\\\2&2\\end{bmatrix}$ (eigenvalues 6 and 1, PC1 along $(2, 1)$).",
+      items: [
+        {
+          kind: "vector",
+          id: "pcap-produce-1",
+          prompt: "Data (1, 2), (3, 4), (5, 9). What is the mean you subtract first?",
+          answer: [3, 5],
+          explain: "x: (1 + 3 + 5)/3 = 3. y: (2 + 4 + 9)/3 = 5.",
+        },
+        {
+          kind: "number",
+          id: "pcap-produce-2",
+          prompt: "A centred point is (3, −1). PC1's unit vector is $(2, 1)/\\sqrt 5$. What is its score on PC1? (Two decimals.)",
+          answer: Math.sqrt(5),
+          tolerance: 0.01,
+          explain: "(3·2 + (−1)·1)/√5 = 5/√5 = √5 ≈ 2.24.",
+        },
+        {
+          kind: "vector",
+          id: "pcap-produce-3",
+          prompt: "Reconstruct that point from its PC1 score alone: score × unit vector.",
+          answer: [2, 1],
+          explain: "√5 · (2, 1)/√5 = (2, 1). The original (3, −1) is off by (1, −2): the PC2 part we dropped.",
+          traps: [{ answer: [3, -1], misconception: "pca-keeps-all", message: "That's the original point. One score can only rebuild the part along PC1." }],
+        },
+        {
+          kind: "number",
+          id: "pcap-produce-4",
+          prompt: "Five components have eigenvalues 50, 30, 15, 4, 1. How many do you need to keep at least 95% of the variance?",
+          answer: 3,
+          explain: "Total 100. Cumulative: 50, 80, 95. Three components reach 95%.",
+        },
+      ],
+    },
+  ],
+  review: [
+    {
+      kind: "number",
+      id: "pcap-review-1",
+      prompt: "Eigenvalues 8, 1.5, 0.5. What fraction of variance do the top 2 components keep?",
+      answer: 0.95,
+      tolerance: 0.005,
+      explain: "(8 + 1.5) / 10 = 0.95.",
+    },
   ],
 };
 
@@ -333,7 +463,7 @@ const mle: ConceptNode = {
   title: "Maximum likelihood",
   summary: "MLE picks the parameters that make the observed data most probable.",
   deps: ["normal", "expectation"],
-  pos: { x: 2, y: 2 },
+  pos: { x: 2, y: 2.2 },
   glossary: [
     { term: "likelihood", meaning: "L(θ) = P(data | θ): how probable your data is if the parameter were θ." },
     { term: "maximum likelihood estimate", meaning: "The θ with the highest likelihood. Written θ̂." },
@@ -428,7 +558,7 @@ const leastSquares: ConceptNode = {
   title: "Least squares regression",
   summary: "The best-fit line minimises the sum of squared residuals: slope = Cov(x, y) / Var(x).",
   deps: ["covariance", "solving-systems"],
-  pos: { x: 2, y: 0 },
+  pos: { x: 2, y: 1.1 },
   glossary: [
     { term: "residual", meaning: "y − ŷ: how far a point is from the line, vertically." },
     { term: "least squares", meaning: "Choosing the line that makes the sum of squared residuals as small as possible." },
@@ -531,7 +661,7 @@ const losses: ConceptNode = {
   title: "Loss functions are likelihoods",
   summary: "Minimising squared error is maximum likelihood under normal noise; log loss is maximum likelihood for yes/no labels.",
   deps: ["least-squares", "mle"],
-  pos: { x: 3, y: 1 },
+  pos: { x: 3, y: 1.6 },
   glossary: [
     { term: "loss function", meaning: "The number training tries to make small: how wrong the model is on the data." },
     { term: "log loss", meaning: "−ln(probability the model gave the true label). Also called cross-entropy." },
@@ -612,5 +742,5 @@ export const unit5: Unit = {
   track: "Statistics",
   title: "Spread, Normal & Regression",
   blurb: "How data spreads, the bell curve, and why training a model is maximum likelihood.",
-  nodes: [variance, covariance, normal, mle, leastSquares, losses],
+  nodes: [variance, covariance, pcaPractice, normal, mle, leastSquares, losses],
 };

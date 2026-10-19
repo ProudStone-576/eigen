@@ -289,6 +289,92 @@ export function LikelihoodWidget({ heads, flips }: { heads: number; flips: numbe
   );
 }
 
+// ---------- PCA pipeline ----------
+
+const STAGES = ["Raw data", "Centre it", "Find the components", "Project onto PC1", "Reconstruct"] as const;
+
+export function PcaPipeWidget({ points }: { points: Vec[] }) {
+  const [stage, setStage] = useState(0);
+  const n = points.length;
+  const mean: Vec = [points.reduce((s, p) => s + p[0], 0) / n, points.reduce((s, p) => s + p[1], 0) / n];
+  const ctr = points.map((p): Vec => [p[0] - mean[0], p[1] - mean[1]]);
+  const a = ctr.reduce((s, p) => s + p[0] * p[0], 0) / n;
+  const b = ctr.reduce((s, p) => s + p[0] * p[1], 0) / n;
+  const d = ctr.reduce((s, p) => s + p[1] * p[1], 0) / n;
+  const l1 = (a + d) / 2 + Math.hypot((a - d) / 2, b);
+  const l2 = a + d - l1;
+  const th = Math.atan2(2 * b, a - d) / 2;
+  const u1: Vec = [Math.cos(th), Math.sin(th)];
+  const u2: Vec = [-u1[1], u1[0]];
+  const scores = ctr.map((p) => p[0] * u1[0] + p[1] * u1[1]);
+  const recon = scores.map((s): Vec => [s * u1[0], s * u1[1]]);
+  const R = 5.5;
+  const c = chart(400, 400, -R, R, -R, R, 14);
+  const P = (q: Vec): [number, number] => [c.sx(q[0]), c.sy(q[1])];
+  const centred = stage >= 1;
+  const shown = centred ? ctr : points;
+  const axis = (u: Vec, len: number, color: string) => {
+    const [x1, y1] = P([-u[0] * len, -u[1] * len]);
+    const [x2, y2] = P([u[0] * len, u[1] * len]);
+    return <line x1={x1} y1={y1} x2={x2} y2={y2} stroke={color} strokeWidth={3} strokeLinecap="round" />;
+  };
+  return (
+    <Box>
+      <div className="flex flex-wrap gap-2">
+        {STAGES.map((s, i) => (
+          <button key={s} type="button" className={`chip ${stage === i ? "chip-on" : ""}`} onClick={() => setStage(i)}>
+            {i + 1}. {s}
+          </button>
+        ))}
+      </div>
+      <svg viewBox={`0 0 ${c.w} ${c.h}`} className="w-full max-w-[420px] aspect-square rounded-2xl bg-[var(--plane)]">
+        <line x1={c.sx(-R)} x2={c.sx(R)} y1={c.sy(0)} y2={c.sy(0)} stroke="var(--axis)" />
+        <line x1={c.sx(0)} x2={c.sx(0)} y1={c.sy(-R)} y2={c.sy(R)} stroke="var(--axis)" />
+        {stage === 0 && <circle cx={c.sx(mean[0])} cy={c.sy(mean[1])} r={6} fill="none" stroke="var(--solid)" strokeWidth={2} />}
+        {stage === 1 && points.map((p, i) => <circle key={`o${i}`} cx={c.sx(p[0])} cy={c.sy(p[1])} r={3} fill="var(--muted)" fillOpacity={0.35} />)}
+        {stage >= 2 && axis(u1, 2 * Math.sqrt(l1), "var(--v)")}
+        {stage >= 2 && axis(u2, 2 * Math.sqrt(l2), "var(--j)")}
+        {stage === 3 &&
+          ctr.map((p, i) => {
+            const [x1, y1] = P(p);
+            const [x2, y2] = P(recon[i]);
+            return <line key={`p${i}`} x1={x1} y1={y1} x2={x2} y2={y2} stroke="var(--muted)" strokeOpacity={0.5} />;
+          })}
+        {stage === 4 &&
+          ctr.map((p, i) => {
+            const [x1, y1] = P(p);
+            const [x2, y2] = P(recon[i]);
+            return <line key={`r${i}`} x1={x1} y1={y1} x2={x2} y2={y2} stroke="var(--mis)" strokeWidth={1.5} />;
+          })}
+        {stage < 4 && shown.map((p, i) => <circle key={i} cx={c.sx(p[0])} cy={c.sy(p[1])} r={4.5} fill="var(--a)" fillOpacity={stage === 4 ? 0.3 : 1} />)}
+        {stage >= 3 && recon.map((q, i) => <circle key={`q${i}`} cx={c.sx(q[0])} cy={c.sy(q[1])} r={4} fill="var(--v)" />)}
+        {stage === 4 && ctr.map((p, i) => <circle key={`g${i}`} cx={c.sx(p[0])} cy={c.sy(p[1])} r={3.5} fill="var(--a)" fillOpacity={0.45} />)}
+      </svg>
+      <div className="text-sm space-y-1">
+        {stage === 0 && <p>15 data points. The green ring is their mean, ({fmt(mean[0])}, {fmt(mean[1])}): not at the origin.</p>}
+        {stage === 1 && <p>Subtract the mean from every point. Now the cloud is centred on the origin; the grey dots show where it was.</p>}
+        {stage === 2 && (
+          <p>
+            Covariance matrix <Tex src={`\\begin{bmatrix}${fmt(a)}&${fmt(b)}\\\\${fmt(b)}&${fmt(d)}\\end{bmatrix}`} />. Its eigenvectors:{" "}
+            <span className="text-[var(--v)] font-semibold">PC1</span> (λ = {fmt(l1)}) and <span className="text-[var(--j)] font-semibold">PC2</span> (λ = {fmt(l2)}).
+          </p>
+        )}
+        {stage === 3 && (
+          <p>
+            Keep one number per point: its <strong>score</strong> along PC1 (the yellow dots). 2 numbers per point became 1.
+          </p>
+        )}
+        {stage === 4 && (
+          <p>
+            Rebuild each point from its score alone. Red bars are what was lost. Variance kept: <strong>{pct(l1 / (l1 + l2))}</strong>; lost:{" "}
+            {pct(l2 / (l1 + l2))} (exactly PC2&rsquo;s eigenvalue over the total).
+          </p>
+        )}
+      </div>
+    </Box>
+  );
+}
+
 // ---------- Fit a line ----------
 
 export function FitLineWidget({ points }: { points: Vec[] }) {
