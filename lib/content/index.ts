@@ -5,6 +5,7 @@ import { unit3 } from "./linear-algebra/unit3";
 import { unit4 } from "./statistics/unit4";
 import { unit5 } from "./statistics/unit5";
 import { unit6 } from "./calculus/unit6";
+import { fromGeneratedId } from "./generators";
 
 export const course: Course = {
   id: "math-for-ml",
@@ -20,9 +21,13 @@ export function getNode(id: string): ConceptNode | undefined {
 }
 
 /** Where an item sits, so grading knows which progress rule applies. */
-export type ItemContext = "check" | "predict" | "resolve" | "produce" | "review";
+export type ItemContext = "check" | "predict" | "resolve" | "produce" | "review" | "practice";
 
 export function findItem(node: ConceptNode, itemId: string): { item: Item; context: ItemContext; misconception?: string } | null {
+  if (itemId.startsWith("gen~")) {
+    const gen = fromGeneratedId(itemId);
+    return gen && gen.nodeId === node.id ? { item: gen.item, context: "practice" } : null;
+  }
   for (const step of node.steps) {
     if (step.type === "check" && step.item.id === itemId) return { item: step.item, context: "check" };
     if (step.type === "predict") {

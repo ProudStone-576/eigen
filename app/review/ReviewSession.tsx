@@ -9,6 +9,7 @@ export function ReviewSession({ cards }: { cards: { nodeId: string; title: strin
   const [index, setIndex] = useState(0);
   const [graded, setGraded] = useState(false);
   const [score, setScore] = useState(0);
+  const [missed, setMissed] = useState<{ nodeId: string; title: string }[]>([]);
 
   if (index >= cards.length) {
     return (
@@ -17,6 +18,18 @@ export function ReviewSession({ cards }: { cards: { nodeId: string; title: strin
           {score} / {cards.length} recalled
         </h2>
         <p className="text-[var(--muted)]">Recalled ones wait longer next time. Missed ones come back tomorrow.</p>
+        {missed.length > 0 && (
+          <div className="space-y-2">
+            <p className="text-sm">Rebuild what slipped before it comes back:</p>
+            <div className="flex flex-wrap justify-center gap-2">
+              {missed.map((m) => (
+                <Link key={m.nodeId} href={`/practice/${m.nodeId}`} className="chip">
+                  Practice {m.title}
+                </Link>
+              ))}
+            </div>
+          </div>
+        )}
         <Link href="/learn" className="btn">
           Back to the map
         </Link>
@@ -38,6 +51,7 @@ export function ReviewSession({ cards }: { cards: { nodeId: string; title: strin
           onGraded={(g) => {
             setGraded(true);
             if (g.status === "correct") setScore((s) => s + 1);
+            else setMissed((m) => [...m, { nodeId: card.nodeId, title: card.title }]);
           }}
         />
       </div>

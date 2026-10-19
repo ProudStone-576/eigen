@@ -22,7 +22,7 @@ const LABEL: Record<PublicStep["type"], string> = {
 const STATUS_COPY: Record<Status, { title: string; body: string }> = {
   SOLID: { title: "Solid 🎉", body: "You produced it unaided. It's in your review queue for tomorrow, then the gaps grow: 2, 4, 8 days…" },
   LANDED: { title: "Landed", body: "You've got the idea. Nail the produce step to make it solid." },
-  MISCONCEPTION: { title: "Something to untangle", body: "One of your answers points to a common mix-up. Run the lesson again: the predict step is built to sort it out." },
+  MISCONCEPTION: { title: "Something to untangle", body: "One of your answers points to a common mix-up. Practice will throw questions built to catch exactly that, mixed with the ideas underneath, until it clicks." },
   EDGE: { title: "In progress", body: "Keep going. Answer the check to land this concept." },
   UNKNOWN: { title: "Not started", body: "" },
 };
@@ -144,11 +144,14 @@ export function Lesson({ nodeId, title, steps, initialStatus, nextNode, tutor = 
         <p className="text-lg text-[var(--muted)] max-w-md mx-auto">{copy.body}</p>
         <div className="flex justify-center gap-3 flex-wrap">
           <Link href="/learn" className="btn-ghost">Back to the map</Link>
-          {nextNode && status !== "MISCONCEPTION" && (
+          {status !== "SOLID" && (
+            <Link href={`/practice/${nodeId}`} className="btn">Practice until it clicks →</Link>
+          )}
+          {nextNode && status === "SOLID" && (
             <Link href={`/learn/${nextNode.id}`} className="btn">Next: {nextNode.title} →</Link>
           )}
-          {status === "MISCONCEPTION" && (
-            <button type="button" className="btn" onClick={() => location.reload()}>Run it again</button>
+          {nextNode && status === "LANDED" && (
+            <Link href={`/learn/${nextNode.id}`} className="btn-ghost">Next: {nextNode.title} →</Link>
           )}
         </div>
       </div>

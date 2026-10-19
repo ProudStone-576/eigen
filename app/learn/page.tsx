@@ -3,7 +3,8 @@ import { ConceptMap, STATUS_STYLE } from "@/components/ConceptMap";
 import { requireUser } from "@/lib/auth/session";
 import { course } from "@/lib/content";
 import { dueNodes, loadProgress, statusIn, unlocked } from "@/lib/learning/progress";
-import type { Status } from "@/lib/learning/rules";
+import { PRACTICE_STREAK, type Status } from "@/lib/learning/rules";
+import { strugglingNodes } from "@/lib/learning/practice";
 
 export const metadata = { title: "Learn" };
 
@@ -12,6 +13,7 @@ export default async function LearnPage() {
   const progress = await loadProgress(user.id);
   const status = statusIn(progress);
   const due = dueNodes(progress);
+  const struggling = await strugglingNodes(user.id);
 
   return (
     <div className="space-y-8">
@@ -30,6 +32,28 @@ export default async function LearnPage() {
           </span>
           <span className="btn">Review</span>
         </Link>
+      )}
+
+      {struggling.length > 0 && (
+        <section className="card space-y-3 border-[var(--edge)]">
+          <h2 className="font-bold">🎯 Needs practice</h2>
+          <p className="text-sm text-[var(--muted)]">
+            These keep tripping you up. Practice gives fresh questions on each, mixed with the ideas underneath, until you get them right{" "}
+            {PRACTICE_STREAK} times in a row.
+          </p>
+          <ul className="space-y-2">
+            {struggling.map((s) => (
+              <li key={s.id} className="flex items-center justify-between gap-3 flex-wrap">
+                <span>
+                  <strong>{s.title}</strong> <span className="text-sm text-[var(--muted)]">· {s.reason}</span>
+                </span>
+                <Link href={`/practice/${s.id}`} className="btn">
+                  Practice
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </section>
       )}
 
       {course.units.map((unit, i) => {

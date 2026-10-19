@@ -3,7 +3,7 @@ import type { NodeProgress, Prisma } from "@prisma/client";
 import { prisma } from "@/lib/db";
 import { allNodes, findItem, getNode, targets } from "@/lib/content";
 import { grade, type Grade, type Response } from "@/lib/check";
-import { apply, FRESH, isDue, isUnlocked, localDay, nextStreak, XP, type LearningEvent, type Progress, type Status } from "./rules";
+import { apply, FRESH, isDue, isUnlocked, localDay, nextStreak, PRACTICE_STREAK, XP, type LearningEvent, type Progress, type Status } from "./rules";
 
 export type ProgressMap = Map<string, Progress>;
 
@@ -52,7 +52,13 @@ export async function markOpened(userId: string, nodeId: string): Promise<void> 
   if (!row || row.status !== next.status) await save(prisma, userId, nodeId, next);
 }
 
-export type GradeResult = Grade & { status_after: Status; xpGained: number };
+export type GradeResult = Grade & {
+  status_after: Status;
+  xpGained: number;
+  /** Practice only: correct answers in a row on this concept, and whether this answer mastered it. */
+  practiceStreak?: number;
+  mastered?: boolean;
+};
 
 function safeTimeZone(tz: string | undefined): string {
   try {
@@ -143,24 +149,56 @@ export async function submitAnswer(args: {
       case "review":
         event = { type: "review", correct };
         break;
+      case "practice": {
+        // A wrong answer that springs a trap reveals a held misconception (never demotes a solid concept).
+        if (!correct && result.misconception && before.status !== "SOLID") {
+          event = { type: "check", correct: false, misconception: result.misconception };
+        }
+        break;
+      }
     }
 
     if (event) events.push(event);
+    let practiceStreak: number | undefined;
+    let mastered = false;
+    if (found.context === "practice") {
+      const recent = await tx.attempt.findMany({
+        where: { userId: args.userId, nodeId: node.id, step: "practice" },
+        orderBy: { createdAt: "desc" },
+        take: PRACTICE_STREAK,
+        select: { correct: true },
+      });
+      practiceStreak = 0;
+      for (const a of recent) {
+        if (!a.correct) break;
+        practiceStreak++;
+      }
+      if (practiceStreak >= PRACTICE_STREAK) {
+        const preview = events.reduce((p, e) => apply(p, e, now), before);
+        if (preview.status !== "SOLID" && preview.status !== "MISCONCEPTION") {
+          events.push({ type: "practice-mastered" });
+          mastered = true;
+        }
+      }
+    }
     const after = events.reduce((p, e) => apply(p, e, now), before);
     if (after !== before) await save(tx, args.userId, node.id, after);
 
-    // XP: first correct answer per item, every correct review (reviews are rate-limited by due dates).
+    // XP: first correct answer per item, every correct review (reviews are rate-limited by due dates),
+    // a little per correct practice answer, and a bonus for mastering through practice.
     const xpGained = !correct
       ? 0
-      : found.context === "review"
-        ? XP.review
-        : firstCorrect
-          ? found.context === "produce"
-            ? XP.produce
-            : found.context === "resolve"
-              ? XP.resolved
-              : XP.check
-          : 0;
+      : found.context === "practice"
+        ? XP.practice + (mastered ? XP.mastered : 0)
+        : found.context === "review"
+          ? XP.review
+          : firstCorrect
+            ? found.context === "produce"
+              ? XP.produce
+              : found.context === "resolve"
+                ? XP.resolved
+                : XP.check
+            : 0;
 
     const user = await tx.user.findUniqueOrThrow({ where: { id: args.userId }, select: { lastActiveOn: true, streakDays: true } });
     const today = localDay(now, safeTimeZone(args.timeZone));
@@ -169,6 +207,6 @@ export async function submitAnswer(args: {
       data: { xp: { increment: xpGained }, lastActiveOn: today, streakDays: nextStreak(user.lastActiveOn, today, user.streakDays) },
     });
 
-    return { ...result, status_after: after.status, xpGained };
+    return { ...result, status_after: after.status, xpGained, practiceStreak, mastered };
   });
 }

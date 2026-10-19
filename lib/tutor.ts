@@ -74,7 +74,7 @@ export async function hintFor(args: { userId: string; nodeId: string; itemId: st
   const found = node && findItem(node, args.itemId);
   if (!node || !found) return { error: "Unknown question." };
   // Hints are for practice, not for the diagnostic questions that decide status.
-  if (found.context !== "produce") return { error: "Hints are available on produce questions." };
+  if (found.context !== "produce" && found.context !== "practice") return { error: "Hints are available on produce and practice questions." };
 
   const since = new Date(Date.now() - 86_400_000);
   const used = await prisma.hint.count({ where: { userId: args.userId, createdAt: { gte: since } } });

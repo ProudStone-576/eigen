@@ -8,6 +8,7 @@ import { createSession, currentUser, destroySession } from "@/lib/auth/session";
 import { submitAnswer, type GradeResult } from "@/lib/learning/progress";
 import type { Response } from "@/lib/check";
 import { hintFor, type HintResult } from "@/lib/tutor";
+import { nextPracticeQuestion, type PracticeQuestion } from "@/lib/learning/practice";
 
 export type FormState = { error: string | null };
 
@@ -64,6 +65,13 @@ const responseSchema: z.ZodType<Response> = z.discriminatedUnion("kind", [
   z.object({ kind: z.literal("vector"), values: z.array(cell).max(10) }),
   z.object({ kind: z.literal("matrix"), values: z.array(z.array(cell).max(10)).max(10) }),
 ]);
+
+export async function nextPractice(input: { nodeId: string; index: number }): Promise<PracticeQuestion | { error: string }> {
+  const user = await currentUser();
+  if (!user) return { error: "Your session ended. Log in again." };
+  const index = Number.isInteger(input.index) && input.index >= 0 ? input.index : 0;
+  return nextPracticeQuestion(user.id, String(input.nodeId), index);
+}
 
 export async function askHint(input: { nodeId: string; itemId: string; response: Response }): Promise<HintResult> {
   const user = await currentUser();

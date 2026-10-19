@@ -26,7 +26,12 @@ export type LearningEvent =
   | { type: "resolved"; misconception: string; correct: boolean }
   | { type: "produce"; correct: boolean }
   | { type: "review"; correct: boolean }
-  | { type: "testout"; correct: boolean };
+  | { type: "testout"; correct: boolean }
+  /** PRACTICE_STREAK correct answers in a row on fresh, varied questions: that's unaided production. */
+  | { type: "practice-mastered" };
+
+/** Correct practice answers in a row (on new variants) that count as mastering a concept. */
+export const PRACTICE_STREAK = 3;
 
 export const FRESH: Progress = { status: "UNKNOWN", misconceptionId: null, intervalDays: 0, reviewStreak: 0, dueAt: null };
 
@@ -78,6 +83,10 @@ export function apply(p: Progress, e: LearningEvent, now: Date): Progress {
     case "testout":
       // Producing cold, before the lesson, is production. Missing it just means: take the lesson.
       return e.correct && p.status !== "MISCONCEPTION" ? becomeSolid(p, now) : p;
+
+    case "practice-mastered":
+      // A live misconception still has to be dislodged first; practice items that target it do that.
+      return p.status === "MISCONCEPTION" || p.status === "SOLID" ? p : becomeSolid(p, now);
   }
 }
 
@@ -95,7 +104,7 @@ export function isDue(p: Progress, now: Date): boolean {
 
 // ---------- XP and streak ----------
 
-export const XP = { check: 10, resolved: 15, produce: 25, review: 5, testout: 40 } as const;
+export const XP = { check: 10, resolved: 15, produce: 25, review: 5, testout: 40, practice: 3, mastered: 30 } as const;
 
 /** Calendar day in the student's timezone, as YYYY-MM-DD. */
 export function localDay(now: Date, timeZone: string): string {

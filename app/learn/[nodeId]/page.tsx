@@ -57,6 +57,10 @@ export default async function LessonPage({ params }: { params: Promise<{ nodeId:
         tutor={tutorEnabled()}
       />
       <aside className="space-y-4 text-sm">
+        <Link href={`/practice/${node.id}`} className="card p-4! block hover:border-[var(--accent)]">
+          <p className="font-semibold">🎯 Practice</p>
+          <p className="text-[var(--muted)]">Endless fresh questions on this, mixed with what it builds on.</p>
+        </Link>
         <div className="card p-4!">
           <p className="font-semibold">New words</p>
           <dl className="mt-2 space-y-2">
