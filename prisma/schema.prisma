@@ -1,0 +1,92 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+enum Role {
+  TEACHER
+  STUDENT
+}
+
+/// Where a concept sits in a student's head. Mirrors the learning system's
+/// statuses: nothing becomes SOLID until the student produced it unaided.
+enum NodeStatus {
+  UNKNOWN
+  EDGE
+  LANDED
+  SOLID
+  MISCONCEPTION
+}
+
+model User {
+  id           String         @id @default(cuid())
+  email        String         @unique
+  name         String
+  passwordHash String
+  role         Role           @default(STUDENT)
+  xp           Int            @default(0)
+  /// Consecutive days with at least one graded answer.
+  streakDays   Int            @default(0)
+  /// Local calendar day (YYYY-MM-DD) of the last graded answer.
+  lastActiveOn String?
+  createdAt    DateTime       @default(now())
+  sessions     Session[]
+  progress     NodeProgress[]
+  attempts     Attempt[]
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  userId    String
+  /// SHA-256 of the cookie token. The raw token is never stored.
+  tokenHash String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+/// One row per (student, concept). Concepts live in code (lib/content), so
+/// nodeId is a stable string id, not a foreign key.
+model NodeProgress {
+  id              String     @id @default(cuid())
+  userId          String
+  nodeId          String
+  status          NodeStatus @default(UNKNOWN)
+  /// Misconception currently held, when status = MISCONCEPTION.
+  misconceptionId String?
+  /// Spaced review: days until next review, consecutive correct reviews.
+  intervalDays    Int        @default(0)
+  reviewStreak    Int        @default(0)
+  dueAt           DateTime?
+  updatedAt       DateTime   @updatedAt
+  user            User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, nodeId])
+  @@index([userId, dueAt])
+}
+
+/// Every graded answer. Append-only: the source of truth for analytics and
+/// for re-deriving progress if the rules change.
+model Attempt {
+  id              String   @id @default(cuid())
+  userId          String
+  nodeId          String
+  itemId          String
+  /// Which lesson step graded it: check, predict, resolve, produce, review, testout.
+  step            String
+  correct         Boolean
+  misconceptionId String?
+  response        Json
+  createdAt       DateTime @default(now())
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, nodeId])
+  @@index([nodeId, itemId])
+}
