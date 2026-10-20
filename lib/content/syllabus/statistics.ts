@@ -11,16 +11,6 @@ export type Area = { title: string; topics: Topic[] };
 /** Sections still to be written, with the chapter each will join. */
 export const PLANNED: Record<string, { title: string; chapter: string }> = {
   // Distributions & estimation
-  "discrete-family": { title: "Geometric, hypergeometric & multinomial", chapter: "Distributions & the CLT" },
-  "continuous-family": { title: "Gamma, beta, Weibull & lognormal", chapter: "Distributions & the CLT" },
-  "sampling-distributions": { title: "χ², t and F distributions", chapter: "Distributions & the CLT" },
-  "multivariate-normal": { title: "The multivariate normal", chapter: "Distributions & the CLT" },
-  mixtures: { title: "Mixtures, truncation & zero inflation", chapter: "Distributions & the CLT" },
-  "estimator-properties": { title: "Properties of estimators", chapter: "Estimation" },
-  "method-of-moments": { title: "Method of moments & MAP", chapter: "Estimation" },
-  "fisher-information": { title: "Fisher information & the Cramér–Rao bound", chapter: "Estimation" },
-  bootstrap: { title: "The bootstrap", chapter: "Estimation" },
-  "intervals-more": { title: "Intervals for variances, predictions & tolerances", chapter: "Estimation" },
   // Testing, association, regression
   "two-sample-tests": { title: "Two-proportion and variance tests", chapter: "Inference" },
   "multiple-testing": { title: "Effect sizes & multiple testing", chapter: "Inference" },

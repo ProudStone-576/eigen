@@ -3,7 +3,11 @@ import { deepen } from "../deepen";
 import { DISTRIBUTIONS_DEPTH } from "./distributions.depth";
 import { node as mgf } from "../sections/mgf";
 import { node as lln } from "../sections/lln-inequalities";
-import { node as surveyDesign } from "../sections/survey-design";
+import { node as discreteFamily } from "../sections/discrete-family";
+import { node as continuousFamily } from "../sections/continuous-family";
+import { node as multivariateNormal } from "../sections/multivariate-normal";
+import { node as mixtures } from "../sections/mixtures";
+import { node as samplingDistributions } from "../sections/sampling-distributions";
 
 const binomial: ConceptNode = {
   id: "binomial",
@@ -601,5 +605,17 @@ export const distributionsUnit: Unit = {
   track: "Statistics",
   title: "Distributions & the CLT",
   blurb: "Binomial, Poisson, uniform and exponential, and why averages always end up bell-shaped.",
-  nodes: [...[binomial, poisson, continuous].map((n) => deepen(n, DISTRIBUTIONS_DEPTH[n.id])), mgf, lln, ...[clt, se].map((n) => deepen(n, DISTRIBUTIONS_DEPTH[n.id])), surveyDesign],
+  nodes: [
+    deepen(binomial, DISTRIBUTIONS_DEPTH[binomial.id]),
+    discreteFamily,
+    ...[poisson, continuous].map((n) => deepen(n, DISTRIBUTIONS_DEPTH[n.id])),
+    mgf,
+    continuousFamily,
+    multivariateNormal,
+    mixtures,
+    lln,
+    deepen(clt, DISTRIBUTIONS_DEPTH[clt.id]),
+    samplingDistributions,
+    deepen(se, DISTRIBUTIONS_DEPTH[se.id]),
+  ],
 };

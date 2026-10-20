@@ -76,6 +76,14 @@ const OVERRIDES: Record<string, IntroSpec> = {
   "joint-distributions": { kind: "people", mode: "table-same" },
   mgf: { kind: "bars", dist: { type: "poisson", lambda: 3 }, marks: "mean" },
   "survey-design": { kind: "people", mode: "sample" },
+  "discrete-family": { kind: "bars", dist: { type: "binomial", n: 10, p: 0.3 }, marks: "mean" },
+  "continuous-family": { kind: "bars", dist: { type: "exponential" }, marks: "mean" },
+  mixtures: { kind: "bars", dist: { type: "values", values: [10, 12, 12, 13, 14, 14, 15, 30, 31, 32, 32, 33, 35], max: 45 }, marks: "mean" },
+  "sampling-distributions": { kind: "bars", dist: { type: "clt" } },
+  "estimator-properties": { kind: "intervals" },
+  "method-of-moments": { kind: "bars", dist: { type: "poisson", lambda: 2 }, marks: "mean" },
+  bootstrap: { kind: "bars", dist: { type: "clt" } },
+  "intervals-more": { kind: "intervals" },
 };
 
 const MARKS: Record<string, "mean" | "box" | "spread"> = {

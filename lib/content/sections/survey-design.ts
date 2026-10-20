@@ -15,7 +15,7 @@ const base: ConceptNode = {
   title: "Survey design: weights & corrections",
   summary: "A survey's precision depends on how many people are asked, not on what share of the population that is, unless the share is large; then the finite population correction shrinks the standard error. Weights let a sample that over- or under-represents groups estimate the whole population.",
   deps: ["standard-error", "sampling-bias"],
-  pos: { x: 6, y: 1 },
+  pos: { x: 1, y: 1 },
   glossary: [
     { term: "finite population correction", meaning: "The factor $\\sqrt{(N - n)/(N - 1)}$ that shrinks a standard error when a large share of the population is sampled." },
     { term: "weight", meaning: "How many population members a sampled unit stands for." },
