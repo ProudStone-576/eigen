@@ -1,6 +1,9 @@
 import type { ConceptNode, Unit } from "@/lib/content/types";
 import { deepen } from "../deepen";
 import { INFERENCE_DEPTH } from "./inference.depth";
+import { node as twoSampleTests } from "../sections/two-sample-tests";
+import { node as multipleTesting } from "../sections/multiple-testing";
+import { node as permutationTests } from "../sections/permutation-tests";
 
 const ci: ConceptNode = {
   id: "confidence-intervals",
@@ -765,5 +768,5 @@ export const inferenceUnit: Unit = {
   track: "Statistics",
   title: "Inference",
   blurb: "Confidence intervals, hypothesis tests, t and chi-square, and when a correlation means a cause.",
-  nodes: [ci, tests, errors, tTests, chi, causation].map((n) => deepen(n, INFERENCE_DEPTH[n.id])),
+  nodes: [...[ci, tests, errors, tTests, chi, causation].map((n) => deepen(n, INFERENCE_DEPTH[n.id])), twoSampleTests, multipleTesting, permutationTests],
 };

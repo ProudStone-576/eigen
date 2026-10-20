@@ -12,15 +12,6 @@ export type Area = { title: string; topics: Topic[] };
 export const PLANNED: Record<string, { title: string; chapter: string }> = {
   // Distributions & estimation
   // Testing, association, regression
-  "two-sample-tests": { title: "Two-proportion and variance tests", chapter: "Inference" },
-  "multiple-testing": { title: "Effect sizes & multiple testing", chapter: "Inference" },
-  "likelihood-ratio": { title: "Likelihood ratio, Wald & score tests", chapter: "Inference" },
-  "permutation-tests": { title: "Permutation & randomisation tests", chapter: "Inference" },
-  "rank-correlation": { title: "Rank correlation & association measures", chapter: "Regression Analysis" },
-  "regression-inference": { title: "Inference for regression", chapter: "Regression Analysis" },
-  "regression-diagnostics": { title: "Regression diagnostics", chapter: "Regression Analysis" },
-  "regression-features": { title: "Dummies, interactions, polynomials & splines", chapter: "Regression Analysis" },
-  glm: { title: "Generalised linear models", chapter: "Regression Analysis" },
   // ANOVA, nonparametric, robust
   "one-way-anova": { title: "One-way ANOVA", chapter: "ANOVA & Experiments" },
   "post-hoc-tests": { title: "Post-hoc comparisons", chapter: "ANOVA & Experiments" },

@@ -84,6 +84,15 @@ const OVERRIDES: Record<string, IntroSpec> = {
   "method-of-moments": { kind: "bars", dist: { type: "poisson", lambda: 2 }, marks: "mean" },
   bootstrap: { kind: "bars", dist: { type: "clt" } },
   "intervals-more": { kind: "intervals" },
+  "two-sample-tests": { kind: "people", mode: "table-differ" },
+  "multiple-testing": { kind: "bell", z: 2.5 },
+  "permutation-tests": { kind: "people", mode: "folds" },
+  "likelihood-ratio": { kind: "bars", dist: { type: "likelihood", heads: 60, flips: 100 } },
+  "rank-correlation": { kind: "cloud", flatten: false },
+  "regression-inference": { kind: "scatter", points: [[1, 2], [2, 2.8], [3, 4.1], [4, 4.9], [5, 6.2]], fit: "line" },
+  "regression-diagnostics": { kind: "scatter", points: [], fit: "wiggle" },
+  "regression-features": { kind: "scatter", points: [], fit: "plane" },
+  glm: { kind: "bars", dist: { type: "poisson", lambda: 3 }, marks: "mean" },
 };
 
 const MARKS: Record<string, "mean" | "box" | "spread"> = {
