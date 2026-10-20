@@ -202,6 +202,10 @@ const OVERRIDES: Record<string, IntroSpec> = {
   "separable-homogeneous": { kind: "bars", dist: { type: "exponential" } },
   "linear-de": { kind: "bars", dist: { type: "values", values: [6, 4.4, 3.4, 2.8, 2.5, 2.3, 2.2], max: 6 } },
   "de-applications": { kind: "bars", dist: { type: "values", values: [64, 32, 16, 8, 4, 2, 1], max: 64 } },
+  "vector-algebra": { kind: "vectors", op: "add", v: [2, 1], w: [1, 2] },
+  "cross-product": { kind: "vectors", op: "span", v: [2, 0], w: [1, 1.5] },
+  "lines-3d": { kind: "vectors", op: "scale", v: [1, 2], k: 2 },
+  "planes-3d": { kind: "vectors", op: "combo", v: [1, 0], w: [0, 1], a: 2, b: 1 },
 };
 
 const MARKS: Record<string, "mean" | "box" | "spread"> = {

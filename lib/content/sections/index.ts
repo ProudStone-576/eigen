@@ -25,6 +25,7 @@ import * as continuity from "./continuity";
 import * as continuousFamily from "./continuous-family";
 import * as counting from "./counting";
 import * as coxModel from "./cox-model";
+import * as crossProduct from "./cross-product";
 import * as dataQuality from "./data-quality";
 import * as dataVariables from "./data-variables";
 import * as deApplications from "./de-applications";
@@ -72,6 +73,7 @@ import * as likelihoodRatio from "./likelihood-ratio";
 import * as limits from "./limits";
 import * as linearDe from "./linear-de";
 import * as linearEquations from "./linear-equations";
+import * as lines3d from "./lines-3d";
 import * as lln from "./lln-inequalities";
 import * as mahalanobis from "./mahalanobis";
 import * as matrixAlgebra from "./matrix-algebra";
@@ -95,6 +97,7 @@ import * as parabola from "./parabola";
 import * as permutationsAdvanced from "./permutations-advanced";
 import * as permutationTests from "./permutation-tests";
 import * as planeGeometry from "./plane-geometry";
+import * as planes3d from "./planes-3d";
 import * as polynomials from "./polynomials";
 import * as postHocTests from "./post-hoc-tests";
 import * as potentialOutcomes from "./potential-outcomes";
@@ -139,6 +142,7 @@ import * as tsComponents from "./ts-components";
 import * as twoSampleTests from "./two-sample-tests";
 import * as twoWayAnova from "./two-way-anova";
 import * as uncertaintyShift from "./uncertainty-shift";
+import * as vectorAlgebra from "./vector-algebra";
 
 /**
  * Self-contained sections: each file holds the lesson, its exam-depth material
@@ -172,6 +176,7 @@ const SECTIONS = [
   continuousFamily,
   counting,
   coxModel,
+  crossProduct,
   dataQuality,
   dataVariables,
   deApplications,
@@ -219,6 +224,7 @@ const SECTIONS = [
   limits,
   linearDe,
   linearEquations,
+  lines3d,
   lln,
   mahalanobis,
   matrixAlgebra,
@@ -242,6 +248,7 @@ const SECTIONS = [
   permutationsAdvanced,
   permutationTests,
   planeGeometry,
+  planes3d,
   polynomials,
   postHocTests,
   potentialOutcomes,
@@ -286,6 +293,7 @@ const SECTIONS = [
   twoSampleTests,
   twoWayAnova,
   uncertaintyShift,
+  vectorAlgebra,
 ];
 
 export const SECTION_TEMPLATES: Record<string, Template[]> = Object.fromEntries(SECTIONS.map((s) => [s.node.id, s.templates]));

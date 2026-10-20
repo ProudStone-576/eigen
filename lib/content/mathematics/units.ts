@@ -53,6 +53,10 @@ import { node as deBasics } from "../sections/de-basics";
 import { node as separableHomogeneous } from "../sections/separable-homogeneous";
 import { node as linearDe } from "../sections/linear-de";
 import { node as deApplications } from "../sections/de-applications";
+import { node as vectorAlgebra } from "../sections/vector-algebra";
+import { node as crossProduct } from "../sections/cross-product";
+import { node as lines3d } from "../sections/lines-3d";
+import { node as planes3d } from "../sections/planes-3d";
 
 /** Part I: the exam mathematics syllabus (JEE Main and Advanced, SAT), in teaching order. */
 
@@ -160,4 +164,12 @@ export const differentialUnit: Unit = {
   nodes: [deBasics, separableHomogeneous, linearDe, deApplications],
 };
 
-export const mathematicsUnits: Unit[] = [algebraUnit, geometryUnit, functionsUnit, trigUnit, complexUnit, sequencesUnit, countingUnit, matricesUnit, coordinateUnit, limitsUnit, applicationsUnit, integralUnit, differentialUnit];
+export const vectors3dUnit: Unit = {
+  id: "ma-14",
+  track: "Mathematics",
+  title: "Vectors & 3D Geometry",
+  blurb: "Vectors in space and the dot product, cross and triple products, lines in space with skew distances, and planes with their distances and angles.",
+  nodes: [vectorAlgebra, crossProduct, lines3d, planes3d],
+};
+
+export const mathematicsUnits: Unit[] = [algebraUnit, geometryUnit, functionsUnit, trigUnit, complexUnit, sequencesUnit, countingUnit, matricesUnit, coordinateUnit, limitsUnit, applicationsUnit, integralUnit, differentialUnit, vectors3dUnit];

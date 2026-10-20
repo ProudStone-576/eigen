@@ -7,12 +7,8 @@
 
 import type { Area } from "./statistics";
 
-/** Sections still to be written, with the chapter each will join. */
+/** Sections still to be written, with the chapter each will join. Empty: every topic is taught. */
 export const MATH_PLANNED: Record<string, { title: string; chapter: string }> = {
-  "vector-algebra": { title: "Vector algebra & the dot product", chapter: "Vectors & 3D Geometry" },
-  "cross-product": { title: "Cross & triple products", chapter: "Vectors & 3D Geometry" },
-  "lines-3d": { title: "Lines in space", chapter: "Vectors & 3D Geometry" },
-  "planes-3d": { title: "Planes", chapter: "Vectors & 3D Geometry" },
 };
 
 const T = (section: string, ...names: string[]): [string, string][] => names.map((n) => [n, section]);
