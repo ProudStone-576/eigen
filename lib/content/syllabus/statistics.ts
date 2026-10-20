@@ -16,11 +16,6 @@ export const PLANNED: Record<string, { title: string; chapter: string }> = {
   // Bayesian, multivariate
   // Time series, causal, survival
   // Learning, theory, computing, practice
-  sufficiency: { title: "Sufficiency & exponential families", chapter: "Mathematical Statistics" },
-  asymptotics: { title: "Asymptotics & the delta method", chapter: "Mathematical Statistics" },
-  "decision-theory": { title: "Decision theory", chapter: "Mathematical Statistics" },
-  kde: { title: "Kernel density & kernel regression", chapter: "Mathematical Statistics" },
-  "high-dimensional": { title: "High-dimensional inference", chapter: "Mathematical Statistics" },
   "monte-carlo": { title: "Monte Carlo simulation", chapter: "Statistical Computing & Practice" },
   "statistical-computing": { title: "Computing at scale & reproducibility", chapter: "Statistical Computing & Practice" },
   "applied-fields": { title: "Statistics in the field", chapter: "Statistical Computing & Practice" },
@@ -299,7 +294,7 @@ export const STATISTICS_SYLLABUS: Area[] = [
     title: "Statistical Learning and Machine Learning",
     topics: [
       ...T("bias-variance", "Bias-variance trade-off", "Overfitting and underfitting"),
-      ...T("high-dimensional", "Statistical learning theory"),
+      ...T("learning-theory", "Statistical learning theory"),
       ...T("clustering", "Supervised and unsupervised learning"),
       ...T("cross-validation", "Training, validation, and test sets", "Cross-validation", "Feature selection"),
       ...T("regression-features", "Feature engineering"),
@@ -322,7 +317,8 @@ export const STATISTICS_SYLLABUS: Area[] = [
     topics: [
       ...T("sufficiency", "Mathematical statistics", "Sufficient statistics", "Rao-Blackwell theorem", "Lehmann-Scheffé theorem", "Exponential families", "Completeness and ancillary statistics", "Likelihood theory"),
       ...T("decision-theory", "Statistical decision theory", "Loss functions and risk", "Admissibility", "Minimax estimation"),
-      ...T("asymptotics", "Measure-theoretic probability", "Asymptotic normality", "Delta method", "Slutsky's theorem", "Continuous mapping theorem", "Empirical process theory", "U-statistics", "Semiparametric statistics"),
+      ...T("asymptotics", "Measure-theoretic probability", "Asymptotic normality", "Delta method", "Slutsky's theorem", "Continuous mapping theorem"),
+      ...T("advanced-asymptotics", "Empirical process theory", "U-statistics", "Semiparametric statistics"),
       ...T("robust-estimation", "Influence functions"),
       ...T("kde", "Nonparametric estimation", "Kernel density estimation", "Kernel regression", "Smoothing and bandwidth selection"),
       ...T("bootstrap", "Bootstrap theory"),

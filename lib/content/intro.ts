@@ -131,6 +131,13 @@ const OVERRIDES: Record<string, IntroSpec> = {
   "calibration-imbalance": { kind: "threshold", imbalanced: true },
   interpretability: { kind: "scatter", points: [], fit: "plane" },
   "uncertainty-shift": { kind: "intervals" },
+  sufficiency: { kind: "bars", dist: { type: "likelihood", heads: 6, flips: 10 } },
+  asymptotics: { kind: "bars", dist: { type: "clt" } },
+  "advanced-asymptotics": { kind: "bars", dist: { type: "values", values: [1, 2, 2, 3, 4, 4, 5, 6, 7, 9], max: 10 }, marks: "box" },
+  "decision-theory": { kind: "bars", dist: { type: "normal" }, marks: "mean" },
+  kde: { kind: "bars", dist: { type: "values", values: [2, 3, 3, 4, 4, 4, 5, 9, 10, 10, 11], max: 14 }, marks: "spread" },
+  "high-dimensional": { kind: "cloud", flatten: true },
+  "learning-theory": { kind: "people", mode: "folds" },
 };
 
 const MARKS: Record<string, "mean" | "box" | "spread"> = {

@@ -1,6 +1,8 @@
 import type { Template } from "../templates";
+import * as advancedAsymptotics from "./advanced-asymptotics";
 import * as advancedTimeSeries from "./advanced-time-series";
 import * as arima from "./arima";
+import * as asymptotics from "./asymptotics";
 import * as bayesFactors from "./bayes-factors";
 import * as bayesianInference from "./bayesian-inference";
 import * as bootstrap from "./bootstrap";
@@ -12,6 +14,7 @@ import * as counting from "./counting";
 import * as coxModel from "./cox-model";
 import * as dataQuality from "./data-quality";
 import * as dataVariables from "./data-variables";
+import * as decisionTheory from "./decision-theory";
 import * as discreteFamily from "./discrete-family";
 import * as discriminantAnalysis from "./discriminant-analysis";
 import * as doeAdvanced from "./doe-advanced";
@@ -26,11 +29,14 @@ import * as glm from "./glm";
 import * as gmmEm from "./gmm-em";
 import * as heterogeneousEffects from "./heterogeneous-effects";
 import * as hierarchicalModels from "./hierarchical-models";
+import * as highDimensional from "./high-dimensional";
 import * as interpretability from "./interpretability";
 import * as intervalsMore from "./intervals-more";
 import * as jointDistributions from "./joint-distributions";
 import * as kaplanMeier from "./kaplan-meier";
+import * as kde from "./kde";
 import * as kruskalFriedman from "./kruskal-friedman";
+import * as learningTheory from "./learning-theory";
 import * as likelihoodRatio from "./likelihood-ratio";
 import * as lln from "./lln-inequalities";
 import * as mahalanobis from "./mahalanobis";
@@ -58,6 +64,7 @@ import * as robustEstimation from "./robust-estimation";
 import * as samplingDistributions from "./sampling-distributions";
 import * as spreadMeasures from "./spread-measures";
 import * as stationarityAcf from "./stationarity-acf";
+import * as sufficiency from "./sufficiency";
 import * as surveyDesign from "./survey-design";
 import * as survivalExtensions from "./survival-extensions";
 import * as survivalFunctions from "./survival-functions";
@@ -75,8 +82,10 @@ import * as uncertaintyShift from "./uncertainty-shift";
  * templates to the practice generator.
  */
 const SECTIONS = [
+  advancedAsymptotics,
   advancedTimeSeries,
   arima,
+  asymptotics,
   bayesFactors,
   bayesianInference,
   bootstrap,
@@ -88,6 +97,7 @@ const SECTIONS = [
   coxModel,
   dataQuality,
   dataVariables,
+  decisionTheory,
   discreteFamily,
   discriminantAnalysis,
   doeAdvanced,
@@ -102,11 +112,14 @@ const SECTIONS = [
   gmmEm,
   heterogeneousEffects,
   hierarchicalModels,
+  highDimensional,
   interpretability,
   intervalsMore,
   jointDistributions,
   kaplanMeier,
+  kde,
   kruskalFriedman,
+  learningTheory,
   likelihoodRatio,
   lln,
   mahalanobis,
@@ -134,6 +147,7 @@ const SECTIONS = [
   samplingDistributions,
   spreadMeasures,
   stationarityAcf,
+  sufficiency,
   surveyDesign,
   survivalExtensions,
   survivalFunctions,
