@@ -9,10 +9,6 @@ import type { Area } from "./statistics";
 
 /** Sections still to be written, with the chapter each will join. */
 export const MATH_PLANNED: Record<string, { title: string; chapter: string }> = {
-  "de-basics": { title: "Differential equations: order, degree & formation", chapter: "Differential Equations" },
-  "separable-homogeneous": { title: "Separable & homogeneous equations", chapter: "Differential Equations" },
-  "linear-de": { title: "Linear first-order equations", chapter: "Differential Equations" },
-  "de-applications": { title: "Applications of differential equations", chapter: "Differential Equations" },
   "vector-algebra": { title: "Vector algebra & the dot product", chapter: "Vectors & 3D Geometry" },
   "cross-product": { title: "Cross & triple products", chapter: "Vectors & 3D Geometry" },
   "lines-3d": { title: "Lines in space", chapter: "Vectors & 3D Geometry" },

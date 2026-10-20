@@ -198,6 +198,10 @@ const OVERRIDES: Record<string, IntroSpec> = {
   "integration-techniques": { kind: "curve", fn: "cubic", a: 1.5 },
   "definite-integrals": { kind: "bars", dist: { type: "values", values: [1, 4, 9, 16, 25, 36], max: 36 } },
   "area-under-curves": { kind: "bars", dist: { type: "values", values: [2, 3.5, 4.5, 5, 4.5, 3.5, 2], max: 6 } },
+  "de-basics": { kind: "curve", fn: "chain", a: 1.5 },
+  "separable-homogeneous": { kind: "bars", dist: { type: "exponential" } },
+  "linear-de": { kind: "bars", dist: { type: "values", values: [6, 4.4, 3.4, 2.8, 2.5, 2.3, 2.2], max: 6 } },
+  "de-applications": { kind: "bars", dist: { type: "values", values: [64, 32, 16, 8, 4, 2, 1], max: 64 } },
 };
 
 const MARKS: Record<string, "mean" | "box" | "spread"> = {

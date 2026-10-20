@@ -49,6 +49,10 @@ import { node as indefiniteIntegrals } from "../sections/indefinite-integrals";
 import { node as integrationTechniques } from "../sections/integration-techniques";
 import { node as definiteIntegrals } from "../sections/definite-integrals";
 import { node as areaUnderCurves } from "../sections/area-under-curves";
+import { node as deBasics } from "../sections/de-basics";
+import { node as separableHomogeneous } from "../sections/separable-homogeneous";
+import { node as linearDe } from "../sections/linear-de";
+import { node as deApplications } from "../sections/de-applications";
 
 /** Part I: the exam mathematics syllabus (JEE Main and Advanced, SAT), in teaching order. */
 
@@ -148,4 +152,12 @@ export const integralUnit: Unit = {
   nodes: [indefiniteIntegrals, integrationTechniques, definiteIntegrals, areaUnderCurves],
 };
 
-export const mathematicsUnits: Unit[] = [algebraUnit, geometryUnit, functionsUnit, trigUnit, complexUnit, sequencesUnit, countingUnit, matricesUnit, coordinateUnit, limitsUnit, applicationsUnit, integralUnit];
+export const differentialUnit: Unit = {
+  id: "ma-13",
+  track: "Mathematics",
+  title: "Differential Equations",
+  blurb: "Order, degree and formation of differential equations, separable and homogeneous equations, linear first-order equations, and models of growth, decay, cooling and mixing.",
+  nodes: [deBasics, separableHomogeneous, linearDe, deApplications],
+};
+
+export const mathematicsUnits: Unit[] = [algebraUnit, geometryUnit, functionsUnit, trigUnit, complexUnit, sequencesUnit, countingUnit, matricesUnit, coordinateUnit, limitsUnit, applicationsUnit, integralUnit, differentialUnit];

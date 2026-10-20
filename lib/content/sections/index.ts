@@ -27,6 +27,8 @@ import * as counting from "./counting";
 import * as coxModel from "./cox-model";
 import * as dataQuality from "./data-quality";
 import * as dataVariables from "./data-variables";
+import * as deApplications from "./de-applications";
+import * as deBasics from "./de-basics";
 import * as decisionTheory from "./decision-theory";
 import * as definiteIntegrals from "./definite-integrals";
 import * as determinantsProperties from "./determinants-properties";
@@ -68,6 +70,7 @@ import * as kruskalFriedman from "./kruskal-friedman";
 import * as learningTheory from "./learning-theory";
 import * as likelihoodRatio from "./likelihood-ratio";
 import * as limits from "./limits";
+import * as linearDe from "./linear-de";
 import * as linearEquations from "./linear-equations";
 import * as lln from "./lln-inequalities";
 import * as mahalanobis from "./mahalanobis";
@@ -111,6 +114,7 @@ import * as reproduciblePractice from "./reproducible-practice";
 import * as robustEstimation from "./robust-estimation";
 import * as rootsOfUnity from "./roots-of-unity";
 import * as samplingDistributions from "./sampling-distributions";
+import * as separableHomogeneous from "./separable-homogeneous";
 import * as setsRelations from "./sets-relations";
 import * as spatialEnvironmental from "./spatial-environmental";
 import * as specialSeries from "./special-series";
@@ -170,6 +174,8 @@ const SECTIONS = [
   coxModel,
   dataQuality,
   dataVariables,
+  deApplications,
+  deBasics,
   decisionTheory,
   definiteIntegrals,
   determinantsProperties,
@@ -211,6 +217,7 @@ const SECTIONS = [
   learningTheory,
   likelihoodRatio,
   limits,
+  linearDe,
   linearEquations,
   lln,
   mahalanobis,
@@ -254,6 +261,7 @@ const SECTIONS = [
   robustEstimation,
   rootsOfUnity,
   samplingDistributions,
+  separableHomogeneous,
   setsRelations,
   spatialEnvironmental,
   specialSeries,
