@@ -8,18 +8,8 @@
 export type Topic = [name: string, section: string];
 export type Area = { title: string; topics: Topic[] };
 
-/** Sections still to be written, with the chapter each will join. */
-export const PLANNED: Record<string, { title: string; chapter: string }> = {
-  // Distributions & estimation
-  // Testing, association, regression
-  // ANOVA, nonparametric, robust
-  // Bayesian, multivariate
-  // Time series, causal, survival
-  // Learning, theory, computing, practice
-  "monte-carlo": { title: "Monte Carlo simulation", chapter: "Statistical Computing & Practice" },
-  "statistical-computing": { title: "Computing at scale & reproducibility", chapter: "Statistical Computing & Practice" },
-  "applied-fields": { title: "Statistics in the field", chapter: "Statistical Computing & Practice" },
-};
+/** Sections still to be written, with the chapter each will join. Empty: every topic is taught. */
+export const PLANNED: Record<string, { title: string; chapter: string }> = {};
 
 const T = (section: string, ...names: string[]): Topic[] => names.map((n) => [n, section]);
 
@@ -327,7 +317,9 @@ export const STATISTICS_SYLLABUS: Area[] = [
       ...T("multiple-testing", "Multiple hypothesis testing theory", "False discovery rate"),
       ...T("permutation-tests", "Sequential analysis", "Sequential probability ratio tests"),
       ...T("likelihood-ratio", "Information-theoretic statistics"),
-      ...T("applied-fields", "Extreme-value statistics", "Spatial statistics", "Geostatistics", "Functional data analysis", "Statistical genetics", "Psychometrics and item response theory"),
+      ...T("spatial-environmental", "Extreme-value statistics", "Spatial statistics", "Geostatistics"),
+      ...T("genetics-networks-text", "Functional data analysis", "Statistical genetics"),
+      ...T("psychometrics-social", "Psychometrics and item response theory"),
     ],
   },
   {
@@ -341,13 +333,20 @@ export const STATISTICS_SYLLABUS: Area[] = [
       ...T("gradient-descent", "Numerical optimization"),
       ...T("mle", "Maximum likelihood computation"),
       ...T("skew-shape", "Statistical visualization"),
-      ...T("statistical-computing", "Reproducible analysis", "Computational complexity", "Parallel statistical computing", "Big-data statistics", "Streaming statistics", "Online estimation", "Distributed statistical analysis", "Privacy-preserving statistics", "Statistical programming in Python", "Statistical programming in R", "SQL for statistical data extraction", "Statistical software validation", "Version control and reproducibility"),
+      ...T("statistical-computing", "Computational complexity", "Parallel statistical computing", "Big-data statistics", "Streaming statistics", "Online estimation", "Distributed statistical analysis", "Privacy-preserving statistics"),
+      ...T("reproducible-practice", "Reproducible analysis", "Statistical programming in Python", "Statistical programming in R", "SQL for statistical data extraction", "Statistical software validation", "Version control and reproducibility"),
     ],
   },
   {
     title: "Specialized Statistical Fields",
     topics: [
-      ...T("applied-fields", "Biostatistics", "Epidemiological statistics", "Clinical trial statistics", "Public health statistics", "Econometrics", "Financial statistics", "Actuarial statistics", "Business analytics", "Industrial statistics", "Quality control", "Statistical process control", "Six Sigma statistical methods", "Educational statistics", "Psychometrics", "Social statistics", "Spatial statistics", "Geostatistics", "Sports analytics", "Sports performance modeling", "Forensic statistics", "Reliability engineering", "Network statistics", "Text and language statistics", "Computational social science", "Environmental statistics", "Climate statistics"),
+      ...T("clinical-epi", "Biostatistics", "Epidemiological statistics", "Clinical trial statistics", "Public health statistics"),
+      ...T("econometrics-finance", "Econometrics", "Financial statistics", "Actuarial statistics", "Business analytics"),
+      ...T("quality-control", "Industrial statistics", "Quality control", "Statistical process control", "Six Sigma statistical methods", "Reliability engineering"),
+      ...T("psychometrics-social", "Educational statistics", "Psychometrics", "Social statistics", "Computational social science"),
+      ...T("spatial-environmental", "Spatial statistics", "Geostatistics", "Environmental statistics", "Climate statistics"),
+      ...T("sports-forensic", "Sports analytics", "Sports performance modeling", "Forensic statistics"),
+      ...T("genetics-networks-text", "Network statistics", "Text and language statistics"),
       ...T("survey-design", "Political polling", "Survey statistics", "Official statistics"),
       ...T("bayes-factors", "Bayesian experimental design"),
       ...T("heterogeneous-effects", "Causal machine learning"),

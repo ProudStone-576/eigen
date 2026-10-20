@@ -7,6 +7,7 @@ import * as bayesFactors from "./bayes-factors";
 import * as bayesianInference from "./bayesian-inference";
 import * as bootstrap from "./bootstrap";
 import * as calibrationImbalance from "./calibration-imbalance";
+import * as clinicalEpi from "./clinical-epi";
 import * as clustering from "./clustering";
 import * as conjugatePriors from "./conjugate-priors";
 import * as continuousFamily from "./continuous-family";
@@ -18,6 +19,7 @@ import * as decisionTheory from "./decision-theory";
 import * as discreteFamily from "./discrete-family";
 import * as discriminantAnalysis from "./discriminant-analysis";
 import * as doeAdvanced from "./doe-advanced";
+import * as econometricsFinance from "./econometrics-finance";
 import * as estimatorProperties from "./estimator-properties";
 import * as experimentDesign from "./experiment-design";
 import * as exponentialSmoothing from "./exponential-smoothing";
@@ -25,6 +27,7 @@ import * as factorAnalysis from "./factor-analysis";
 import * as fisherInformation from "./fisher-information";
 import * as forecasting from "./forecasting";
 import * as frequencyTables from "./frequency-tables";
+import * as geneticsNetworksText from "./genetics-networks-text";
 import * as glm from "./glm";
 import * as gmmEm from "./gmm-em";
 import * as heterogeneousEffects from "./heterogeneous-effects";
@@ -45,6 +48,7 @@ import * as mediationSensitivity from "./mediation-sensitivity";
 import * as methodOfMoments from "./method-of-moments";
 import * as mgf from "./mgf";
 import * as mixtures from "./mixtures";
+import * as monteCarlo from "./monte-carlo";
 import * as multipleTesting from "./multiple-testing";
 import * as multivariateNormal from "./multivariate-normal";
 import * as normalityTests from "./normality-tests";
@@ -54,16 +58,22 @@ import * as permutationTests from "./permutation-tests";
 import * as postHocTests from "./post-hoc-tests";
 import * as potentialOutcomes from "./potential-outcomes";
 import * as propensityScores from "./propensity-scores";
+import * as psychometricsSocial from "./psychometrics-social";
+import * as qualityControl from "./quality-control";
 import * as quasiExperiments from "./quasi-experiments";
 import * as rankCorrelation from "./rank-correlation";
 import * as rankTests from "./rank-tests";
 import * as regressionDiagnostics from "./regression-diagnostics";
 import * as regressionFeatures from "./regression-features";
 import * as regressionInference from "./regression-inference";
+import * as reproduciblePractice from "./reproducible-practice";
 import * as robustEstimation from "./robust-estimation";
 import * as samplingDistributions from "./sampling-distributions";
+import * as spatialEnvironmental from "./spatial-environmental";
+import * as sportsForensic from "./sports-forensic";
 import * as spreadMeasures from "./spread-measures";
 import * as stationarityAcf from "./stationarity-acf";
+import * as statisticalComputing from "./statistical-computing";
 import * as sufficiency from "./sufficiency";
 import * as surveyDesign from "./survey-design";
 import * as survivalExtensions from "./survival-extensions";
@@ -90,6 +100,7 @@ const SECTIONS = [
   bayesianInference,
   bootstrap,
   calibrationImbalance,
+  clinicalEpi,
   clustering,
   conjugatePriors,
   continuousFamily,
@@ -101,6 +112,7 @@ const SECTIONS = [
   discreteFamily,
   discriminantAnalysis,
   doeAdvanced,
+  econometricsFinance,
   estimatorProperties,
   experimentDesign,
   exponentialSmoothing,
@@ -108,6 +120,7 @@ const SECTIONS = [
   fisherInformation,
   forecasting,
   frequencyTables,
+  geneticsNetworksText,
   glm,
   gmmEm,
   heterogeneousEffects,
@@ -128,6 +141,7 @@ const SECTIONS = [
   methodOfMoments,
   mgf,
   mixtures,
+  monteCarlo,
   multipleTesting,
   multivariateNormal,
   normalityTests,
@@ -137,16 +151,22 @@ const SECTIONS = [
   postHocTests,
   potentialOutcomes,
   propensityScores,
+  psychometricsSocial,
+  qualityControl,
   quasiExperiments,
   rankCorrelation,
   rankTests,
   regressionDiagnostics,
   regressionFeatures,
   regressionInference,
+  reproduciblePractice,
   robustEstimation,
   samplingDistributions,
+  spatialEnvironmental,
+  sportsForensic,
   spreadMeasures,
   stationarityAcf,
+  statisticalComputing,
   sufficiency,
   surveyDesign,
   survivalExtensions,

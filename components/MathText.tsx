@@ -1,18 +1,26 @@
 import katex from "katex";
 
 /**
- * Renders content text: $$display$$, $inline$, **bold**, *italic*.
+ * Renders content text: $$display$$, $inline$, **bold**, *italic*, `code`.
  * Content is ours (lib/content), not user input, so HTML from KaTeX is trusted;
  * plain text segments are still escaped.
  */
 
 const escape = (s: string) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 
-function inlineMarkup(s: string): string {
-  return escape(s)
+function emphasis(s: string): string {
+  return s
     .replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")
     // *emphasis* only when it starts after a space/bracket with a letter, so "2*3 - 1*4" stays maths.
     .replace(/(^|[\s(])\*([A-Za-z][^*\n]*?)\*(?=[\s.,;:!?)]|$)/g, "$1<em>$2</em>");
+}
+
+/** `code` spans stay literal, so `SELECT *` or `x**2` inside them isn't read as emphasis. */
+function inlineMarkup(s: string): string {
+  return escape(s)
+    .split(/(`[^`\n]+`)/)
+    .map((part, i) => (i % 2 === 1 ? `<code class="inline-code">${part.slice(1, -1)}</code>` : emphasis(part)))
+    .join("");
 }
 
 function tex(src: string, displayMode: boolean): string {

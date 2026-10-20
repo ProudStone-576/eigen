@@ -138,6 +138,16 @@ const OVERRIDES: Record<string, IntroSpec> = {
   kde: { kind: "bars", dist: { type: "values", values: [2, 3, 3, 4, 4, 4, 5, 9, 10, 10, 11], max: 14 }, marks: "spread" },
   "high-dimensional": { kind: "cloud", flatten: true },
   "learning-theory": { kind: "people", mode: "folds" },
+  "monte-carlo": { kind: "bars", dist: { type: "clt" } },
+  "statistical-computing": { kind: "people", mode: "sample" },
+  "reproducible-practice": { kind: "people", mode: "folds" },
+  "clinical-epi": { kind: "people", mode: "bayes", prevalence: 0.01, sensitivity: 0.9, falsePositive: 0.05 },
+  "econometrics-finance": { kind: "scatter", points: [], fit: "simpson" },
+  "quality-control": { kind: "bars", dist: { type: "normal" }, marks: "spread" },
+  "spatial-environmental": { kind: "bars", dist: { type: "exponential" }, marks: "box" },
+  "psychometrics-social": { kind: "bars", dist: { type: "binomial", n: 20, p: 0.6 }, marks: "mean" },
+  "genetics-networks-text": { kind: "bars", dist: { type: "values", values: [60, 30, 20, 15, 12, 10, 8, 7, 6, 5], max: 60 } },
+  "sports-forensic": { kind: "people", mode: "bayes", prevalence: 0.001, sensitivity: 1, falsePositive: 0.01 },
 };
 
 const MARKS: Record<string, "mean" | "box" | "spread"> = {

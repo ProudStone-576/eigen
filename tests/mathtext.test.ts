@@ -18,4 +18,11 @@ describe("content text rendering", () => {
   it("escapes HTML in plain text", () => {
     expect(renderMath("<script>x</script>")).not.toContain("<script>");
   });
+  it("renders `code` literally, without emphasis inside", () => {
+    const h = renderMath("run `SELECT *, COUNT(*) FROM t` and **check**");
+    expect(h).toContain('<code class="inline-code">SELECT *, COUNT(*) FROM t</code>');
+    expect(h).toContain("<strong>check</strong>");
+    expect(renderMath("`a <b> c`")).toBe('<code class="inline-code">a &lt;b&gt; c</code>');
+    expect(renderMath("`**x**`")).not.toContain("<strong>");
+  });
 });
