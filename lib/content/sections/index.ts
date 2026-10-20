@@ -23,6 +23,7 @@ import * as econometricsFinance from "./econometrics-finance";
 import * as estimatorProperties from "./estimator-properties";
 import * as experimentDesign from "./experiment-design";
 import * as exponentialSmoothing from "./exponential-smoothing";
+import * as exponentsLogs from "./exponents-logs";
 import * as factorAnalysis from "./factor-analysis";
 import * as fisherInformation from "./fisher-information";
 import * as forecasting from "./forecasting";
@@ -41,10 +42,12 @@ import * as kde from "./kde";
 import * as kruskalFriedman from "./kruskal-friedman";
 import * as learningTheory from "./learning-theory";
 import * as likelihoodRatio from "./likelihood-ratio";
+import * as linearEquations from "./linear-equations";
 import * as lln from "./lln-inequalities";
 import * as mahalanobis from "./mahalanobis";
 import * as mcmc from "./mcmc";
 import * as mediationSensitivity from "./mediation-sensitivity";
+import * as mensuration from "./mensuration";
 import * as methodOfMoments from "./method-of-moments";
 import * as mgf from "./mgf";
 import * as mixtures from "./mixtures";
@@ -55,14 +58,18 @@ import * as normalityTests from "./normality-tests";
 import * as oneWayAnova from "./one-way-anova";
 import * as otherMeans from "./other-means";
 import * as permutationTests from "./permutation-tests";
+import * as planeGeometry from "./plane-geometry";
+import * as polynomials from "./polynomials";
 import * as postHocTests from "./post-hoc-tests";
 import * as potentialOutcomes from "./potential-outcomes";
 import * as propensityScores from "./propensity-scores";
 import * as psychometricsSocial from "./psychometrics-social";
+import * as quadratics from "./quadratics";
 import * as qualityControl from "./quality-control";
 import * as quasiExperiments from "./quasi-experiments";
 import * as rankCorrelation from "./rank-correlation";
 import * as rankTests from "./rank-tests";
+import * as ratiosPercentages from "./ratios-percentages";
 import * as regressionDiagnostics from "./regression-diagnostics";
 import * as regressionFeatures from "./regression-features";
 import * as regressionInference from "./regression-inference";
@@ -116,6 +123,7 @@ const SECTIONS = [
   estimatorProperties,
   experimentDesign,
   exponentialSmoothing,
+  exponentsLogs,
   factorAnalysis,
   fisherInformation,
   forecasting,
@@ -134,10 +142,12 @@ const SECTIONS = [
   kruskalFriedman,
   learningTheory,
   likelihoodRatio,
+  linearEquations,
   lln,
   mahalanobis,
   mcmc,
   mediationSensitivity,
+  mensuration,
   methodOfMoments,
   mgf,
   mixtures,
@@ -148,14 +158,18 @@ const SECTIONS = [
   oneWayAnova,
   otherMeans,
   permutationTests,
+  planeGeometry,
+  polynomials,
   postHocTests,
   potentialOutcomes,
   propensityScores,
   psychometricsSocial,
+  quadratics,
   qualityControl,
   quasiExperiments,
   rankCorrelation,
   rankTests,
+  ratiosPercentages,
   regressionDiagnostics,
   regressionFeatures,
   regressionInference,

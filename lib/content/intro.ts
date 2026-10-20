@@ -148,6 +148,13 @@ const OVERRIDES: Record<string, IntroSpec> = {
   "psychometrics-social": { kind: "bars", dist: { type: "binomial", n: 20, p: 0.6 }, marks: "mean" },
   "genetics-networks-text": { kind: "bars", dist: { type: "values", values: [60, 30, 20, 15, 12, 10, 8, 7, 6, 5], max: 60 } },
   "sports-forensic": { kind: "people", mode: "bayes", prevalence: 0.001, sensitivity: 1, falsePositive: 0.01 },
+  "linear-equations": { kind: "scatter", points: [[0, 1], [1, 3.1], [2, 4.9], [3, 7.2], [4, 8.8], [5, 11.1]], fit: "line" },
+  "ratios-percentages": { kind: "bars", dist: { type: "values", values: [20, 25, 25, 30, 35, 40, 40, 45], max: 50 }, marks: "mean" },
+  "exponents-logs": { kind: "bars", dist: { type: "exponential" } },
+  polynomials: { kind: "scatter", points: [], fit: "wiggle" },
+  quadratics: { kind: "curve", fn: "square", a: 1 },
+  "plane-geometry": { kind: "vectors", op: "add", v: [3, 1], w: [1, 2] },
+  mensuration: { kind: "lattice" },
 };
 
 const MARKS: Record<string, "mean" | "box" | "spread"> = {
