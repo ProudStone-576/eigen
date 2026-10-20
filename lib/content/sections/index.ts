@@ -2,6 +2,7 @@ import type { Template } from "../templates";
 import * as advancedAsymptotics from "./advanced-asymptotics";
 import * as advancedTimeSeries from "./advanced-time-series";
 import * as arima from "./arima";
+import * as arithmeticProgressions from "./arithmetic-progressions";
 import * as asymptotics from "./asymptotics";
 import * as bayesFactors from "./bayes-factors";
 import * as bayesianInference from "./bayesian-inference";
@@ -9,6 +10,9 @@ import * as bootstrap from "./bootstrap";
 import * as calibrationImbalance from "./calibration-imbalance";
 import * as clinicalEpi from "./clinical-epi";
 import * as clustering from "./clustering";
+import * as complexAlgebra from "./complex-algebra";
+import * as complexGeometry from "./complex-geometry";
+import * as complexPolar from "./complex-polar";
 import * as compositionInverse from "./composition-inverse";
 import * as conjugatePriors from "./conjugate-priors";
 import * as continuousFamily from "./continuous-family";
@@ -32,11 +36,13 @@ import * as frequencyTables from "./frequency-tables";
 import * as functionGraphs from "./function-graphs";
 import * as functionsBasics from "./functions-basics";
 import * as geneticsNetworksText from "./genetics-networks-text";
+import * as geometricProgressions from "./geometric-progressions";
 import * as glm from "./glm";
 import * as gmmEm from "./gmm-em";
 import * as heterogeneousEffects from "./heterogeneous-effects";
 import * as hierarchicalModels from "./hierarchical-models";
 import * as highDimensional from "./high-dimensional";
+import * as induction from "./induction";
 import * as interpretability from "./interpretability";
 import * as intervalsMore from "./intervals-more";
 import * as inverseTrig from "./inverse-trig";
@@ -50,6 +56,7 @@ import * as linearEquations from "./linear-equations";
 import * as lln from "./lln-inequalities";
 import * as mahalanobis from "./mahalanobis";
 import * as mcmc from "./mcmc";
+import * as meansInequalities from "./means-inequalities";
 import * as mediationSensitivity from "./mediation-sensitivity";
 import * as mensuration from "./mensuration";
 import * as methodOfMoments from "./method-of-moments";
@@ -79,9 +86,11 @@ import * as regressionFeatures from "./regression-features";
 import * as regressionInference from "./regression-inference";
 import * as reproduciblePractice from "./reproducible-practice";
 import * as robustEstimation from "./robust-estimation";
+import * as rootsOfUnity from "./roots-of-unity";
 import * as samplingDistributions from "./sampling-distributions";
 import * as setsRelations from "./sets-relations";
 import * as spatialEnvironmental from "./spatial-environmental";
+import * as specialSeries from "./special-series";
 import * as sportsForensic from "./sports-forensic";
 import * as spreadMeasures from "./spread-measures";
 import * as stationarityAcf from "./stationarity-acf";
@@ -111,6 +120,7 @@ const SECTIONS = [
   advancedAsymptotics,
   advancedTimeSeries,
   arima,
+  arithmeticProgressions,
   asymptotics,
   bayesFactors,
   bayesianInference,
@@ -118,6 +128,9 @@ const SECTIONS = [
   calibrationImbalance,
   clinicalEpi,
   clustering,
+  complexAlgebra,
+  complexGeometry,
+  complexPolar,
   compositionInverse,
   conjugatePriors,
   continuousFamily,
@@ -141,11 +154,13 @@ const SECTIONS = [
   functionGraphs,
   functionsBasics,
   geneticsNetworksText,
+  geometricProgressions,
   glm,
   gmmEm,
   heterogeneousEffects,
   hierarchicalModels,
   highDimensional,
+  induction,
   interpretability,
   intervalsMore,
   inverseTrig,
@@ -159,6 +174,7 @@ const SECTIONS = [
   lln,
   mahalanobis,
   mcmc,
+  meansInequalities,
   mediationSensitivity,
   mensuration,
   methodOfMoments,
@@ -188,9 +204,11 @@ const SECTIONS = [
   regressionInference,
   reproduciblePractice,
   robustEstimation,
+  rootsOfUnity,
   samplingDistributions,
   setsRelations,
   spatialEnvironmental,
+  specialSeries,
   sportsForensic,
   spreadMeasures,
   stationarityAcf,

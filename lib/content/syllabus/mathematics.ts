@@ -9,15 +9,6 @@ import type { Area } from "./statistics";
 
 /** Sections still to be written, with the chapter each will join. */
 export const MATH_PLANNED: Record<string, { title: string; chapter: string }> = {
-  "complex-algebra": { title: "Complex numbers & the Argand plane", chapter: "Complex Numbers" },
-  "complex-polar": { title: "Polar form & De Moivre's theorem", chapter: "Complex Numbers" },
-  "roots-of-unity": { title: "Roots of unity", chapter: "Complex Numbers" },
-  "complex-geometry": { title: "Geometry with complex numbers", chapter: "Complex Numbers" },
-  "arithmetic-progressions": { title: "Arithmetic progressions", chapter: "Sequences & Series" },
-  "geometric-progressions": { title: "Geometric progressions", chapter: "Sequences & Series" },
-  "means-inequalities": { title: "Means & inequalities", chapter: "Sequences & Series" },
-  "special-series": { title: "Special series & summation", chapter: "Sequences & Series" },
-  induction: { title: "Mathematical induction", chapter: "Sequences & Series" },
   "permutations-advanced": { title: "Permutations", chapter: "Permutations, Combinations & Binomial Theorem" },
   "combinations-advanced": { title: "Combinations & distributions", chapter: "Permutations, Combinations & Binomial Theorem" },
   "binomial-theorem": { title: "The binomial theorem", chapter: "Permutations, Combinations & Binomial Theorem" },

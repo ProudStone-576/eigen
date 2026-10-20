@@ -164,6 +164,15 @@ const OVERRIDES: Record<string, IntroSpec> = {
   "trig-equations": { kind: "bars", dist: { type: "values", values: [5, 8, 10, 8, 5, 2, 0, 2, 5, 8, 10, 8, 5], max: 10 }, marks: "mean" },
   "inverse-trig": { kind: "plane", m: [[0, 1], [1, 0]], firstName: "reflect in y = x" },
   "triangles-trig": { kind: "vectors", op: "add", v: [4, 1], w: [-1, 3] },
+  "complex-algebra": { kind: "vectors", op: "add", v: [3, 2], w: [1, -2] },
+  "complex-polar": { kind: "plane", m: [[1, -1], [1, 1]], firstName: "multiply by 1 + i" },
+  "roots-of-unity": { kind: "plane", m: [[-0.5, -0.866], [0.866, -0.5]], firstName: "multiply by ω" },
+  "complex-geometry": { kind: "plane", m: [[0, -1], [1, 0]], firstName: "multiply by i" },
+  "arithmetic-progressions": { kind: "scatter", points: [[1, 3], [2, 7], [3, 11], [4, 15], [5, 19], [6, 23]], fit: "line" },
+  "geometric-progressions": { kind: "bars", dist: { type: "values", values: [1, 2, 4, 8, 16, 32], max: 32 } },
+  "means-inequalities": { kind: "bars", dist: { type: "values", values: [2, 3, 5, 8, 12], max: 12 }, marks: "mean" },
+  "special-series": { kind: "bars", dist: { type: "values", values: [1, 4, 9, 16, 25, 36], max: 36 } },
+  induction: { kind: "bars", dist: { type: "values", values: [1, 3, 5, 7, 9, 11], max: 12 }, marks: "mean" },
 };
 
 const MARKS: Record<string, "mean" | "box" | "spread"> = {

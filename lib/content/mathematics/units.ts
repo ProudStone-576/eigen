@@ -15,6 +15,15 @@ import { node as trigIdentities } from "../sections/trig-identities";
 import { node as trigEquations } from "../sections/trig-equations";
 import { node as inverseTrig } from "../sections/inverse-trig";
 import { node as trianglesTrig } from "../sections/triangles-trig";
+import { node as complexAlgebra } from "../sections/complex-algebra";
+import { node as complexPolar } from "../sections/complex-polar";
+import { node as rootsOfUnity } from "../sections/roots-of-unity";
+import { node as complexGeometry } from "../sections/complex-geometry";
+import { node as arithmeticProgressions } from "../sections/arithmetic-progressions";
+import { node as geometricProgressions } from "../sections/geometric-progressions";
+import { node as meansInequalities } from "../sections/means-inequalities";
+import { node as specialSeries } from "../sections/special-series";
+import { node as induction } from "../sections/induction";
 
 /** Part I: the exam mathematics syllabus (JEE Main and Advanced, SAT), in teaching order. */
 
@@ -50,4 +59,20 @@ export const trigUnit: Unit = {
   nodes: [trigRatios, trigIdentities, trigEquations, inverseTrig, trianglesTrig],
 };
 
-export const mathematicsUnits: Unit[] = [algebraUnit, geometryUnit, functionsUnit, trigUnit];
+export const complexUnit: Unit = {
+  id: "ma-5",
+  track: "Mathematics",
+  title: "Complex Numbers",
+  blurb: "Arithmetic in the Argand plane, polar form and De Moivre, roots of unity, and geometry done with complex numbers.",
+  nodes: [complexAlgebra, complexPolar, rootsOfUnity, complexGeometry],
+};
+
+export const sequencesUnit: Unit = {
+  id: "ma-6",
+  track: "Mathematics",
+  title: "Sequences & Series",
+  blurb: "Arithmetic and geometric progressions, means and the AM–GM inequality, sums of powers and telescoping series, and proof by induction.",
+  nodes: [arithmeticProgressions, geometricProgressions, meansInequalities, specialSeries, induction],
+};
+
+export const mathematicsUnits: Unit[] = [algebraUnit, geometryUnit, functionsUnit, trigUnit, complexUnit, sequencesUnit];
