@@ -1,4 +1,6 @@
 import type { ConceptNode, Unit } from "@/lib/content/types";
+import { deepen } from "../deepen";
+import { DISTRIBUTIONS_DEPTH } from "./distributions.depth";
 
 const binomial: ConceptNode = {
   id: "binomial",
@@ -596,5 +598,5 @@ export const distributionsUnit: Unit = {
   track: "Statistics",
   title: "Distributions & the CLT",
   blurb: "Binomial, Poisson, uniform and exponential, and why averages always end up bell-shaped.",
-  nodes: [binomial, poisson, continuous, clt, se],
+  nodes: [binomial, poisson, continuous, clt, se].map((n) => deepen(n, DISTRIBUTIONS_DEPTH[n.id])),
 };

@@ -1,4 +1,6 @@
 import type { ConceptNode, Unit } from "@/lib/content/types";
+import { deepen } from "../deepen";
+import { EVALUATION_DEPTH } from "./evaluation.depth";
 
 const multiple: ConceptNode = {
   id: "multiple-regression",
@@ -861,5 +863,5 @@ export const evaluationUnit: Unit = {
   track: "Machine learning",
   title: "Regression & Evaluation",
   blurb: "Multiple and logistic regression, regularisation, honest validation, and the metrics that matter.",
-  nodes: [multiple, logistic, regularization, cv, biasVariance, precisionRecall, roc],
+  nodes: [multiple, logistic, regularization, cv, biasVariance, precisionRecall, roc].map((n) => deepen(n, EVALUATION_DEPTH[n.id])),
 };

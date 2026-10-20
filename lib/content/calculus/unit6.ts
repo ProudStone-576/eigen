@@ -1,4 +1,6 @@
 import type { ConceptNode, Unit } from "@/lib/content/types";
+import { deepen } from "../deepen";
+import { UNIT6_DEPTH } from "./unit6.depth";
 
 const v = (x: number | string, y: number | string) => `\\begin{bmatrix}${x}\\\\${y}\\end{bmatrix}`;
 
@@ -576,5 +578,5 @@ export const unit6: Unit = {
   track: "Calculus",
   title: "Calculus for ML",
   blurb: "Slopes, gradients, and how a model walks downhill on its loss: the engine of training.",
-  nodes: [derivative, rules, chain, gradient, descent, backprop],
+  nodes: [derivative, rules, chain, gradient, descent, backprop].map((n) => deepen(n, UNIT6_DEPTH[n.id])),
 };

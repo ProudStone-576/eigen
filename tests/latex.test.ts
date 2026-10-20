@@ -56,7 +56,7 @@ function checkMath(text: string, where: string) {
 }
 
 describe("all math renders", () => {
-  it("in every lesson", () => {
+  it("in every lesson", { timeout: 60_000 }, () => {
     for (const n of allNodes) for (const t of stepTexts(n)) checkMath(t, n.id);
   });
 

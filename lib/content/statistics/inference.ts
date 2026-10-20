@@ -1,4 +1,6 @@
 import type { ConceptNode, Unit } from "@/lib/content/types";
+import { deepen } from "../deepen";
+import { INFERENCE_DEPTH } from "./inference.depth";
 
 const ci: ConceptNode = {
   id: "confidence-intervals",
@@ -763,5 +765,5 @@ export const inferenceUnit: Unit = {
   track: "Statistics",
   title: "Inference",
   blurb: "Confidence intervals, hypothesis tests, t and chi-square, and when a correlation means a cause.",
-  nodes: [ci, tests, errors, tTests, chi, causation],
+  nodes: [ci, tests, errors, tTests, chi, causation].map((n) => deepen(n, INFERENCE_DEPTH[n.id])),
 };

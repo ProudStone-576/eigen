@@ -1,4 +1,6 @@
 import type { ConceptNode, Unit } from "@/lib/content/types";
+import { deepen } from "../deepen";
+import { UNIT7_DEPTH } from "./unit7.depth";
 
 const v = (x: number | string, y: number | string) => `\\begin{bmatrix}${x}\\\\${y}\\end{bmatrix}`;
 const m = (a: number | string, b: number | string, c: number | string, d: number | string) =>
@@ -523,5 +525,5 @@ export const unit7: Unit = {
   track: "Neural networks",
   title: "Neural Networks",
   blurb: "Everything together: neurons are dot products, layers are matrices, training is gradient descent on a likelihood.",
-  nodes: [neuron, activation, layer, forwardPass, training, playground],
+  nodes: [neuron, activation, layer, forwardPass, training, playground].map((n) => deepen(n, UNIT7_DEPTH[n.id])),
 };
