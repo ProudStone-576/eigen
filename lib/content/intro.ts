@@ -186,6 +186,10 @@ const OVERRIDES: Record<string, IntroSpec> = {
   parabola: { kind: "curve", fn: "square", a: 1 },
   ellipse: { kind: "plane", m: [[2, 0], [0, 1]], area: true, firstName: "stretch a circle" },
   hyperbola: { kind: "plane", m: [[2, 0], [0, 0.5]], area: true, firstName: "squeeze along xy = c²" },
+  limits: { kind: "curve", fn: "square", a: 1 },
+  continuity: { kind: "threshold" },
+  differentiability: { kind: "curve", fn: "cubic", a: 0.5 },
+  "differentiation-methods": { kind: "curve", fn: "chain", a: 1 },
 };
 
 const MARKS: Record<string, "mean" | "box" | "spread"> = {

@@ -37,6 +37,10 @@ import { node as circles } from "../sections/circles";
 import { node as parabola } from "../sections/parabola";
 import { node as ellipse } from "../sections/ellipse";
 import { node as hyperbola } from "../sections/hyperbola";
+import { node as limits } from "../sections/limits";
+import { node as continuity } from "../sections/continuity";
+import { node as differentiability } from "../sections/differentiability";
+import { node as differentiationMethods } from "../sections/differentiation-methods";
 
 /** Part I: the exam mathematics syllabus (JEE Main and Advanced, SAT), in teaching order. */
 
@@ -112,4 +116,12 @@ export const coordinateUnit: Unit = {
   nodes: [straightLines, circles, parabola, ellipse, hyperbola],
 };
 
-export const mathematicsUnits: Unit[] = [algebraUnit, geometryUnit, functionsUnit, trigUnit, complexUnit, sequencesUnit, countingUnit, matricesUnit, coordinateUnit];
+export const limitsUnit: Unit = {
+  id: "ma-10",
+  track: "Mathematics",
+  title: "Limits, Continuity & Differentiability",
+  blurb: "Limits and indeterminate forms, continuity and the intermediate value theorem, differentiability, and the methods of differentiation.",
+  nodes: [limits, continuity, differentiability, differentiationMethods],
+};
+
+export const mathematicsUnits: Unit[] = [algebraUnit, geometryUnit, functionsUnit, trigUnit, complexUnit, sequencesUnit, countingUnit, matricesUnit, coordinateUnit, limitsUnit];

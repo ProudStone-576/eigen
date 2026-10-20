@@ -20,6 +20,7 @@ import * as complexGeometry from "./complex-geometry";
 import * as complexPolar from "./complex-polar";
 import * as compositionInverse from "./composition-inverse";
 import * as conjugatePriors from "./conjugate-priors";
+import * as continuity from "./continuity";
 import * as continuousFamily from "./continuous-family";
 import * as counting from "./counting";
 import * as coxModel from "./cox-model";
@@ -27,6 +28,8 @@ import * as dataQuality from "./data-quality";
 import * as dataVariables from "./data-variables";
 import * as decisionTheory from "./decision-theory";
 import * as determinantsProperties from "./determinants-properties";
+import * as differentiability from "./differentiability";
+import * as differentiationMethods from "./differentiation-methods";
 import * as discreteFamily from "./discrete-family";
 import * as discriminantAnalysis from "./discriminant-analysis";
 import * as doeAdvanced from "./doe-advanced";
@@ -60,6 +63,7 @@ import * as kde from "./kde";
 import * as kruskalFriedman from "./kruskal-friedman";
 import * as learningTheory from "./learning-theory";
 import * as likelihoodRatio from "./likelihood-ratio";
+import * as limits from "./limits";
 import * as linearEquations from "./linear-equations";
 import * as lln from "./lln-inequalities";
 import * as mahalanobis from "./mahalanobis";
@@ -151,6 +155,7 @@ const SECTIONS = [
   complexPolar,
   compositionInverse,
   conjugatePriors,
+  continuity,
   continuousFamily,
   counting,
   coxModel,
@@ -158,6 +163,8 @@ const SECTIONS = [
   dataVariables,
   decisionTheory,
   determinantsProperties,
+  differentiability,
+  differentiationMethods,
   discreteFamily,
   discriminantAnalysis,
   doeAdvanced,
@@ -191,6 +198,7 @@ const SECTIONS = [
   kruskalFriedman,
   learningTheory,
   likelihoodRatio,
+  limits,
   linearEquations,
   lln,
   mahalanobis,

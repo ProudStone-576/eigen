@@ -9,10 +9,6 @@ import type { Area } from "./statistics";
 
 /** Sections still to be written, with the chapter each will join. */
 export const MATH_PLANNED: Record<string, { title: string; chapter: string }> = {
-  limits: { title: "Limits", chapter: "Limits, Continuity & Differentiability" },
-  continuity: { title: "Continuity", chapter: "Limits, Continuity & Differentiability" },
-  differentiability: { title: "Differentiability", chapter: "Limits, Continuity & Differentiability" },
-  "differentiation-methods": { title: "Methods of differentiation", chapter: "Limits, Continuity & Differentiability" },
   "tangents-normals": { title: "Tangents, normals & rates of change", chapter: "Applications of Derivatives" },
   monotonicity: { title: "Increasing & decreasing functions", chapter: "Applications of Derivatives" },
   "maxima-minima": { title: "Maxima & minima", chapter: "Applications of Derivatives" },
