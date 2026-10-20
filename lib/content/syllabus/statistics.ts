@@ -15,13 +15,6 @@ export const PLANNED: Record<string, { title: string; chapter: string }> = {
   // ANOVA, nonparametric, robust
   // Bayesian, multivariate
   // Time series, causal, survival
-  "potential-outcomes": { title: "Potential outcomes & DAGs", chapter: "Causal Inference" },
-  "propensity-scores": { title: "Matching, weighting & propensity scores", chapter: "Causal Inference" },
-  "quasi-experiments": { title: "Instruments, differences-in-differences & discontinuities", chapter: "Causal Inference" },
-  "mediation-sensitivity": { title: "Mediation, heterogeneity & sensitivity", chapter: "Causal Inference" },
-  "survival-functions": { title: "Survival & hazard functions", chapter: "Survival & Reliability" },
-  "kaplan-meier": { title: "Kaplan–Meier & the log-rank test", chapter: "Survival & Reliability" },
-  "cox-model": { title: "Cox & parametric survival models", chapter: "Survival & Reliability" },
   // Learning, theory, computing, practice
   "trees-ensembles": { title: "Trees, forests & boosting", chapter: "More Statistical Learning" },
   "svm-knn-nb": { title: "SVMs, nearest neighbours & naive Bayes", chapter: "More Statistical Learning" },
@@ -287,7 +280,8 @@ export const STATISTICS_SYLLABUS: Area[] = [
       ...T("experiment-design", "Treatment and control groups", "Randomized experiments"),
       ...T("propensity-scores", "Observational causal inference", "Matching methods", "Propensity scores", "Inverse probability weighting", "Regression adjustment", "Doubly robust estimation"),
       ...T("quasi-experiments", "Instrumental variables", "Two-stage least squares", "Regression discontinuity designs", "Difference-in-differences", "Synthetic control methods"),
-      ...T("mediation-sensitivity", "Mediation analysis", "Moderation analysis", "Sensitivity analysis", "Negative controls", "Causal forests", "Heterogeneous treatment effects", "Target trial emulation"),
+      ...T("mediation-sensitivity", "Mediation analysis", "Moderation analysis", "Sensitivity analysis", "Negative controls", "Target trial emulation"),
+      ...T("heterogeneous-effects", "Causal forests", "Heterogeneous treatment effects"),
     ],
   },
   {
@@ -295,7 +289,8 @@ export const STATISTICS_SYLLABUS: Area[] = [
     topics: [
       ...T("survival-functions", "Time-to-event data", "Censoring and truncation", "Survival functions", "Hazard functions", "Reliability functions", "Failure rates", "Hazard-rate estimation", "Life tables"),
       ...T("kaplan-meier", "Kaplan-Meier estimator", "Log-rank test"),
-      ...T("cox-model", "Cox proportional hazards model", "Parametric survival models", "Accelerated failure-time models", "Competing risks", "Recurrent events", "Frailty models", "Weibull reliability models", "Repairable systems", "Reliability testing", "Accelerated life testing"),
+      ...T("cox-model", "Cox proportional hazards model", "Parametric survival models", "Accelerated failure-time models", "Weibull reliability models"),
+      ...T("survival-extensions", "Competing risks", "Recurrent events", "Frailty models", "Repairable systems", "Reliability testing", "Accelerated life testing"),
     ],
   },
   {
@@ -364,7 +359,7 @@ export const STATISTICS_SYLLABUS: Area[] = [
       ...T("applied-fields", "Biostatistics", "Epidemiological statistics", "Clinical trial statistics", "Public health statistics", "Econometrics", "Financial statistics", "Actuarial statistics", "Business analytics", "Industrial statistics", "Quality control", "Statistical process control", "Six Sigma statistical methods", "Educational statistics", "Psychometrics", "Social statistics", "Spatial statistics", "Geostatistics", "Sports analytics", "Sports performance modeling", "Forensic statistics", "Reliability engineering", "Network statistics", "Text and language statistics", "Computational social science", "Environmental statistics", "Climate statistics"),
       ...T("survey-design", "Political polling", "Survey statistics", "Official statistics"),
       ...T("bayes-factors", "Bayesian experimental design"),
-      ...T("mediation-sensitivity", "Causal machine learning"),
+      ...T("heterogeneous-effects", "Causal machine learning"),
     ],
   },
 ];

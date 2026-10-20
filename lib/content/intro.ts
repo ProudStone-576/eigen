@@ -117,6 +117,15 @@ const OVERRIDES: Record<string, IntroSpec> = {
   arima: { kind: "cloud", flatten: false },
   forecasting: { kind: "intervals" },
   "advanced-time-series": { kind: "bars", dist: { type: "values", values: [1, 0, 1, 0, 4, 5, 6, 4, 0, 1, 1, 0], max: 8 }, marks: "spread" },
+  "potential-outcomes": { kind: "scatter", points: [], fit: "simpson" },
+  "propensity-scores": { kind: "people", mode: "biased" },
+  "quasi-experiments": { kind: "people", mode: "table-differ" },
+  "mediation-sensitivity": { kind: "people", mode: "table-same" },
+  "heterogeneous-effects": { kind: "people", mode: "folds" },
+  "survival-functions": { kind: "bars", dist: { type: "exponential" } },
+  "kaplan-meier": { kind: "bars", dist: { type: "values", values: [2, 3, 5, 6, 6, 8, 9, 12, 14, 20], max: 24 }, marks: "box" },
+  "cox-model": { kind: "bars", dist: { type: "exponential" }, marks: "mean" },
+  "survival-extensions": { kind: "bars", dist: { type: "poisson", lambda: 2 }, marks: "mean" },
 };
 
 const MARKS: Record<string, "mean" | "box" | "spread"> = {
