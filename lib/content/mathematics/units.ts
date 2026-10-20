@@ -32,6 +32,11 @@ import { node as probabilityRules } from "../sections/probability-rules";
 import { node as matrixAlgebra } from "../sections/matrix-algebra";
 import { node as determinantsProperties } from "../sections/determinants-properties";
 import { node as adjointSystems } from "../sections/adjoint-systems";
+import { node as straightLines } from "../sections/straight-lines";
+import { node as circles } from "../sections/circles";
+import { node as parabola } from "../sections/parabola";
+import { node as ellipse } from "../sections/ellipse";
+import { node as hyperbola } from "../sections/hyperbola";
 
 /** Part I: the exam mathematics syllabus (JEE Main and Advanced, SAT), in teaching order. */
 
@@ -99,4 +104,12 @@ export const matricesUnit: Unit = {
   nodes: [matrixAlgebra, determinantsProperties, adjointSystems],
 };
 
-export const mathematicsUnits: Unit[] = [algebraUnit, geometryUnit, functionsUnit, trigUnit, complexUnit, sequencesUnit, countingUnit, matricesUnit];
+export const coordinateUnit: Unit = {
+  id: "ma-9",
+  track: "Mathematics",
+  title: "Coordinate Geometry",
+  blurb: "Straight lines, circles and the three conics, parabola, ellipse and hyperbola, with their foci, tangents and normals.",
+  nodes: [straightLines, circles, parabola, ellipse, hyperbola],
+};
+
+export const mathematicsUnits: Unit[] = [algebraUnit, geometryUnit, functionsUnit, trigUnit, complexUnit, sequencesUnit, countingUnit, matricesUnit, coordinateUnit];

@@ -9,11 +9,6 @@ import type { Area } from "./statistics";
 
 /** Sections still to be written, with the chapter each will join. */
 export const MATH_PLANNED: Record<string, { title: string; chapter: string }> = {
-  "straight-lines": { title: "Straight lines", chapter: "Coordinate Geometry" },
-  circles: { title: "Circles", chapter: "Coordinate Geometry" },
-  parabola: { title: "The parabola", chapter: "Coordinate Geometry" },
-  ellipse: { title: "The ellipse", chapter: "Coordinate Geometry" },
-  hyperbola: { title: "The hyperbola", chapter: "Coordinate Geometry" },
   limits: { title: "Limits", chapter: "Limits, Continuity & Differentiability" },
   continuity: { title: "Continuity", chapter: "Limits, Continuity & Differentiability" },
   differentiability: { title: "Differentiability", chapter: "Limits, Continuity & Differentiability" },

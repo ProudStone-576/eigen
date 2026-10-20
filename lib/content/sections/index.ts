@@ -11,6 +11,7 @@ import * as binomialCoefficients from "./binomial-coefficients";
 import * as binomialTheorem from "./binomial-theorem";
 import * as bootstrap from "./bootstrap";
 import * as calibrationImbalance from "./calibration-imbalance";
+import * as circles from "./circles";
 import * as clinicalEpi from "./clinical-epi";
 import * as clustering from "./clustering";
 import * as combinationsAdvanced from "./combinations-advanced";
@@ -30,6 +31,7 @@ import * as discreteFamily from "./discrete-family";
 import * as discriminantAnalysis from "./discriminant-analysis";
 import * as doeAdvanced from "./doe-advanced";
 import * as econometricsFinance from "./econometrics-finance";
+import * as ellipse from "./ellipse";
 import * as estimatorProperties from "./estimator-properties";
 import * as experimentDesign from "./experiment-design";
 import * as exponentialSmoothing from "./exponential-smoothing";
@@ -47,6 +49,7 @@ import * as gmmEm from "./gmm-em";
 import * as heterogeneousEffects from "./heterogeneous-effects";
 import * as hierarchicalModels from "./hierarchical-models";
 import * as highDimensional from "./high-dimensional";
+import * as hyperbola from "./hyperbola";
 import * as induction from "./induction";
 import * as interpretability from "./interpretability";
 import * as intervalsMore from "./intervals-more";
@@ -74,6 +77,7 @@ import * as multivariateNormal from "./multivariate-normal";
 import * as normalityTests from "./normality-tests";
 import * as oneWayAnova from "./one-way-anova";
 import * as otherMeans from "./other-means";
+import * as parabola from "./parabola";
 import * as permutationsAdvanced from "./permutations-advanced";
 import * as permutationTests from "./permutation-tests";
 import * as planeGeometry from "./plane-geometry";
@@ -103,6 +107,7 @@ import * as sportsForensic from "./sports-forensic";
 import * as spreadMeasures from "./spread-measures";
 import * as stationarityAcf from "./stationarity-acf";
 import * as statisticalComputing from "./statistical-computing";
+import * as straightLines from "./straight-lines";
 import * as sufficiency from "./sufficiency";
 import * as surveyDesign from "./survey-design";
 import * as survivalExtensions from "./survival-extensions";
@@ -137,6 +142,7 @@ const SECTIONS = [
   binomialTheorem,
   bootstrap,
   calibrationImbalance,
+  circles,
   clinicalEpi,
   clustering,
   combinationsAdvanced,
@@ -156,6 +162,7 @@ const SECTIONS = [
   discriminantAnalysis,
   doeAdvanced,
   econometricsFinance,
+  ellipse,
   estimatorProperties,
   experimentDesign,
   exponentialSmoothing,
@@ -173,6 +180,7 @@ const SECTIONS = [
   heterogeneousEffects,
   hierarchicalModels,
   highDimensional,
+  hyperbola,
   induction,
   interpretability,
   intervalsMore,
@@ -200,6 +208,7 @@ const SECTIONS = [
   normalityTests,
   oneWayAnova,
   otherMeans,
+  parabola,
   permutationsAdvanced,
   permutationTests,
   planeGeometry,
@@ -229,6 +238,7 @@ const SECTIONS = [
   spreadMeasures,
   stationarityAcf,
   statisticalComputing,
+  straightLines,
   sufficiency,
   surveyDesign,
   survivalExtensions,

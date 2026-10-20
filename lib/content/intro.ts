@@ -181,6 +181,11 @@ const OVERRIDES: Record<string, IntroSpec> = {
   "matrix-algebra": { kind: "plane", m: [[1, 1], [0, 1]], firstName: "shear" },
   "determinants-properties": { kind: "plane", m: [[2, 1], [1, 2]], area: true },
   "adjoint-systems": { kind: "plane", m: [[2, 1], [5, 3]], then: [[3, -1], [-5, 2]], firstName: "A", thenName: "inverse of A" },
+  "straight-lines": { kind: "scatter", points: [[0, 1], [1, 3], [2, 5], [3, 7], [4, 9]], fit: "line" },
+  circles: { kind: "plane", m: [[0, -1], [1, 0]], firstName: "rotate by 90°" },
+  parabola: { kind: "curve", fn: "square", a: 1 },
+  ellipse: { kind: "plane", m: [[2, 0], [0, 1]], area: true, firstName: "stretch a circle" },
+  hyperbola: { kind: "plane", m: [[2, 0], [0, 0.5]], area: true, firstName: "squeeze along xy = c²" },
 };
 
 const MARKS: Record<string, "mean" | "box" | "spread"> = {
