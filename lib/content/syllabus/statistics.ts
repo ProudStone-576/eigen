@@ -13,14 +13,6 @@ export const PLANNED: Record<string, { title: string; chapter: string }> = {
   // Distributions & estimation
   // Testing, association, regression
   // ANOVA, nonparametric, robust
-  "one-way-anova": { title: "One-way ANOVA", chapter: "ANOVA & Experiments" },
-  "post-hoc-tests": { title: "Post-hoc comparisons", chapter: "ANOVA & Experiments" },
-  "two-way-anova": { title: "Two-way & factorial ANOVA", chapter: "ANOVA & Experiments" },
-  "doe-advanced": { title: "Blocks, Latin squares & response surfaces", chapter: "ANOVA & Experiments" },
-  "rank-tests": { title: "Sign, Wilcoxon & Mann–Whitney tests", chapter: "Nonparametric & Robust Methods" },
-  "kruskal-friedman": { title: "Kruskal–Wallis & Friedman tests", chapter: "Nonparametric & Robust Methods" },
-  "normality-tests": { title: "Goodness-of-fit & normality tests", chapter: "Nonparametric & Robust Methods" },
-  "robust-estimation": { title: "Robust estimation", chapter: "Nonparametric & Robust Methods" },
   // Bayesian, multivariate
   "bayesian-inference": { title: "Bayesian inference", chapter: "Bayesian Statistics" },
   "conjugate-priors": { title: "Conjugate priors", chapter: "Bayesian Statistics" },

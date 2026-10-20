@@ -93,6 +93,14 @@ const OVERRIDES: Record<string, IntroSpec> = {
   "regression-diagnostics": { kind: "scatter", points: [], fit: "wiggle" },
   "regression-features": { kind: "scatter", points: [], fit: "plane" },
   glm: { kind: "bars", dist: { type: "poisson", lambda: 3 }, marks: "mean" },
+  "one-way-anova": { kind: "people", mode: "table-differ" },
+  "post-hoc-tests": { kind: "bars", dist: { type: "values", values: [12, 13, 14, 15, 15, 16, 20, 21, 22, 23], max: 30 }, marks: "box" },
+  "two-way-anova": { kind: "people", mode: "table-differ" },
+  "doe-advanced": { kind: "people", mode: "folds" },
+  "rank-tests": { kind: "bars", dist: { type: "values", values: [3, 4, 4, 5, 6, 6, 7, 7, 8, 90], max: 100 }, marks: "box" },
+  "kruskal-friedman": { kind: "bars", dist: { type: "values", values: [5, 8, 9, 12, 14, 15, 18, 22, 30, 41], max: 50 }, marks: "box" },
+  "normality-tests": { kind: "bars", dist: { type: "normal" }, marks: "spread" },
+  "robust-estimation": { kind: "bars", dist: { type: "values", values: [4, 5, 5, 6, 6, 7, 95], max: 100 }, marks: "mean" },
 };
 
 const MARKS: Record<string, "mean" | "box" | "spread"> = {

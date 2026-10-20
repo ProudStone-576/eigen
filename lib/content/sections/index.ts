@@ -5,12 +5,14 @@ import * as counting from "./counting";
 import * as dataQuality from "./data-quality";
 import * as dataVariables from "./data-variables";
 import * as discreteFamily from "./discrete-family";
+import * as doeAdvanced from "./doe-advanced";
 import * as estimatorProperties from "./estimator-properties";
 import * as experimentDesign from "./experiment-design";
 import * as fisherInformation from "./fisher-information";
 import * as frequencyTables from "./frequency-tables";
 import * as intervalsMore from "./intervals-more";
 import * as jointDistributions from "./joint-distributions";
+import * as kruskalFriedman from "./kruskal-friedman";
 import * as glm from "./glm";
 import * as likelihoodRatio from "./likelihood-ratio";
 import * as lln from "./lln-inequalities";
@@ -19,17 +21,23 @@ import * as mgf from "./mgf";
 import * as mixtures from "./mixtures";
 import * as multipleTesting from "./multiple-testing";
 import * as multivariateNormal from "./multivariate-normal";
+import * as normalityTests from "./normality-tests";
+import * as oneWayAnova from "./one-way-anova";
 import * as otherMeans from "./other-means";
 import * as permutationTests from "./permutation-tests";
+import * as postHocTests from "./post-hoc-tests";
 import * as rankCorrelation from "./rank-correlation";
+import * as rankTests from "./rank-tests";
 import * as regressionDiagnostics from "./regression-diagnostics";
 import * as regressionFeatures from "./regression-features";
 import * as regressionInference from "./regression-inference";
+import * as robustEstimation from "./robust-estimation";
 import * as samplingDistributions from "./sampling-distributions";
 import * as spreadMeasures from "./spread-measures";
 import * as surveyDesign from "./survey-design";
 import * as transformations from "./transformations";
 import * as twoSampleTests from "./two-sample-tests";
+import * as twoWayAnova from "./two-way-anova";
 
 /**
  * Self-contained sections: each file holds the lesson, its exam-depth material
@@ -43,6 +51,7 @@ const SECTIONS = [
   dataQuality,
   dataVariables,
   discreteFamily,
+  doeAdvanced,
   estimatorProperties,
   experimentDesign,
   fisherInformation,
@@ -50,6 +59,7 @@ const SECTIONS = [
   glm,
   intervalsMore,
   jointDistributions,
+  kruskalFriedman,
   likelihoodRatio,
   lln,
   methodOfMoments,
@@ -57,17 +67,23 @@ const SECTIONS = [
   mixtures,
   multipleTesting,
   multivariateNormal,
+  normalityTests,
+  oneWayAnova,
   otherMeans,
   permutationTests,
+  postHocTests,
   rankCorrelation,
+  rankTests,
   regressionDiagnostics,
   regressionFeatures,
   regressionInference,
+  robustEstimation,
   samplingDistributions,
   spreadMeasures,
   surveyDesign,
   transformations,
   twoSampleTests,
+  twoWayAnova,
 ];
 
 export const SECTION_TEMPLATES: Record<string, Template[]> = Object.fromEntries(SECTIONS.map((s) => [s.node.id, s.templates]));
