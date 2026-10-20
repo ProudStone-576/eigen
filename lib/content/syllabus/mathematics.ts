@@ -9,14 +9,6 @@ import type { Area } from "./statistics";
 
 /** Sections still to be written, with the chapter each will join. */
 export const MATH_PLANNED: Record<string, { title: string; chapter: string }> = {
-  "permutations-advanced": { title: "Permutations", chapter: "Permutations, Combinations & Binomial Theorem" },
-  "combinations-advanced": { title: "Combinations & distributions", chapter: "Permutations, Combinations & Binomial Theorem" },
-  "binomial-theorem": { title: "The binomial theorem", chapter: "Permutations, Combinations & Binomial Theorem" },
-  "binomial-coefficients": { title: "Binomial coefficients & identities", chapter: "Permutations, Combinations & Binomial Theorem" },
-  "probability-rules": { title: "Probability by counting: addition & multiplication rules", chapter: "Permutations, Combinations & Binomial Theorem" },
-  "matrix-algebra": { title: "Matrices & their algebra", chapter: "Matrices & Determinants" },
-  "determinants-properties": { title: "Determinants & their properties", chapter: "Matrices & Determinants" },
-  "adjoint-systems": { title: "Adjoint, inverse & linear systems", chapter: "Matrices & Determinants" },
   "straight-lines": { title: "Straight lines", chapter: "Coordinate Geometry" },
   circles: { title: "Circles", chapter: "Coordinate Geometry" },
   parabola: { title: "The parabola", chapter: "Coordinate Geometry" },

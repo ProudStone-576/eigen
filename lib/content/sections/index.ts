@@ -1,4 +1,5 @@
 import type { Template } from "../templates";
+import * as adjointSystems from "./adjoint-systems";
 import * as advancedAsymptotics from "./advanced-asymptotics";
 import * as advancedTimeSeries from "./advanced-time-series";
 import * as arima from "./arima";
@@ -6,10 +7,13 @@ import * as arithmeticProgressions from "./arithmetic-progressions";
 import * as asymptotics from "./asymptotics";
 import * as bayesFactors from "./bayes-factors";
 import * as bayesianInference from "./bayesian-inference";
+import * as binomialCoefficients from "./binomial-coefficients";
+import * as binomialTheorem from "./binomial-theorem";
 import * as bootstrap from "./bootstrap";
 import * as calibrationImbalance from "./calibration-imbalance";
 import * as clinicalEpi from "./clinical-epi";
 import * as clustering from "./clustering";
+import * as combinationsAdvanced from "./combinations-advanced";
 import * as complexAlgebra from "./complex-algebra";
 import * as complexGeometry from "./complex-geometry";
 import * as complexPolar from "./complex-polar";
@@ -21,6 +25,7 @@ import * as coxModel from "./cox-model";
 import * as dataQuality from "./data-quality";
 import * as dataVariables from "./data-variables";
 import * as decisionTheory from "./decision-theory";
+import * as determinantsProperties from "./determinants-properties";
 import * as discreteFamily from "./discrete-family";
 import * as discriminantAnalysis from "./discriminant-analysis";
 import * as doeAdvanced from "./doe-advanced";
@@ -55,6 +60,7 @@ import * as likelihoodRatio from "./likelihood-ratio";
 import * as linearEquations from "./linear-equations";
 import * as lln from "./lln-inequalities";
 import * as mahalanobis from "./mahalanobis";
+import * as matrixAlgebra from "./matrix-algebra";
 import * as mcmc from "./mcmc";
 import * as meansInequalities from "./means-inequalities";
 import * as mediationSensitivity from "./mediation-sensitivity";
@@ -68,11 +74,13 @@ import * as multivariateNormal from "./multivariate-normal";
 import * as normalityTests from "./normality-tests";
 import * as oneWayAnova from "./one-way-anova";
 import * as otherMeans from "./other-means";
+import * as permutationsAdvanced from "./permutations-advanced";
 import * as permutationTests from "./permutation-tests";
 import * as planeGeometry from "./plane-geometry";
 import * as polynomials from "./polynomials";
 import * as postHocTests from "./post-hoc-tests";
 import * as potentialOutcomes from "./potential-outcomes";
+import * as probabilityRules from "./probability-rules";
 import * as propensityScores from "./propensity-scores";
 import * as psychometricsSocial from "./psychometrics-social";
 import * as quadratics from "./quadratics";
@@ -117,6 +125,7 @@ import * as uncertaintyShift from "./uncertainty-shift";
  * templates to the practice generator.
  */
 const SECTIONS = [
+  adjointSystems,
   advancedAsymptotics,
   advancedTimeSeries,
   arima,
@@ -124,10 +133,13 @@ const SECTIONS = [
   asymptotics,
   bayesFactors,
   bayesianInference,
+  binomialCoefficients,
+  binomialTheorem,
   bootstrap,
   calibrationImbalance,
   clinicalEpi,
   clustering,
+  combinationsAdvanced,
   complexAlgebra,
   complexGeometry,
   complexPolar,
@@ -139,6 +151,7 @@ const SECTIONS = [
   dataQuality,
   dataVariables,
   decisionTheory,
+  determinantsProperties,
   discreteFamily,
   discriminantAnalysis,
   doeAdvanced,
@@ -173,6 +186,7 @@ const SECTIONS = [
   linearEquations,
   lln,
   mahalanobis,
+  matrixAlgebra,
   mcmc,
   meansInequalities,
   mediationSensitivity,
@@ -186,11 +200,13 @@ const SECTIONS = [
   normalityTests,
   oneWayAnova,
   otherMeans,
+  permutationsAdvanced,
   permutationTests,
   planeGeometry,
   polynomials,
   postHocTests,
   potentialOutcomes,
+  probabilityRules,
   propensityScores,
   psychometricsSocial,
   quadratics,

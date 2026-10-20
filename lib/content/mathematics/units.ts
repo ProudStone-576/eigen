@@ -24,6 +24,14 @@ import { node as geometricProgressions } from "../sections/geometric-progression
 import { node as meansInequalities } from "../sections/means-inequalities";
 import { node as specialSeries } from "../sections/special-series";
 import { node as induction } from "../sections/induction";
+import { node as permutationsAdvanced } from "../sections/permutations-advanced";
+import { node as combinationsAdvanced } from "../sections/combinations-advanced";
+import { node as binomialTheorem } from "../sections/binomial-theorem";
+import { node as binomialCoefficients } from "../sections/binomial-coefficients";
+import { node as probabilityRules } from "../sections/probability-rules";
+import { node as matrixAlgebra } from "../sections/matrix-algebra";
+import { node as determinantsProperties } from "../sections/determinants-properties";
+import { node as adjointSystems } from "../sections/adjoint-systems";
 
 /** Part I: the exam mathematics syllabus (JEE Main and Advanced, SAT), in teaching order. */
 
@@ -75,4 +83,20 @@ export const sequencesUnit: Unit = {
   nodes: [arithmeticProgressions, geometricProgressions, meansInequalities, specialSeries, induction],
 };
 
-export const mathematicsUnits: Unit[] = [algebraUnit, geometryUnit, functionsUnit, trigUnit, complexUnit, sequencesUnit];
+export const countingUnit: Unit = {
+  id: "ma-7",
+  track: "Mathematics",
+  title: "Permutations, Combinations & Binomial Theorem",
+  blurb: "Arrangements and selections with restrictions, distributions and derangements, the binomial theorem and its coefficient identities, and probability by counting.",
+  nodes: [permutationsAdvanced, combinationsAdvanced, binomialTheorem, binomialCoefficients, probabilityRules],
+};
+
+export const matricesUnit: Unit = {
+  id: "ma-8",
+  track: "Mathematics",
+  title: "Matrices & Determinants",
+  blurb: "Matrix algebra and its pitfalls, determinants and their properties, and solving linear systems with adjoints, inverses and Cramer's rule.",
+  nodes: [matrixAlgebra, determinantsProperties, adjointSystems],
+};
+
+export const mathematicsUnits: Unit[] = [algebraUnit, geometryUnit, functionsUnit, trigUnit, complexUnit, sequencesUnit, countingUnit, matricesUnit];

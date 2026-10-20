@@ -173,6 +173,14 @@ const OVERRIDES: Record<string, IntroSpec> = {
   "means-inequalities": { kind: "bars", dist: { type: "values", values: [2, 3, 5, 8, 12], max: 12 }, marks: "mean" },
   "special-series": { kind: "bars", dist: { type: "values", values: [1, 4, 9, 16, 25, 36], max: 36 } },
   induction: { kind: "bars", dist: { type: "values", values: [1, 3, 5, 7, 9, 11], max: 12 }, marks: "mean" },
+  "permutations-advanced": { kind: "people", mode: "sample" },
+  "combinations-advanced": { kind: "people", mode: "folds" },
+  "binomial-theorem": { kind: "bars", dist: { type: "binomial", n: 10, p: 0.5 } },
+  "binomial-coefficients": { kind: "bars", dist: { type: "binomial", n: 8, p: 0.5 }, marks: "spread" },
+  "probability-rules": { kind: "bars", dist: { type: "die" } },
+  "matrix-algebra": { kind: "plane", m: [[1, 1], [0, 1]], firstName: "shear" },
+  "determinants-properties": { kind: "plane", m: [[2, 1], [1, 2]], area: true },
+  "adjoint-systems": { kind: "plane", m: [[2, 1], [5, 3]], then: [[3, -1], [-5, 2]], firstName: "A", thenName: "inverse of A" },
 };
 
 const MARKS: Record<string, "mean" | "box" | "spread"> = {
