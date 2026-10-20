@@ -1,6 +1,7 @@
 import katex from "katex";
 import { describe, expect, it } from "vitest";
 import { allNodes } from "@/lib/content";
+import { introCaption, introFor } from "@/lib/content/intro";
 import { generate, templatesFor, type Level } from "@/lib/content/templates";
 import type { ConceptNode, Item } from "@/lib/content/types";
 
@@ -58,6 +59,10 @@ function checkMath(text: string, where: string) {
 describe("all math renders", () => {
   it("in every lesson", { timeout: 60_000 }, () => {
     for (const n of allNodes) for (const t of stepTexts(n)) checkMath(t, n.id);
+  });
+
+  it("in every opening-figure caption", () => {
+    for (const n of allNodes) checkMath(introCaption(introFor(n)), `${n.id} (figure caption)`);
   });
 
   it("in every generated question, every template, every level", { timeout: 120_000 }, () => {
