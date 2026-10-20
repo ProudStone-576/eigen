@@ -1,6 +1,9 @@
 import type { ConceptNode, Unit } from "@/lib/content/types";
 import { deepen } from "../deepen";
 import { DISTRIBUTIONS_DEPTH } from "./distributions.depth";
+import { node as mgf } from "../sections/mgf";
+import { node as lln } from "../sections/lln-inequalities";
+import { node as surveyDesign } from "../sections/survey-design";
 
 const binomial: ConceptNode = {
   id: "binomial",
@@ -370,7 +373,7 @@ const clt: ConceptNode = {
   title: "The central limit theorem",
   summary: "Averages of n independent draws from almost any population are approximately normal, centred on the population mean, with spread σ/√n. The data keeps its shape; the averages become a bell.",
   deps: ["normal", "uniform-exponential"],
-  pos: { x: 2, y: 1 },
+  pos: { x: 3, y: 1 },
   glossary: [
     { term: "sample mean", meaning: "$\\bar x$: the average of one sample of size n." },
     { term: "sampling distribution", meaning: "How a statistic like $\\bar x$ would vary if you repeated the sampling many times." },
@@ -479,7 +482,7 @@ const se: ConceptNode = {
   title: "Standard error",
   summary: "The standard deviation describes individuals; the standard error, $s/\\sqrt{n}$ for a mean or $\\sqrt{p(1-p)/n}$ for a proportion, describes how much an estimate would wobble from sample to sample.",
   deps: ["clt"],
-  pos: { x: 3, y: 1 },
+  pos: { x: 4, y: 1 },
   glossary: [
     { term: "standard error (SE)", meaning: "The standard deviation of an estimate across repeated samples." },
     { term: "s", meaning: "The sample standard deviation, our estimate of σ." },
@@ -598,5 +601,5 @@ export const distributionsUnit: Unit = {
   track: "Statistics",
   title: "Distributions & the CLT",
   blurb: "Binomial, Poisson, uniform and exponential, and why averages always end up bell-shaped.",
-  nodes: [binomial, poisson, continuous, clt, se].map((n) => deepen(n, DISTRIBUTIONS_DEPTH[n.id])),
+  nodes: [...[binomial, poisson, continuous].map((n) => deepen(n, DISTRIBUTIONS_DEPTH[n.id])), mgf, lln, ...[clt, se].map((n) => deepen(n, DISTRIBUTIONS_DEPTH[n.id])), surveyDesign],
 };

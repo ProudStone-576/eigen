@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { allNodes, findItem, getNode, misconceptionsOf, publicItem, publicSteps } from "@/lib/content";
+import { allNodes, findItem, getNode, misconceptionsOf, publicItem, publicSteps, resolveRefs } from "@/lib/content";
+import { sectionNumber } from "@/lib/content/numbering";
 import { grade, type Response } from "@/lib/check";
 import type { ConceptNode, Item } from "@/lib/content/types";
 
@@ -111,6 +112,12 @@ describe.each(allNodes.map((n) => [n.id, n] as const))("node %s", (_id, node) =>
 });
 
 it("getNode resolves", () => expect(getNode("vector")?.title).toBeTruthy());
+
+it("every §{id} cross-reference is resolved to the section's current number", () => {
+  expect(JSON.stringify(allNodes)).not.toMatch(/§\{/);
+  expect(resolveRefs("see §{variance}")).toBe(`see §${sectionNumber("variance")}`);
+  expect(() => resolveRefs("§{no-such-section}")).toThrow();
+});
 
 it("shuffled options keep every option and don't always put the right one first", () => {
   const mcs = allNodes.flatMap(itemsOf).filter((i) => i.kind === "mc");

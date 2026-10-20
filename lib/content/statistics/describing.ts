@@ -1,4 +1,7 @@
 import type { ConceptNode, Unit } from "@/lib/content/types";
+import { node as dataVariables } from "../sections/data-variables";
+import { node as frequencyTables } from "../sections/frequency-tables";
+import { node as otherMeans } from "../sections/other-means";
 import { deepen } from "../deepen";
 import { DESCRIBING_DEPTH } from "./describing.depth";
 
@@ -7,7 +10,7 @@ const centre: ConceptNode = {
   title: "Mean, median & mode",
   summary: "The mean balances every value's size; the median is the middle of the sorted data, so one extreme value drags the mean but barely moves the median.",
   deps: [],
-  pos: { x: 0, y: 1 },
+  pos: { x: 0, y: 1.2 },
   glossary: [
     { term: "mean", meaning: "Add the values up and divide by how many there are." },
     { term: "median", meaning: "The middle value once the data is sorted (the average of the two middle values if there's an even number)." },
@@ -127,7 +130,7 @@ const quartiles: ConceptNode = {
   title: "Quartiles, IQR & box plots",
   summary: "Quartiles cut sorted data into four equal parts; the IQR (Q3 − Q1) is the spread of the middle half, and points beyond 1.5 × IQR from the box are flagged as outliers.",
   deps: ["mean-median-mode"],
-  pos: { x: 1, y: 1 },
+  pos: { x: 2, y: 0.6 },
   glossary: [
     { term: "quartiles", meaning: "Q1 is the median of the lower half of the sorted data, Q3 the median of the upper half." },
     { term: "IQR", meaning: "Interquartile range, Q3 − Q1: how spread out the middle 50% is." },
@@ -246,7 +249,7 @@ const shape: ConceptNode = {
   title: "Shape, skew & choosing a chart",
   summary: "Skew is named after the long tail: right skew pulls the mean above the median. Pick the chart from the data: histograms for one number, bars for categories, scatterplots for two numbers.",
   deps: ["quartiles-iqr"],
-  pos: { x: 2, y: 1 },
+  pos: { x: 3, y: 0.6 },
   glossary: [
     { term: "skew", meaning: "Lopsidedness. Right (positive) skew has a long tail to the right; left (negative) skew a long tail to the left." },
     { term: "histogram", meaning: "Bars showing how many values fall in each range of a numeric variable." },
@@ -393,7 +396,7 @@ const sampling: ConceptNode = {
   title: "Sampling methods",
   summary: "A sample is random when chance, not convenience, decides who's in it. Stratified samples take some from every group; cluster samples take whole groups.",
   deps: [],
-  pos: { x: 0, y: 2.6 },
+  pos: { x: 0, y: 0 },
   glossary: [
     { term: "population", meaning: "Everyone (or everything) you want to know about." },
     { term: "sample", meaning: "The part of the population you actually measure." },
@@ -511,7 +514,7 @@ const bias: ConceptNode = {
   title: "Sampling bias",
   summary: "Bias is a systematic error in who gets measured. Unlike random error, it doesn't shrink as the sample grows: a huge biased sample is confidently wrong.",
   deps: ["sampling-methods"],
-  pos: { x: 1, y: 2.6 },
+  pos: { x: 1, y: 0 },
   glossary: [
     { term: "bias", meaning: "An error that pushes results the same way every time, because of how data was collected." },
     { term: "survivorship bias", meaning: "Only looking at the cases that made it through some filter." },
@@ -634,6 +637,9 @@ export const describingUnit: Unit = {
   id: "st-0",
   track: "Statistics",
   title: "Describing Data",
-  blurb: "Centre, spread and shape; how samples are drawn and how they go wrong.",
-  nodes: [centre, quartiles, shape, sampling, bias].map((n) => deepen(n, DESCRIBING_DEPTH[n.id])),
+  blurb: "Kinds of data, frequency tables and histograms; centre, spread and shape.",
+  nodes: [dataVariables, frequencyTables, deepen(centre, DESCRIBING_DEPTH[centre.id]), otherMeans, deepen(quartiles, DESCRIBING_DEPTH[quartiles.id]), deepen(shape, DESCRIBING_DEPTH[shape.id])],
 };
+
+/** The two sampling sections open the Collecting Data chapter (collecting.ts). */
+export const samplingNodes = [sampling, bias].map((n) => deepen(n, DESCRIBING_DEPTH[n.id]));

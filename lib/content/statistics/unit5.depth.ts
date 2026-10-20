@@ -1,6 +1,6 @@
 import { ex, mc, num, vec, type Depth } from "../deepen";
 
-/** Chapter 6 at exam depth: variance, covariance, PCA on data, the normal distribution, MLE, least squares, losses. */
+/** Spread, Normal & Regression at exam depth: variance, covariance, PCA on data, the normal distribution, MLE, least squares, losses. */
 
 const M = (a: string, b: string, c: string, d: string) => `\\begin{bmatrix} ${a} & ${b} \\\\ ${c} & ${d} \\end{bmatrix}`;
 /** Accepts an exact fraction or 3 decimal places. */
@@ -10,7 +10,7 @@ const dp = (id: string, prompt: string, value: number, explain: string) => num(i
 const TABLE = "Use $\\Phi(0.5) = 0.6915$, $\\Phi(1) = 0.8413$, $\\Phi(1.5) = 0.9332$, $\\Phi(2) = 0.9772$.";
 
 export const UNIT5_DEPTH: Record<string, Depth> = {
-  // §6.1
+  // §{variance}
   variance: {
     definitions: [
       {
@@ -32,7 +32,7 @@ export const UNIT5_DEPTH: Record<string, Depth> = {
         statement: "$\\operatorname{Var}(aX + b) = a^2\\operatorname{Var}(X)$, so $\\sigma_{aX + b} = |a|\\sigma_X$. If $X$ and $Y$ are independent, $\\operatorname{Var}(X \\pm Y) = \\operatorname{Var}(X) + \\operatorname{Var}(Y)$.",
         proof: [
           "$aX + b$ has mean $a\\mu + b$, so its deviation is $a(X - \\mu)$; squaring gives the factor $a^2$, and $b$ disappears.",
-          "For sums, $\\operatorname{Var}(X + Y) = \\operatorname{Var}(X) + \\operatorname{Var}(Y) + 2\\operatorname{Cov}(X, Y)$ (§6.2), and independence makes the covariance 0. For $X - Y$, $\\operatorname{Var}(-Y) = \\operatorname{Var}(Y)$: variances add even when the variables are subtracted.",
+          "For sums, $\\operatorname{Var}(X + Y) = \\operatorname{Var}(X) + \\operatorname{Var}(Y) + 2\\operatorname{Cov}(X, Y)$ (§{covariance}), and independence makes the covariance 0. For $X - Y$, $\\operatorname{Var}(-Y) = \\operatorname{Var}(Y)$: variances add even when the variables are subtracted.",
         ],
       },
     ],
@@ -49,7 +49,7 @@ export const UNIT5_DEPTH: Record<string, Depth> = {
         level: 2,
         title: "the computing formula",
         problem: "Find the variance of one roll of a fair die.",
-        solution: ["$E[X] = 3.5$ and $E[X^2] = \\tfrac{91}{6}$ (§5.3).", "$\\operatorname{Var}(X) = \\tfrac{91}{6} - \\tfrac{49}{4} = \\tfrac{182 - 147}{12}$."],
+        solution: ["$E[X] = 3.5$ and $E[X^2] = \\tfrac{91}{6}$ (§{expectation}).", "$\\operatorname{Var}(X) = \\tfrac{91}{6} - \\tfrac{49}{4} = \\tfrac{182 - 147}{12}$."],
         result: "$\\tfrac{35}{12} \\approx 2.917$.",
       },
       {
@@ -86,7 +86,7 @@ export const UNIT5_DEPTH: Record<string, Depth> = {
     ],
   },
 
-  // §6.2
+  // §{covariance}
   covariance: {
     definitions: [
       {
@@ -180,7 +180,7 @@ export const UNIT5_DEPTH: Record<string, Depth> = {
     ],
   },
 
-  // §6.3
+  // §{pca-practice}
   "pca-practice": {
     definitions: [
       {
@@ -269,7 +269,7 @@ export const UNIT5_DEPTH: Record<string, Depth> = {
     ],
   },
 
-  // §6.4
+  // §{normal}
   normal: {
     definitions: [
       {
@@ -294,7 +294,7 @@ export const UNIT5_DEPTH: Record<string, Depth> = {
         type: "theorem",
         name: "linear combinations",
         statement: "If $X \\sim N(\\mu, \\sigma^2)$ then $aX + b \\sim N(a\\mu + b, a^2\\sigma^2)$. If $X \\sim N(\\mu_1, \\sigma_1^2)$ and $Y \\sim N(\\mu_2, \\sigma_2^2)$ are independent, then $X \\pm Y \\sim N(\\mu_1 \\pm \\mu_2,\\ \\sigma_1^2 + \\sigma_2^2)$.",
-        proof: ["The means and variances follow from §5.3 and §6.1. That the result is again normal is a special property of the normal family (it follows from its moment generating function), not true for most distributions."],
+        proof: ["The means and variances follow from §{expectation} and §{variance}. That the result is again normal is a special property of the normal family (it follows from its moment generating function), not true for most distributions."],
       },
     ],
     examples: [
@@ -347,7 +347,7 @@ export const UNIT5_DEPTH: Record<string, Depth> = {
     ],
   },
 
-  // §6.5
+  // §{mle}
   mle: {
     definitions: [
       {
@@ -435,7 +435,7 @@ export const UNIT5_DEPTH: Record<string, Depth> = {
     ],
   },
 
-  // §6.6
+  // §{least-squares}
   "least-squares": {
     definitions: [
       {
@@ -501,7 +501,7 @@ export const UNIT5_DEPTH: Record<string, Depth> = {
     ],
     pitfalls: [
       { wrong: "The regression of $x$ on $y$ is the same line rearranged.", right: "Different line (unless $|r| = 1$): it minimises horizontal, not vertical, distances." },
-      { wrong: "A good fit ($R^2$ near 1) proves $x$ causes $y$.", right: "It measures linear association only; see §8.6." },
+      { wrong: "A good fit ($R^2$ near 1) proves $x$ causes $y$.", right: "It measures linear association only; see §{correlation-causation}." },
       { wrong: "Use the line to predict far outside the data.", right: "Extrapolation assumes the straight-line pattern continues where there is no data." },
     ],
     formulas: [
@@ -523,7 +523,7 @@ export const UNIT5_DEPTH: Record<string, Depth> = {
     ],
   },
 
-  // §6.7
+  // §{loss-functions}
   "loss-functions": {
     definitions: [
       {
@@ -540,7 +540,7 @@ export const UNIT5_DEPTH: Record<string, Depth> = {
         proof: [
           "$\\tfrac{d}{dc}\\sum(y_i - c)^2 = -2\\sum(y_i - c) = 0$ gives $c = \\bar y$.",
           "Moving $c$ right by a small step changes $\\sum|y_i - c|$ by (number of points left of $c$ − number right of $c$) times the step; this is 0 exactly when $c$ is a median.",
-          "With $k$ ones among $n$, the total log loss $-k\\ln p - (n - k)\\ln(1 - p)$ is the negative Bernoulli log-likelihood, minimised at $p = k/n$ (§6.5).",
+          "With $k$ ones among $n$, the total log loss $-k\\ln p - (n - k)\\ln(1 - p)$ is the negative Bernoulli log-likelihood, minimised at $p = k/n$ (§{mle}).",
         ],
       },
       {

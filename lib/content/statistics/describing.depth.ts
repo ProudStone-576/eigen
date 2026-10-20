@@ -1,9 +1,9 @@
 import { ex, mc, num, type Depth } from "../deepen";
 
-/** Chapter 4 at exam depth: centre, spread by quartiles, shape, sampling design and bias. */
+/** Describing Data and Collecting Data at exam depth: centre, quartiles, shape, sampling design and bias. */
 
 export const DESCRIBING_DEPTH: Record<string, Depth> = {
-  // §4.1
+  // §{mean-median-mode}
   "mean-median-mode": {
     definitions: [
       {
@@ -81,7 +81,7 @@ export const DESCRIBING_DEPTH: Record<string, Depth> = {
     ],
   },
 
-  // §4.2
+  // §{quartiles-iqr}
   "quartiles-iqr": {
     definitions: [
       {
@@ -156,7 +156,7 @@ export const DESCRIBING_DEPTH: Record<string, Depth> = {
     ],
   },
 
-  // §4.3
+  // §{skew-shape}
   "skew-shape": {
     definitions: [
       {
@@ -227,7 +227,7 @@ export const DESCRIBING_DEPTH: Record<string, Depth> = {
     ],
   },
 
-  // §4.4
+  // §{sampling-methods}
   "sampling-methods": {
     definitions: [
       {
@@ -239,6 +239,11 @@ export const DESCRIBING_DEPTH: Record<string, Depth> = {
         type: "definition",
         term: "designs",
         body: "**Simple random sample (SRS)** of size $n$: every set of $n$ individuals is equally likely. **Systematic:** every $k$-th individual from a list after a random start. **Stratified:** split into groups (strata) and take an SRS from each. **Cluster:** randomly choose whole groups and measure everyone in them. **Convenience:** whoever is easy to reach (not random).",
+      },
+      {
+        type: "definition",
+        term: "multistage sampling, replacement, data sources",
+        body: "**Multistage** sampling repeats the choice at several levels: random districts, then random schools within them, then random pupils. Sampling **with replacement** returns each unit before the next draw, so it can be chosen twice; **without replacement** it can't, and draws become slightly dependent (§{survey-design}). **Primary** data are collected for the study at hand; **secondary** data were collected by someone else for another purpose, such as census records.",
       },
     ],
     theorems: [
@@ -309,7 +314,7 @@ export const DESCRIBING_DEPTH: Record<string, Depth> = {
     ],
   },
 
-  // §4.5
+  // §{sampling-bias}
   "sampling-bias": {
     definitions: [
       {
@@ -321,6 +326,11 @@ export const DESCRIBING_DEPTH: Record<string, Depth> = {
         type: "definition",
         term: "kinds of bias",
         body: "**Selection bias:** the sampling frame or method misses part of the population. **Nonresponse:** selected people do not answer, and they differ from those who do. **Voluntary response:** only the motivated respond. **Survivorship:** only cases that passed a filter are seen. **Response bias:** leading questions or untruthful answers.",
+      },
+      {
+        type: "definition",
+        term: "non-random designs and memory",
+        body: "**Purposive** (judgement) sampling picks units the researcher thinks typical; **snowball** sampling asks each participant to recruit others, useful for hidden groups but biased towards well-connected people. **Recall bias** arises when people misremember the past, for example patients with an illness searching their memory harder for possible causes than healthy controls do.",
       },
     ],
     theorems: [

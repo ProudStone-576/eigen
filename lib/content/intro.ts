@@ -66,6 +66,16 @@ const OVERRIDES: Record<string, IntroSpec> = {
   regularization: { kind: "scatter", points: [], fit: "wiggle" },
   "bias-variance": { kind: "scatter", points: [], fit: "wiggle" },
   "cross-validation": { kind: "people", mode: "folds" },
+  // Self-contained sections (lib/content/sections) without a widget of their own.
+  "data-variables": { kind: "people", mode: "sample" },
+  "frequency-tables": { kind: "bars", dist: { type: "values", values: [12, 15, 15, 18, 22, 22, 22, 25, 28, 31, 35, 41], max: 50 }, marks: "box" },
+  "other-means": { kind: "bars", dist: { type: "values", values: [30, 30, 40, 45, 60, 60, 60, 90], max: 100 }, marks: "mean" },
+  "experiment-design": { kind: "people", mode: "table-differ" },
+  "data-quality": { kind: "people", mode: "biased" },
+  counting: { kind: "bars", dist: { type: "binomial", n: 8, p: 0.5 } },
+  "joint-distributions": { kind: "people", mode: "table-same" },
+  mgf: { kind: "bars", dist: { type: "poisson", lambda: 3 }, marks: "mean" },
+  "survey-design": { kind: "people", mode: "sample" },
 };
 
 const MARKS: Record<string, "mean" | "box" | "spread"> = {

@@ -1,12 +1,12 @@
 import { ex, mc, num, type Depth } from "../deepen";
 
-/** Chapter 5 at exam depth: probability rules, random variables, expectation, conditioning, Bayes, independence. */
+/** Probability & Bayes at exam depth: probability rules, random variables, expectation, conditioning, Bayes, independence. */
 
 /** A probability answer: accepts an exact fraction or 3 decimal places. */
 const fr = (id: string, prompt: string, value: number, explain: string) => num(id, `${prompt} Give an exact fraction or 3 decimal places.`, value, explain, 0.0005);
 
 export const UNIT4_DEPTH: Record<string, Depth> = {
-  // §5.1
+  // §{probability}
   probability: {
     definitions: [
       {
@@ -91,7 +91,7 @@ export const UNIT4_DEPTH: Record<string, Depth> = {
     ],
   },
 
-  // §5.2
+  // §{random-variable}
   "random-variable": {
     definitions: [
       {
@@ -171,7 +171,7 @@ export const UNIT4_DEPTH: Record<string, Depth> = {
     ],
   },
 
-  // §5.3
+  // §{expectation}
   expectation: {
     definitions: [
       {
@@ -258,7 +258,7 @@ export const UNIT4_DEPTH: Record<string, Depth> = {
     ],
   },
 
-  // §5.4
+  // §{conditional-probability}
   "conditional-probability": {
     definitions: [
       {
@@ -315,7 +315,7 @@ export const UNIT4_DEPTH: Record<string, Depth> = {
       },
     ],
     pitfalls: [
-      { wrong: "$P(A \\mid B) = P(B \\mid A)$.", right: "They are different questions. $P(\\text{positive test} \\mid \\text{ill})$ can be 0.99 while $P(\\text{ill} \\mid \\text{positive})$ is 0.17 (§5.5)." },
+      { wrong: "$P(A \\mid B) = P(B \\mid A)$.", right: "They are different questions. $P(\\text{positive test} \\mid \\text{ill})$ can be 0.99 while $P(\\text{ill} \\mid \\text{positive})$ is 0.17 (§{bayes})." },
       { wrong: "Two children, at least one a boy: $P(\\text{both boys}) = \\tfrac12$.", right: "The equally likely cases are $BB, BG, GB$, so it is $\\tfrac13$." },
     ],
     formulas: [
@@ -337,7 +337,7 @@ export const UNIT4_DEPTH: Record<string, Depth> = {
     ],
   },
 
-  // §5.5
+  // §{bayes}
   bayes: {
     definitions: [
       {
@@ -415,7 +415,7 @@ export const UNIT4_DEPTH: Record<string, Depth> = {
     ],
   },
 
-  // §5.6
+  // §{independence}
   independence: {
     definitions: [
       {

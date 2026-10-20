@@ -1,6 +1,6 @@
 import { ex, mc, num, vec, type Depth } from "../deepen";
 
-/** Chapter 11 at exam depth: multiple and logistic regression, regularisation, validation, bias–variance, classification metrics. */
+/** Regression & Evaluation at exam depth: multiple and logistic regression, regularisation, validation, bias–variance, classification metrics. */
 
 /** Accepts an exact fraction or 3 decimal places. */
 const fr = (id: string, prompt: string, value: number, explain: string) => num(id, `${prompt} Give an exact fraction or 3 decimal places.`, value, explain, 0.0005);
@@ -9,7 +9,7 @@ const dp = (id: string, prompt: string, value: number, explain: string) => num(i
 const sigma = (z: number) => 1 / (1 + Math.exp(-z));
 
 export const EVALUATION_DEPTH: Record<string, Depth> = {
-  // §11.1
+  // §{multiple-regression}
   "multiple-regression": {
     definitions: [
       {
@@ -29,8 +29,8 @@ export const EVALUATION_DEPTH: Record<string, Depth> = {
         name: "normal equations",
         statement: "$\\vec w$ minimises SSE exactly when the residual $\\vec e = \\vec y - X\\vec w$ is perpendicular to every column of $X$: $X^{\\mathsf T}\\vec e = \\vec 0$. If $X^{\\mathsf T}X$ is invertible, $\\vec w = (X^{\\mathsf T}X)^{-1}X^{\\mathsf T}\\vec y$.",
         proof: [
-          "$X\\vec w$ ranges over the span of the columns of $X$. The closest point to $\\vec y$ in that span is the perpendicular projection (§6.6), whose error is perpendicular to every column.",
-          "Rewrite $X^{\\mathsf T}(\\vec y - X\\vec w) = \\vec 0$ as $X^{\\mathsf T}X\\vec w = X^{\\mathsf T}\\vec y$ and multiply by the inverse (§2.5).",
+          "$X\\vec w$ ranges over the span of the columns of $X$. The closest point to $\\vec y$ in that span is the perpendicular projection (§{least-squares}), whose error is perpendicular to every column.",
+          "Rewrite $X^{\\mathsf T}(\\vec y - X\\vec w) = \\vec 0$ as $X^{\\mathsf T}X\\vec w = X^{\\mathsf T}\\vec y$ and multiply by the inverse (§{inverse}).",
         ],
       },
       {
@@ -47,7 +47,7 @@ export const EVALUATION_DEPTH: Record<string, Depth> = {
         kind: "Rule",
         name: "collinear features",
         statement: "If features are nearly linear combinations of one another, $X^{\\mathsf T}X$ is nearly singular, and the individual weights become unstable: small changes in the data swing them wildly, even though predictions stay good.",
-        proof: ["Near-dependent columns make $\\det(X^{\\mathsf T}X)$ close to 0 (§2.4), so its inverse has huge entries that amplify noise in $\\vec y$."],
+        proof: ["Near-dependent columns make $\\det(X^{\\mathsf T}X)$ close to 0 (§{det-zero}), so its inverse has huge entries that amplify noise in $\\vec y$."],
       },
     ],
     examples: [
@@ -111,7 +111,7 @@ export const EVALUATION_DEPTH: Record<string, Depth> = {
     ],
   },
 
-  // §11.2
+  // §{logistic-regression}
   "logistic-regression": {
     definitions: [
       {
@@ -140,13 +140,13 @@ export const EVALUATION_DEPTH: Record<string, Depth> = {
         type: "theorem",
         name: "gradient of the log-loss",
         statement: "$\\dfrac{\\partial L}{\\partial\\vec w} = \\dfrac1n\\sum_i(p_i - y_i)\\vec x_i$ and $\\dfrac{\\partial L}{\\partial b} = \\dfrac1n\\sum_i(p_i - y_i)$: the same residual form as linear regression.",
-        proof: ["For one example, $\\partial L/\\partial z = p - y$ (§9.6), and $\\partial z/\\partial\\vec w = \\vec x$. Average over the examples."],
+        proof: ["For one example, $\\partial L/\\partial z = p - y$ (§{backprop}), and $\\partial z/\\partial\\vec w = \\vec x$. Average over the examples."],
       },
       {
         type: "theorem",
         kind: "Proposition",
         name: "log-loss is maximum likelihood",
-        statement: "Minimising the log-loss is the same as maximising the likelihood $\\prod_i p_i^{y_i}(1 - p_i)^{1 - y_i}$ of the observed labels (§6.5).",
+        statement: "Minimising the log-loss is the same as maximising the likelihood $\\prod_i p_i^{y_i}(1 - p_i)^{1 - y_i}$ of the observed labels (§{mle}).",
         proof: ["$-\\tfrac1n\\ln\\prod_i p_i^{y_i}(1 - p_i)^{1 - y_i}$ is exactly $L$, and $-\\ln$ is decreasing."],
       },
       {
@@ -197,7 +197,7 @@ export const EVALUATION_DEPTH: Record<string, Depth> = {
     pitfalls: [
       { wrong: "$w_j$ is the change in probability per unit of $x_j$.", right: "It is the change in **log-odds**; the change in probability depends on where you start." },
       { wrong: "Fit logistic regression by squared error.", right: "Use log-loss: it is convex in the weights and punishes confident mistakes strongly." },
-      { wrong: "Always classify at $p > 0.5$.", right: "Pick the threshold from the costs of each kind of error (§11.6)." },
+      { wrong: "Always classify at $p > 0.5$.", right: "Pick the threshold from the costs of each kind of error (§{precision-recall})." },
     ],
     formulas: [
       { label: "Model", tex: "\\ln\\tfrac{p}{1 - p} = b + \\vec w\\cdot\\vec x" },
@@ -222,7 +222,7 @@ export const EVALUATION_DEPTH: Record<string, Depth> = {
     ],
   },
 
-  // §11.3
+  // §{regularization}
   regularization: {
     definitions: [
       {
@@ -286,7 +286,7 @@ export const EVALUATION_DEPTH: Record<string, Depth> = {
     pitfalls: [
       { wrong: "Penalise the intercept and use raw units.", right: "Leave the intercept alone and standardise features, or the penalty depends on the units." },
       { wrong: "Ridge removes useless features.", right: "Ridge shrinks; lasso sets weights exactly to 0." },
-      { wrong: "Bigger $\\lambda$ is always safer.", right: "Too large a $\\lambda$ underfits. Choose it by cross-validation (§11.4)." },
+      { wrong: "Bigger $\\lambda$ is always safer.", right: "Too large a $\\lambda$ underfits. Choose it by cross-validation (§{cross-validation})." },
     ],
     formulas: [
       { label: "Ridge", tex: "\\vec w = (X^{\\mathsf T}X + \\lambda I)^{-1}X^{\\mathsf T}\\vec y" },
@@ -309,7 +309,7 @@ export const EVALUATION_DEPTH: Record<string, Depth> = {
     ],
   },
 
-  // §11.4
+  // §{cross-validation}
   "cross-validation": {
     definitions: [
       {
@@ -343,7 +343,7 @@ export const EVALUATION_DEPTH: Record<string, Depth> = {
         kind: "Rule",
         name: "the spread of fold scores",
         statement: "Treat the $k$ fold scores as a sample: $\\text{SE} \\approx s/\\sqrt k$. Two settings whose CV scores differ by much less than about 2 SE are not reliably different.",
-        proof: ["This is the standard error of a mean (§7.5). The folds share training data, so it is only an approximation, usually an optimistic one."],
+        proof: ["This is the standard error of a mean (§{standard-error}). The folds share training data, so it is only an approximation, usually an optimistic one."],
       },
       {
         type: "theorem",
@@ -417,7 +417,7 @@ export const EVALUATION_DEPTH: Record<string, Depth> = {
     ],
   },
 
-  // §11.5
+  // §{bias-variance}
   "bias-variance": {
     definitions: [
       {
@@ -440,7 +440,7 @@ export const EVALUATION_DEPTH: Record<string, Depth> = {
         type: "theorem",
         name: "averaging models",
         statement: "Averaging $m$ models with the same bias and variance $v$ leaves the bias unchanged. If their errors have pairwise correlation $\\rho$, the variance becomes $\\rho v + \\dfrac{(1 - \\rho)v}{m}$; for independent models, $v/m$.",
-        proof: ["$\\operatorname{Var}\\left(\\tfrac1m\\sum\\hat f_i\\right) = \\tfrac{1}{m^2}\\left(mv + m(m - 1)\\rho v\\right)$ by the variance-of-a-sum rule (§6.2). Simplify."],
+        proof: ["$\\operatorname{Var}\\left(\\tfrac1m\\sum\\hat f_i\\right) = \\tfrac{1}{m^2}\\left(mv + m(m - 1)\\rho v\\right)$ by the variance-of-a-sum rule (§{covariance}). Simplify."],
       },
       {
         type: "theorem",
@@ -506,7 +506,7 @@ export const EVALUATION_DEPTH: Record<string, Depth> = {
     ],
   },
 
-  // §11.6
+  // §{precision-recall}
   "precision-recall": {
     definitions: [
       {
@@ -535,7 +535,7 @@ export const EVALUATION_DEPTH: Record<string, Depth> = {
         type: "theorem",
         name: "precision depends on prevalence",
         statement: "If a fraction $\\pi$ of cases are positive, $\\text{precision} = \\dfrac{R\\pi}{R\\pi + \\text{FPR}(1 - \\pi)}$. The same classifier has lower precision when positives are rarer.",
-        proof: ["Precision is $P(\\text{positive} \\mid \\text{flagged})$. Bayes' rule (§5.5) with $P(\\text{flagged} \\mid \\text{positive}) = R$ and $P(\\text{flagged} \\mid \\text{negative}) = \\text{FPR}$."],
+        proof: ["Precision is $P(\\text{positive} \\mid \\text{flagged})$. Bayes' rule (§{bayes}) with $P(\\text{flagged} \\mid \\text{positive}) = R$ and $P(\\text{flagged} \\mid \\text{negative}) = \\text{FPR}$."],
       },
       {
         type: "theorem",
@@ -595,7 +595,7 @@ export const EVALUATION_DEPTH: Record<string, Depth> = {
     ],
   },
 
-  // §11.7
+  // §{roc-auc}
   "roc-auc": {
     definitions: [
       {

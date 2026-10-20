@@ -7,7 +7,7 @@ const M3 = (r: string[][]) => `\\begin{bmatrix} ${r.map((row) => row.join(" & ")
 const D3 = (r: string[][]) => `\\begin{vmatrix} ${r.map((row) => row.join(" & ")).join(" \\\\ ")} \\end{vmatrix}`;
 
 export const UNIT2_DEPTH: Record<string, Depth> = {
-  // §2.1
+  // §{span}
   span: {
     definitions: [
       {
@@ -21,7 +21,7 @@ export const UNIT2_DEPTH: Record<string, Depth> = {
         type: "theorem",
         statement: "In the plane, $\\operatorname{span}\\{\\vec v, \\vec w\\}$ is all of $\\mathbb R^2$ exactly when $v_1w_2 - v_2w_1 \\neq 0$. Otherwise it is a line through the origin (or only $\\vec 0$, if both vectors are zero).",
         proof: [
-          "If $v_1w_2 - v_2w_1 \\neq 0$, the unique-coefficients theorem of §1.4 writes every vector as a combination of $\\vec v$ and $\\vec w$.",
+          "If $v_1w_2 - v_2w_1 \\neq 0$, the unique-coefficients theorem of §{linear-combination} writes every vector as a combination of $\\vec v$ and $\\vec w$.",
           "If $v_1w_2 - v_2w_1 = 0$, the vectors are parallel (or one is zero), so every combination is a multiple of a single vector: a line, or the origin alone.",
         ],
       },
@@ -105,7 +105,7 @@ export const UNIT2_DEPTH: Record<string, Depth> = {
     ],
   },
 
-  // §2.2
+  // §{linear-independence}
   "linear-independence": {
     definitions: [
       {
@@ -128,7 +128,7 @@ export const UNIT2_DEPTH: Record<string, Depth> = {
         statement: "In $\\mathbb R^2$ any three vectors are dependent. More generally, in $\\mathbb R^n$ any $n + 1$ vectors are dependent.",
         proof: [
           "Take three vectors in the plane. If two of them are parallel, they are already dependent.",
-          "Otherwise the first two span the whole plane (§2.1), so the third is a combination of them, which is a dependence. The general statement follows by the same reasoning one dimension at a time.",
+          "Otherwise the first two span the whole plane (§{span}), so the third is a combination of them, which is a dependence. The general statement follows by the same reasoning one dimension at a time.",
         ],
       },
     ],
@@ -198,7 +198,7 @@ export const UNIT2_DEPTH: Record<string, Depth> = {
     ],
   },
 
-  // §2.3
+  // §{determinant}
   determinant: {
     definitions: [
       {
@@ -311,7 +311,7 @@ export const UNIT2_DEPTH: Record<string, Depth> = {
     ],
   },
 
-  // §2.4
+  // §{det-zero}
   "det-zero": {
     definitions: [
       {
@@ -326,16 +326,16 @@ export const UNIT2_DEPTH: Record<string, Depth> = {
         name: "invertible matrix theorem, first form",
         statement: "For a square matrix $A$ the following are equivalent: (a) $\\det A \\neq 0$; (b) the columns of $A$ are independent; (c) $A\\vec x = \\vec 0$ only for $\\vec x = \\vec 0$; (d) $A$ is invertible.",
         proof: [
-          "For $2 \\times 2$: $\\det A = 0$ exactly when the columns are parallel or zero (§2.2), so (a) and (b) agree.",
+          "For $2 \\times 2$: $\\det A = 0$ exactly when the columns are parallel or zero (§{linear-independence}), so (a) and (b) agree.",
           "Dependent columns mean some non-zero $\\vec x$ combines them to $\\vec 0$, which is $A\\vec x = \\vec 0$; so (b) and (c) agree.",
-          "If $A\\vec x = \\vec 0$ for some $\\vec x \\neq \\vec 0$, two inputs ($\\vec x$ and $\\vec 0$) land on the same output, so no inverse can undo $A$. Conversely, §2.5 constructs the inverse when $\\det A \\neq 0$.",
+          "If $A\\vec x = \\vec 0$ for some $\\vec x \\neq \\vec 0$, two inputs ($\\vec x$ and $\\vec 0$) land on the same output, so no inverse can undo $A$. Conversely, §{inverse} constructs the inverse when $\\det A \\neq 0$.",
         ],
       },
       {
         type: "theorem",
         kind: "Corollary",
         statement: "A determinant is 0 whenever two rows (or columns) are equal or proportional, or a row is all zeros.",
-        proof: ["Proportional rows are dependent. Directly: subtracting the right multiple of one from the other (property (iii) of §2.3) produces a zero row, and expanding along it gives 0."],
+        proof: ["Proportional rows are dependent. Directly: subtracting the right multiple of one from the other (property (iii) of §{determinant}) produces a zero row, and expanding along it gives 0."],
       },
     ],
     examples: [
@@ -395,7 +395,7 @@ export const UNIT2_DEPTH: Record<string, Depth> = {
     ],
   },
 
-  // §2.5
+  // §{inverse}
   inverse: {
     definitions: [
       {
@@ -503,7 +503,7 @@ export const UNIT2_DEPTH: Record<string, Depth> = {
     ],
   },
 
-  // §2.6
+  // §{solving-systems}
   "solving-systems": {
     definitions: [
       {

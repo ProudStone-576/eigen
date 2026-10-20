@@ -1,6 +1,6 @@
 import { ex, mc, num, vec, type Depth } from "../deepen";
 
-/** Chapter 10 at exam depth: neurons and their boundaries, activations, layers, the forward pass, training, capacity. */
+/** Neural Networks at exam depth: neurons and their boundaries, activations, layers, the forward pass, training, capacity. */
 
 /** Accepts 3 decimal places. */
 const dp = (id: string, prompt: string, value: number, explain: string) => num(id, `${prompt} Give 3 decimal places.`, value, explain, 0.0006);
@@ -9,7 +9,7 @@ const M = (a: string | number, b: string | number, c: string | number, d: string
 const sigma = (z: number) => 1 / (1 + Math.exp(-z));
 
 export const UNIT7_DEPTH: Record<string, Depth> = {
-  // §10.1
+  // §{neuron}
   neuron: {
     definitions: [
       {
@@ -75,7 +75,7 @@ export const UNIT7_DEPTH: Record<string, Depth> = {
     pitfalls: [
       { wrong: "The bias multiplies an input.", right: "It is added: it shifts the boundary away from the origin." },
       { wrong: "The weight vector points along the boundary.", right: "It is perpendicular to it, pointing to the positive side." },
-      { wrong: "With the right weights one neuron can compute anything.", right: "One neuron draws one straight boundary; XOR needs a hidden layer (§10.6)." },
+      { wrong: "With the right weights one neuron can compute anything.", right: "One neuron draws one straight boundary; XOR needs a hidden layer (§{train-network})." },
     ],
     formulas: [
       { label: "Neuron", tex: "z = \\vec w\\cdot\\vec x + b,\\quad a = f(z)" },
@@ -96,7 +96,7 @@ export const UNIT7_DEPTH: Record<string, Depth> = {
     ],
   },
 
-  // §10.2
+  // §{activation}
   activation: {
     definitions: [
       {
@@ -123,7 +123,7 @@ export const UNIT7_DEPTH: Record<string, Depth> = {
         name: "derivatives",
         statement: "$\\text{ReLU}'(z) = 1$ for $z > 0$ and 0 for $z < 0$; $\\sigma' = \\sigma(1 - \\sigma) \\le \\tfrac14$; $\\tanh' = 1 - \\tanh^2 \\le 1$. Also $\\tanh z = 2\\sigma(2z) - 1$.",
         proof: [
-          "$\\sigma'$ is from §9.3. For tanh, the quotient rule gives $\\dfrac{(e^z + e^{-z})^2 - (e^z - e^{-z})^2}{(e^z + e^{-z})^2} = 1 - \\tanh^2 z$.",
+          "$\\sigma'$ is from §{chain-rule}. For tanh, the quotient rule gives $\\dfrac{(e^z + e^{-z})^2 - (e^z - e^{-z})^2}{(e^z + e^{-z})^2} = 1 - \\tanh^2 z$.",
           "$\\tanh z = \\dfrac{1 - e^{-2z}}{1 + e^{-2z}} = \\dfrac{2}{1 + e^{-2z}} - 1 = 2\\sigma(2z) - 1$.",
         ],
       },
@@ -132,7 +132,7 @@ export const UNIT7_DEPTH: Record<string, Depth> = {
         kind: "Rule",
         name: "vanishing gradients",
         statement: "Backprop through $k$ sigmoid layers multiplies the gradient by $k$ factors $\\sigma'$, each at most $\\tfrac14$. With moderate weights the gradient reaching early layers shrinks like $4^{-k}$. ReLU's derivative of 1 on active units avoids this, which is one reason it is the default.",
-        proof: ["Each layer contributes (weight) $\\times\\ \\sigma'(z)$ by the chain rule (§9.6), and $\\sigma' \\le \\tfrac14$."],
+        proof: ["Each layer contributes (weight) $\\times\\ \\sigma'(z)$ by the chain rule (§{backprop}), and $\\sigma' \\le \\tfrac14$."],
       },
       {
         type: "theorem",
@@ -196,7 +196,7 @@ export const UNIT7_DEPTH: Record<string, Depth> = {
     ],
   },
 
-  // §10.3
+  // §{layer}
   layer: {
     definitions: [
       {
@@ -223,7 +223,7 @@ export const UNIT7_DEPTH: Record<string, Depth> = {
         kind: "Rule",
         name: "shapes must chain",
         statement: "A layer of shape $k \\times m$ can follow one of shape $m \\times n$: the next layer's inputs are the previous layer's neurons. The composite maps $n$ inputs to $k$ outputs.",
-        proof: ["$W_2W_1$ is defined only when $W_2$ has as many columns as $W_1$ has rows (§1.8), and it has shape $k \\times n$."],
+        proof: ["$W_2W_1$ is defined only when $W_2$ has as many columns as $W_1$ has rows (§{composition}), and it has shape $k \\times n$."],
       },
       {
         type: "theorem",
@@ -264,7 +264,7 @@ export const UNIT7_DEPTH: Record<string, Depth> = {
     pitfalls: [
       { wrong: "$W$ for $n$ inputs and $m$ neurons is $n \\times m$.", right: "It is $m \\times n$: one row per neuron." },
       { wrong: "Parameters $= mn$.", right: "Add the $m$ biases." },
-      { wrong: "The layer's output is $W\\vec x + \\vec b$, finished.", right: "Hidden layers apply the activation next; forgetting it collapses the network (§10.2)." },
+      { wrong: "The layer's output is $W\\vec x + \\vec b$, finished.", right: "Hidden layers apply the activation next; forgetting it collapses the network (§{activation})." },
     ],
     formulas: [
       { label: "Layer", tex: "\\vec z = W\\vec x + \\vec b,\\quad W \\in \\mathbb R^{m \\times n}" },
@@ -285,7 +285,7 @@ export const UNIT7_DEPTH: Record<string, Depth> = {
     ],
   },
 
-  // §10.4
+  // §{forward-pass}
   "forward-pass": {
     definitions: [
       {
@@ -305,7 +305,7 @@ export const UNIT7_DEPTH: Record<string, Depth> = {
         kind: "Formula",
         name: "parameter count",
         statement: "A network with layer widths $n_0, n_1, \\dots, n_L$ has $\\displaystyle\\sum_{\\ell = 1}^{L}(n_{\\ell - 1}n_\\ell + n_\\ell)$ parameters.",
-        proof: ["Add the count $mn + m$ (§10.3) for each layer."],
+        proof: ["Add the count $mn + m$ (§{layer}) for each layer."],
       },
       {
         type: "theorem",
@@ -380,7 +380,7 @@ export const UNIT7_DEPTH: Record<string, Depth> = {
     ],
   },
 
-  // §10.5
+  // §{training-loop}
   "training-loop": {
     definitions: [
       {
@@ -399,7 +399,7 @@ export const UNIT7_DEPTH: Record<string, Depth> = {
         type: "theorem",
         name: "mini-batch gradients",
         statement: "The average gradient over a random mini-batch has expected value equal to the full-data gradient, and its standard deviation shrinks like $1/\\sqrt B$.",
-        proof: ["Each example's gradient is a random draw whose mean is the full gradient; expectations add. Averaging $B$ independent draws divides the variance by $B$ (§7.4)."],
+        proof: ["Each example's gradient is a random draw whose mean is the full gradient; expectations add. Averaging $B$ independent draws divides the variance by $B$ (§{clt})."],
       },
       {
         type: "theorem",
@@ -447,7 +447,7 @@ export const UNIT7_DEPTH: Record<string, Depth> = {
     ],
     pitfalls: [
       { wrong: "Start all weights at 0.", right: "Hidden units would stay identical. Use small random values." },
-      { wrong: "Choose the epoch with the best test score.", right: "Choose on validation data; the test set is for the final estimate only (§11.4)." },
+      { wrong: "Choose the epoch with the best test score.", right: "Choose on validation data; the test set is for the final estimate only (§{cross-validation})." },
       { wrong: "Forget to reset gradients between steps.", right: "Frameworks accumulate gradients; without zeroing, each step adds the previous gradients again." },
     ],
     formulas: [
@@ -470,7 +470,7 @@ export const UNIT7_DEPTH: Record<string, Depth> = {
     ],
   },
 
-  // §10.6
+  // §{train-network}
   "train-network": {
     definitions: [
       {
@@ -548,7 +548,7 @@ export const UNIT7_DEPTH: Record<string, Depth> = {
       { label: "Tent", tex: "\\text{ReLU}(x + 1) - 2\\,\\text{ReLU}(x) + \\text{ReLU}(x - 1)" },
     ],
     exercises: [
-      ex(1, mc("tnw-ex-1", "Is XOR linearly separable?", ["No", "Opposite corners share a class."], [["Yes", "No line puts $(0,0), (1,1)$ on one side and $(0,1), (1,0)$ on the other."], ["Only with a bias", "The bias just moves the line."]]), ["A line with $(1, 0)$ and $(0, 1)$ on its positive side and $(0, 0)$ on its negative side must also put $(1, 1)$ on the positive side (§10.1)."]),
+      ex(1, mc("tnw-ex-1", "Is XOR linearly separable?", ["No", "Opposite corners share a class."], [["Yes", "No line puts $(0,0), (1,1)$ on one side and $(0,1), (1,0)$ on the other."], ["Only with a bias", "The bias just moves the line."]]), ["A line with $(1, 0)$ and $(0, 1)$ on its positive side and $(0, 0)$ on its negative side must also put $(1, 1)$ on the positive side (§{neuron})."]),
       ex(1, num("tnw-ex-2", "Evaluate the XOR network $\\text{ReLU}(x_1 + x_2) - 2\\,\\text{ReLU}(x_1 + x_2 - 1)$ at $(1, 0)$.", 1, "$h = (1, 0)$."), ["$1 - 2 \\times 0 = 1$."]),
       ex(2, num("tnw-ex-3", "At most how many linear regions do 3 ReLU units on 2 inputs make?", 7, "$1 + 3 + 3$."), ["$1 + 3 + \\binom32 = 7$."]),
       ex(2, num("tnw-ex-4", "At most how many linear regions do 10 ReLU units on 2 inputs make?", 56, "$1 + 10 + 45$."), ["$1 + 10 + \\binom{10}{2} = 56$."]),

@@ -7,6 +7,7 @@ import { unit5 } from "./statistics/unit5";
 import { unit6 } from "./calculus/unit6";
 import { unit7 } from "./networks/unit7";
 import { describingUnit } from "./statistics/describing";
+import { collectingUnit } from "./statistics/collecting";
 import { distributionsUnit } from "./statistics/distributions";
 import { inferenceUnit } from "./statistics/inference";
 import { evaluationUnit } from "./ml/evaluation";
@@ -15,11 +16,36 @@ import { fromGeneratedId } from "./templates";
 export const course: Course = {
   id: "math-for-ml",
   title: "Math for Machine Learning",
-  units: [unit1, unit2, unit3, describingUnit, unit4, unit5, distributionsUnit, inferenceUnit, unit6, unit7, evaluationUnit],
+  units: [unit1, unit2, unit3, describingUnit, collectingUnit, unit4, unit5, distributionsUnit, inferenceUnit, unit6, unit7, evaluationUnit],
 };
 
 export const allNodes: ConceptNode[] = course.units.flatMap((u) => u.nodes);
 const byId = new Map(allNodes.map((n) => [n.id, n]));
+
+// ---------- Cross-references ----------
+// Content cites other sections as §{node-id}; the number is filled in here from the
+// book's current order, so chapters and sections can be reordered without editing text.
+
+const sectionNo = new Map<string, string>();
+course.units.forEach((u, ci) => u.nodes.forEach((n, si) => sectionNo.set(n.id, `${ci + 1}.${si + 1}`)));
+
+export function resolveRefs(text: string): string {
+  return text.replace(/§\{([a-z0-9-]+)\}/g, (ref, id: string) => {
+    const no = sectionNo.get(id);
+    if (!no) throw new Error(`Unknown section reference ${ref}`);
+    return `§${no}`;
+  });
+}
+
+function resolveAll(x: unknown): void {
+  if (!x || typeof x !== "object") return;
+  const o = x as Record<string, unknown>;
+  for (const k of Object.keys(o)) {
+    if (typeof o[k] === "string") o[k] = resolveRefs(o[k]);
+    else resolveAll(o[k]);
+  }
+}
+allNodes.forEach(resolveAll);
 
 export function getNode(id: string): ConceptNode | undefined {
   return byId.get(id);

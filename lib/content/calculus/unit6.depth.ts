@@ -1,6 +1,6 @@
 import { ex, mc, num, vec, type Depth } from "../deepen";
 
-/** Chapter 9 at exam depth: first principles, differentiation rules and extrema, the chain rule, gradients, descent, backpropagation. */
+/** Calculus for ML at exam depth: first principles, differentiation rules and extrema, the chain rule, gradients, descent, backpropagation. */
 
 /** Accepts an exact fraction or 3 decimal places. */
 const fr = (id: string, prompt: string, value: number, explain: string) => num(id, `${prompt} Give an exact fraction or 3 decimal places.`, value, explain, 0.0005);
@@ -9,7 +9,7 @@ const dp = (id: string, prompt: string, value: number, explain: string) => num(i
 const V = (a: string, b: string) => `\\begin{bmatrix} ${a} \\\\ ${b} \\end{bmatrix}`;
 
 export const UNIT6_DEPTH: Record<string, Depth> = {
-  // §9.1
+  // §{derivative}
   derivative: {
     definitions: [
       {
@@ -106,7 +106,7 @@ export const UNIT6_DEPTH: Record<string, Depth> = {
     ],
   },
 
-  // §9.2
+  // §{derivative-rules}
   "derivative-rules": {
     definitions: [
       {
@@ -215,7 +215,7 @@ export const UNIT6_DEPTH: Record<string, Depth> = {
     ],
   },
 
-  // §9.3
+  // §{chain-rule}
   "chain-rule": {
     definitions: [
       {
@@ -314,7 +314,7 @@ export const UNIT6_DEPTH: Record<string, Depth> = {
     ],
   },
 
-  // §9.4
+  // §{gradient}
   gradient: {
     definitions: [
       {
@@ -350,7 +350,7 @@ export const UNIT6_DEPTH: Record<string, Depth> = {
         name: "second-derivative test in two variables",
         statement: "At a stationary point ($\\nabla f = \\vec 0$) let $D = f_{xx}f_{yy} - f_{xy}^2 = \\det H$. If $D > 0$ and $f_{xx} > 0$, it is a local minimum; if $D > 0$ and $f_{xx} < 0$, a local maximum; if $D < 0$, a **saddle point**. $D = 0$ is inconclusive.",
         proof: [
-          "Near the point, $f \\approx f_0 + \\tfrac12\\Delta\\vec x^{\\mathsf T}H\\Delta\\vec x$. The symmetric $H$ has real eigenvalues $\\lambda_1, \\lambda_2$ (§3.6) with $\\lambda_1\\lambda_2 = \\det H = D$.",
+          "Near the point, $f \\approx f_0 + \\tfrac12\\Delta\\vec x^{\\mathsf T}H\\Delta\\vec x$. The symmetric $H$ has real eigenvalues $\\lambda_1, \\lambda_2$ (§{pca}) with $\\lambda_1\\lambda_2 = \\det H = D$.",
           "$D > 0$: same sign, so the surface curves the same way in every direction, up if $f_{xx} > 0$. $D < 0$: opposite signs, up one way and down the other.",
         ],
       },
@@ -422,7 +422,7 @@ export const UNIT6_DEPTH: Record<string, Depth> = {
     ],
   },
 
-  // §9.5
+  // §{gradient-descent}
   "gradient-descent": {
     definitions: [
       {
@@ -456,7 +456,7 @@ export const UNIT6_DEPTH: Record<string, Depth> = {
         kind: "Proposition",
         name: "small steps go downhill",
         statement: "If $\\nabla L \\neq \\vec 0$, a small enough step reduces the loss: $L(\\theta - \\eta\\nabla L) \\approx L(\\theta) - \\eta|\\nabla L|^2$.",
-        proof: ["By the linear approximation (§9.4), $\\Delta L \\approx \\nabla L\\cdot\\Delta\\theta = \\nabla L\\cdot(-\\eta\\nabla L) = -\\eta|\\nabla L|^2 < 0$."],
+        proof: ["By the linear approximation (§{gradient}), $\\Delta L \\approx \\nabla L\\cdot\\Delta\\theta = \\nabla L\\cdot(-\\eta\\nabla L) = -\\eta|\\nabla L|^2 < 0$."],
       },
       {
         type: "theorem",
@@ -528,7 +528,7 @@ export const UNIT6_DEPTH: Record<string, Depth> = {
     ],
   },
 
-  // §9.6
+  // §{backprop}
   backprop: {
     definitions: [
       {
@@ -547,14 +547,14 @@ export const UNIT6_DEPTH: Record<string, Depth> = {
         type: "theorem",
         name: "multivariable chain rule",
         statement: "If $L$ depends on $w$ through intermediate values $u_1, \\dots, u_k$, then $\\dfrac{\\partial L}{\\partial w} = \\displaystyle\\sum_j \\frac{\\partial L}{\\partial u_j}\\frac{\\partial u_j}{\\partial w}$: gradients from different paths add.",
-        proof: ["A nudge $\\Delta w$ changes each $u_j$ by about $\\tfrac{\\partial u_j}{\\partial w}\\Delta w$, and by the linear approximation (§9.4) the effects of those changes on $L$ add."],
+        proof: ["A nudge $\\Delta w$ changes each $u_j$ by about $\\tfrac{\\partial u_j}{\\partial w}\\Delta w$, and by the linear approximation (§{gradient}) the effects of those changes on $L$ add."],
       },
       {
         type: "theorem",
         kind: "Rule",
         name: "how common nodes pass gradients",
         statement: "**Add** $q = x + y$: both inputs receive the upstream gradient unchanged. **Multiply** $q = xy$: $x$ receives upstream $\\times\\, y$, and $y$ receives upstream $\\times\\, x$. **ReLU**: passes it through where the input was positive, else 0. **Sigmoid**: multiplies it by $\\sigma(1 - \\sigma)$.",
-        proof: ["These are the local derivatives: $\\partial(x + y)/\\partial x = 1$, $\\partial(xy)/\\partial x = y$, $\\text{ReLU}'(z) = 1$ for $z > 0$ and 0 for $z < 0$, and $\\sigma'$ from §9.3."],
+        proof: ["These are the local derivatives: $\\partial(x + y)/\\partial x = 1$, $\\partial(xy)/\\partial x = y$, $\\text{ReLU}'(z) = 1$ for $z > 0$ and 0 for $z < 0$, and $\\sigma'$ from §{chain-rule}."],
       },
       {
         type: "theorem",

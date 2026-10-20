@@ -1,6 +1,6 @@
 import { ex, mc, num, type Depth } from "../deepen";
 
-/** Chapter 8 at exam depth: confidence intervals, tests, errors and power, t-tests, chi-square, causation. */
+/** Inference at exam depth: confidence intervals, tests, errors and power, t-tests, chi-square, causation. */
 
 /** Accepts an exact fraction or 3 decimal places. */
 const fr = (id: string, prompt: string, value: number, explain: string) => num(id, `${prompt} Give an exact fraction or 3 decimal places.`, value, explain, 0.0005);
@@ -9,7 +9,7 @@ const dp = (id: string, prompt: string, value: number, explain: string) => num(i
 const TABLE = "Use $\\Phi(0.5) = 0.6915$, $\\Phi(1) = 0.8413$, $\\Phi(1.5) = 0.9332$, $\\Phi(2) = 0.9772$.";
 
 export const INFERENCE_DEPTH: Record<string, Depth> = {
-  // §8.1
+  // §{confidence-intervals}
   "confidence-intervals": {
     definitions: [
       {
@@ -24,7 +24,7 @@ export const INFERENCE_DEPTH: Record<string, Depth> = {
         name: "why the interval works",
         statement: "If $\\bar X \\approx N(\\mu, \\text{SE}^2)$, then $P(\\bar X - 1.96\\,\\text{SE} \\le \\mu \\le \\bar X + 1.96\\,\\text{SE}) \\approx 0.95$.",
         proof: [
-          "Standardising (§6.4), $P\\left(-1.96 \\le \\dfrac{\\bar X - \\mu}{\\text{SE}} \\le 1.96\\right) = 0.95$.",
+          "Standardising (§{normal}), $P\\left(-1.96 \\le \\dfrac{\\bar X - \\mu}{\\text{SE}} \\le 1.96\\right) = 0.95$.",
           "Rearrange each inequality for $\\mu$. The random quantity is the interval, which moves from sample to sample; $\\mu$ stays fixed.",
         ],
       },
@@ -33,14 +33,14 @@ export const INFERENCE_DEPTH: Record<string, Depth> = {
         kind: "Formula",
         name: "a proportion",
         statement: "A large-sample C% interval for a proportion is $\\hat p \\pm z^*\\sqrt{\\dfrac{\\hat p(1 - \\hat p)}{n}}$.",
-        proof: ["It is the same construction, with $\\text{SE}(\\hat p)$ from §7.5."],
+        proof: ["It is the same construction, with $\\text{SE}(\\hat p)$ from §{standard-error}."],
       },
       {
         type: "theorem",
         kind: "Rule",
         name: "sample size for a margin",
         statement: "For margin at most $E$: $n \\ge \\left(\\dfrac{z^*\\sigma}{E}\\right)^2$ for a mean, and $n \\ge \\left(\\dfrac{z^*}{2E}\\right)^2$ for a proportion whatever $p$ is. Always round **up**.",
-        proof: ["Solve $z^*\\sigma/\\sqrt n \\le E$ for $n$. For a proportion use the worst case $\\sqrt{p(1 - p)} \\le \\tfrac12$ (§7.5)."],
+        proof: ["Solve $z^*\\sigma/\\sqrt n \\le E$ for $n$. For a proportion use the worst case $\\sqrt{p(1 - p)} \\le \\tfrac12$ (§{standard-error})."],
       },
     ],
     examples: [
@@ -111,7 +111,7 @@ export const INFERENCE_DEPTH: Record<string, Depth> = {
     ],
   },
 
-  // §8.2
+  // §{hypothesis-tests}
   "hypothesis-tests": {
     definitions: [
       {
@@ -137,7 +137,7 @@ export const INFERENCE_DEPTH: Record<string, Depth> = {
         kind: "Formula",
         name: "a proportion",
         statement: "To test $H_0: p = p_0$, use $z = \\dfrac{\\hat p - p_0}{\\sqrt{p_0(1 - p_0)/n}}$. For small $n$, compute the p-value exactly from $\\mathrm{Bin}(n, p_0)$.",
-        proof: ["Under $H_0$ the true proportion is $p_0$, so the SE uses $p_0$, not $\\hat p$. The exact version adds binomial probabilities (§7.1) of results at least as extreme."],
+        proof: ["Under $H_0$ the true proportion is $p_0$, so the SE uses $p_0$, not $\\hat p$. The exact version adds binomial probabilities (§{binomial}) of results at least as extreme."],
       },
     ],
     examples: [
@@ -209,7 +209,7 @@ export const INFERENCE_DEPTH: Record<string, Depth> = {
     ],
   },
 
-  // §8.3
+  // §{errors-power}
   "errors-power": {
     definitions: [
       {
@@ -300,7 +300,7 @@ export const INFERENCE_DEPTH: Record<string, Depth> = {
     ],
   },
 
-  // §8.4
+  // §{t-tests}
   "t-tests": {
     definitions: [
       {
@@ -320,14 +320,14 @@ export const INFERENCE_DEPTH: Record<string, Depth> = {
         kind: "Formula",
         name: "t interval",
         statement: "A 95% interval for $\\mu$ from a small sample is $\\bar x \\pm t^*_{n-1}\\dfrac{s}{\\sqrt n}$.",
-        proof: ["Repeat the rearrangement of §8.1 with the t cut-off: $P(-t^* \\le T \\le t^*) = 0.95$."],
+        proof: ["Repeat the rearrangement of §{confidence-intervals} with the t cut-off: $P(-t^* \\le T \\le t^*) = 0.95$."],
       },
       {
         type: "theorem",
         kind: "Rule",
         name: "when the t-test is valid",
         statement: "Observations must be independent. For small $n$ the population (or the differences, if paired) should be roughly normal: no strong skew or outliers. For large $n$ the CLT makes the test reliable anyway.",
-        proof: ["The t distribution is derived for normal data. The CLT (§7.4) makes $\\bar X$ nearly normal for large $n$, but small samples inherit the population's shape."],
+        proof: ["The t distribution is derived for normal data. The CLT (§{clt}) makes $\\bar X$ nearly normal for large $n$, but small samples inherit the population's shape."],
       },
     ],
     examples: [
@@ -392,7 +392,7 @@ export const INFERENCE_DEPTH: Record<string, Depth> = {
     ],
   },
 
-  // §8.5
+  // §{chi-square}
   "chi-square": {
     definitions: [
       {
@@ -486,7 +486,7 @@ export const INFERENCE_DEPTH: Record<string, Depth> = {
     ],
   },
 
-  // §8.6
+  // §{correlation-causation}
   "correlation-causation": {
     definitions: [
       {
@@ -506,7 +506,7 @@ export const INFERENCE_DEPTH: Record<string, Depth> = {
         kind: "Proposition",
         name: "randomisation balances confounders",
         statement: "Under random assignment, every pre-existing characteristic is independent of the treatment, so the groups differ only by chance and by the treatment. A difference larger than chance explains is caused by the treatment.",
-        proof: ["The coin that assigns treatment knows nothing about the subjects. Any variable, measured or not, has the same distribution in each group, up to sampling noise that a test (§8.2) accounts for."],
+        proof: ["The coin that assigns treatment knows nothing about the subjects. Any variable, measured or not, has the same distribution in each group, up to sampling noise that a test (§{hypothesis-tests}) accounts for."],
       },
       {
         type: "theorem",
@@ -520,7 +520,7 @@ export const INFERENCE_DEPTH: Record<string, Depth> = {
         kind: "Rule",
         name: "regression to the mean",
         statement: "If two measurements have correlation $r < 1$, then in standard units the predicted second value is $\\hat z_2 = r z_1$: extreme first results tend to be followed by less extreme ones, with no cause needed.",
-        proof: ["The least-squares line in standard units has slope $r$ (§6.6). With $|r| < 1$, $|r z_1| < |z_1|$."],
+        proof: ["The least-squares line in standard units has slope $r$ (§{least-squares}). With $|r| < 1$, $|r z_1| < |z_1|$."],
       },
     ],
     examples: [
@@ -572,7 +572,7 @@ export const INFERENCE_DEPTH: Record<string, Depth> = {
       ex(3, mc("cc-ex-7", "Hospital Y has the lower overall rate but the higher rate in each severity group. Which comparison is fair?", ["Within severity groups", "It compares like with like."], [["Overall", "The overall rates mix very different case loads."], ["Neither can be used", "The within-group comparison is valid."]]), ["Severity confounds hospital and survival; compare within each severity level."]),
       ex(3, num("cc-ex-8", "Instructors praise landings at $z = 1.5$. Successive landings have $r = 0.4$. Predict the next landing's $z$.", 0.6, "$r z_1$."), ["$0.4 \\times 1.5 = 0.6$: worse, with or without the praise."]),
       ex(3, mc("cc-ex-9", "An observational study of a million people finds that coffee drinkers live longer. You can conclude", ["an association, not causation", "Size does not remove confounding."], [["coffee extends life", "Coffee drinkers may differ in income, health and habits."], ["nothing at all", "The association itself is solid."]]), ["A large sample makes the association precise, but confounders remain."]),
-      ex(3, mc("cc-ex-10", "$X$ and $Y$ have correlation 0. Then", ["they can still be strongly related", "Correlation measures only linear association."], [["$X$ cannot cause $Y$", "A nonlinear or masked effect can give $r = 0$."], ["they are independent", "Zero correlation does not imply independence (§6.2)."]]), ["$Y = X^2$ with $X$ symmetric about 0 has $r = 0$ yet $Y$ is determined by $X$."]),
+      ex(3, mc("cc-ex-10", "$X$ and $Y$ have correlation 0. Then", ["they can still be strongly related", "Correlation measures only linear association."], [["$X$ cannot cause $Y$", "A nonlinear or masked effect can give $r = 0$."], ["they are independent", "Zero correlation does not imply independence (§{covariance})."]]), ["$Y = X^2$ with $X$ symmetric about 0 has $r = 0$ yet $Y$ is determined by $X$."]),
     ],
   },
 };

@@ -1,5 +1,6 @@
 import type { Item } from "./types";
 import { BATCH1 } from "./templates-batch1";
+import { SECTION_TEMPLATES } from "./sections";
 import { GENERATORS, mcNumbers, par, r2, rng, same, sameM, m, v, type Rng } from "./generators";
 
 /**
@@ -798,12 +799,13 @@ const EXTRA: Record<string, Template[]> = {
 };
 
 /** Concepts that have practice templates of any kind. */
-export const TEMPLATED: string[] = [...new Set([...Object.keys(GENERATORS), ...Object.keys(EXTRA), ...Object.keys(BATCH1)])];
+export const TEMPLATED: string[] = [...new Set([...Object.keys(GENERATORS), ...Object.keys(EXTRA), ...Object.keys(BATCH1), ...Object.keys(SECTION_TEMPLATES)])];
 
 /** All templates for a concept: the original compute generators first, then the extra kinds. */
 export function templatesFor(nodeId: string): Template[] {
   const base: Template[] = (GENERATORS[nodeId] ?? []).map((g) => ({ type: "compute" as const, make: (r: Rng) => g(r) }));
-  return [...base, ...(EXTRA[nodeId] ?? []), ...(BATCH1[nodeId] ?? [])];
+  // Appending keeps existing template indices, and so existing question ids, stable.
+  return [...base, ...(EXTRA[nodeId] ?? []), ...(BATCH1[nodeId] ?? []), ...(SECTION_TEMPLATES[nodeId] ?? [])];
 }
 
 export function generatedId(nodeId: string, template: number, level: Level, seed: number) {

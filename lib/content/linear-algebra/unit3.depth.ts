@@ -6,7 +6,7 @@ const M = (a: string, b: string, c: string, d: string) => `\\begin{bmatrix} ${a}
 const M3 = (r: string[][]) => `\\begin{bmatrix} ${r.map((row) => row.join(" & ")).join(" \\\\ ")} \\end{bmatrix}`;
 
 export const UNIT3_DEPTH: Record<string, Depth> = {
-  // §3.1
+  // §{eigenvector}
   eigenvector: {
     definitions: [
       {
@@ -98,7 +98,7 @@ export const UNIT3_DEPTH: Record<string, Depth> = {
     ],
   },
 
-  // §3.2
+  // §{eigenvalue}
   eigenvalue: {
     definitions: [
       {
@@ -121,13 +121,13 @@ export const UNIT3_DEPTH: Record<string, Depth> = {
         type: "theorem",
         name: "trace and determinant",
         statement: "For a $2 \\times 2$ matrix with eigenvalues $\\lambda_1, \\lambda_2$ (counted with repetition, possibly complex): $\\lambda_1 + \\lambda_2 = \\operatorname{tr}A$ and $\\lambda_1\\lambda_2 = \\det A$. For $n \\times n$ matrices, the sum is the trace and the product is the determinant.",
-        proof: ["The eigenvalues are the roots of $\\lambda^2 - (\\operatorname{tr}A)\\lambda + \\det A = 0$ (§3.3). By Vieta's formulas the sum of the roots is $\\operatorname{tr}A$ and their product is $\\det A$."],
+        proof: ["The eigenvalues are the roots of $\\lambda^2 - (\\operatorname{tr}A)\\lambda + \\det A = 0$ (§{finding-eigenvalues}). By Vieta's formulas the sum of the roots is $\\operatorname{tr}A$ and their product is $\\det A$."],
       },
       {
         type: "theorem",
         kind: "Corollary",
         statement: "$A$ is invertible exactly when 0 is not an eigenvalue.",
-        proof: ["0 is an eigenvalue exactly when $A\\vec v = \\vec 0$ for some $\\vec v \\neq \\vec 0$, which by §2.4 is exactly when $A$ is singular."],
+        proof: ["0 is an eigenvalue exactly when $A\\vec v = \\vec 0$ for some $\\vec v \\neq \\vec 0$, which by §{det-zero} is exactly when $A$ is singular."],
       },
     ],
     examples: [
@@ -183,7 +183,7 @@ export const UNIT3_DEPTH: Record<string, Depth> = {
     ],
   },
 
-  // §3.3
+  // §{finding-eigenvalues}
   "finding-eigenvalues": {
     definitions: [
       {
@@ -196,7 +196,7 @@ export const UNIT3_DEPTH: Record<string, Depth> = {
       {
         type: "theorem",
         statement: "$\\lambda$ is an eigenvalue of $A$ exactly when $\\det(A - \\lambda I) = 0$.",
-        proof: ["$A\\vec v = \\lambda\\vec v$ is $(A - \\lambda I)\\vec v = \\vec 0$. A non-zero solution exists exactly when $A - \\lambda I$ is singular (§2.4), i.e. when its determinant is 0."],
+        proof: ["$A\\vec v = \\lambda\\vec v$ is $(A - \\lambda I)\\vec v = \\vec 0$. A non-zero solution exists exactly when $A - \\lambda I$ is singular (§{det-zero}), i.e. when its determinant is 0."],
       },
       {
         type: "theorem",
@@ -277,7 +277,7 @@ export const UNIT3_DEPTH: Record<string, Depth> = {
     ],
   },
 
-  // §3.4
+  // §{finding-eigenvectors}
   "finding-eigenvectors": {
     definitions: [
       {
@@ -350,7 +350,7 @@ export const UNIT3_DEPTH: Record<string, Depth> = {
     ],
   },
 
-  // §3.5
+  // §{eigenbasis}
   eigenbasis: {
     definitions: [
       {
@@ -373,7 +373,7 @@ export const UNIT3_DEPTH: Record<string, Depth> = {
         type: "theorem",
         kind: "Corollary",
         statement: "An $n \\times n$ matrix with $n$ distinct eigenvalues is diagonalisable.",
-        proof: ["Its $n$ eigenvectors are independent (§3.4), so they form a basis."],
+        proof: ["Its $n$ eigenvectors are independent (§{finding-eigenvectors}), so they form a basis."],
       },
     ],
     examples: [
@@ -440,7 +440,7 @@ export const UNIT3_DEPTH: Record<string, Depth> = {
     ],
   },
 
-  // §3.6
+  // §{pca}
   pca: {
     definitions: [
       {
@@ -470,7 +470,7 @@ export const UNIT3_DEPTH: Record<string, Depth> = {
         statement: "Among all unit directions $\\hat u$, the variance of the data along $\\hat u$ is largest for the top eigenvector of $\\Sigma$, and that largest variance is $\\lambda_1$. The total variance $\\sum\\lambda_i$ equals $\\operatorname{tr}\\Sigma$.",
         proof: [
           "Write $\\hat u = c_1\\hat v_1 + c_2\\hat v_2$ in the perpendicular unit eigenvectors, with $c_1^2 + c_2^2 = 1$. The variance along $\\hat u$ is $\\lambda_1c_1^2 + \\lambda_2c_2^2$.",
-          "With $\\lambda_1 \\ge \\lambda_2$ this is at most $\\lambda_1(c_1^2 + c_2^2) = \\lambda_1$, with equality at $\\hat u = \\hat v_1$. The trace equals the sum of the eigenvalues (§3.2).",
+          "With $\\lambda_1 \\ge \\lambda_2$ this is at most $\\lambda_1(c_1^2 + c_2^2) = \\lambda_1$, with equality at $\\hat u = \\hat v_1$. The trace equals the sum of the eigenvalues (§{eigenvalue}).",
         ],
       },
     ],

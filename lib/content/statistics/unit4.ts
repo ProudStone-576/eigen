@@ -1,6 +1,8 @@
 import type { ConceptNode, Unit } from "@/lib/content/types";
 import { deepen } from "../deepen";
 import { UNIT4_DEPTH } from "./unit4.depth";
+import { node as counting } from "../sections/counting";
+import { node as jointDistributions } from "../sections/joint-distributions";
 
 const probability: ConceptNode = {
   id: "probability",
@@ -609,5 +611,5 @@ export const unit4: Unit = {
   track: "Statistics",
   title: "Probability & Bayes",
   blurb: "Chance as a long-run fraction, averages you can bet on, and updating beliefs with evidence.",
-  nodes: [probability, randomVariable, expectation, conditional, bayes, independence].map((n) => deepen(n, UNIT4_DEPTH[n.id])),
+  nodes: [counting, ...[probability, randomVariable, expectation, conditional, bayes, independence].map((n) => deepen(n, UNIT4_DEPTH[n.id])), jointDistributions],
 };

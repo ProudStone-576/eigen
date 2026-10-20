@@ -1,6 +1,6 @@
 import { ex, mc, num, type Depth } from "../deepen";
 
-/** Chapter 7 at exam depth: binomial, Poisson, uniform and exponential, the CLT, standard error. */
+/** Distributions & the CLT at exam depth: binomial, Poisson, uniform and exponential, the CLT, standard error. */
 
 /** Accepts an exact fraction or 3 decimal places. */
 const fr = (id: string, prompt: string, value: number, explain: string) => num(id, `${prompt} Give an exact fraction or 3 decimal places.`, value, explain, 0.0005);
@@ -11,7 +11,7 @@ const C = (n: number, k: number) => fact(n) / (fact(k) * fact(n - k));
 const TABLE = "Use $\\Phi(0.5) = 0.6915$, $\\Phi(1) = 0.8413$, $\\Phi(1.5) = 0.9332$, $\\Phi(2) = 0.9772$.";
 
 export const DISTRIBUTIONS_DEPTH: Record<string, Depth> = {
-  // §7.1
+  // §{binomial}
   binomial: {
     definitions: [
       {
@@ -32,7 +32,7 @@ export const DISTRIBUTIONS_DEPTH: Record<string, Depth> = {
         statement: "If $X \\sim \\mathrm{Bin}(n, p)$ then $E[X] = np$ and $\\operatorname{Var}(X) = npq$.",
         proof: [
           "Write $X = I_1 + \\dots + I_n$, where $I_j = 1$ if trial $j$ succeeds and 0 otherwise. Each $I_j$ has mean $p$ and variance $E[I_j^2] - p^2 = p - p^2 = pq$.",
-          "Expectations always add (§5.3), giving $np$. The trials are independent, so the variances add too (§6.1), giving $npq$.",
+          "Expectations always add (§{expectation}), giving $np$. The trials are independent, so the variances add too (§{variance}), giving $npq$.",
         ],
       },
       {
@@ -113,7 +113,7 @@ export const DISTRIBUTIONS_DEPTH: Record<string, Depth> = {
     ],
   },
 
-  // §7.2
+  // §{poisson}
   poisson: {
     definitions: [
       {
@@ -211,7 +211,7 @@ export const DISTRIBUTIONS_DEPTH: Record<string, Depth> = {
     ],
   },
 
-  // §7.3
+  // §{uniform-exponential}
   "uniform-exponential": {
     definitions: [
       {
@@ -311,7 +311,7 @@ export const DISTRIBUTIONS_DEPTH: Record<string, Depth> = {
     ],
   },
 
-  // §7.4
+  // §{clt}
   clt: {
     definitions: [
       {
@@ -327,7 +327,7 @@ export const DISTRIBUTIONS_DEPTH: Record<string, Depth> = {
         statement: "If the population has mean $\\mu$ and variance $\\sigma^2$, then exactly, for every $n$: $E[\\bar X] = \\mu$, $\\operatorname{Var}(\\bar X) = \\dfrac{\\sigma^2}{n}$, $E[S_n] = n\\mu$ and $\\operatorname{Var}(S_n) = n\\sigma^2$.",
         proof: [
           "Expectations add: $E[S_n] = n\\mu$. The draws are independent, so variances add: $\\operatorname{Var}(S_n) = n\\sigma^2$.",
-          "Dividing by $n$ divides the mean by $n$ and the variance by $n^2$ (§6.1): $\\operatorname{Var}(\\bar X) = n\\sigma^2/n^2 = \\sigma^2/n$.",
+          "Dividing by $n$ divides the mean by $n$ and the variance by $n^2$ (§{variance}): $\\operatorname{Var}(\\bar X) = n\\sigma^2/n^2 = \\sigma^2/n$.",
         ],
       },
       {
@@ -416,7 +416,7 @@ export const DISTRIBUTIONS_DEPTH: Record<string, Depth> = {
     ],
   },
 
-  // §7.5
+  // §{standard-error}
   "standard-error": {
     definitions: [
       {
@@ -431,7 +431,7 @@ export const DISTRIBUTIONS_DEPTH: Record<string, Depth> = {
         name: "standard errors",
         statement: "$\\text{SE}(\\bar x) = \\dfrac{\\sigma}{\\sqrt n} \\approx \\dfrac{s}{\\sqrt n}$ and $\\text{SE}(\\hat p) = \\sqrt{\\dfrac{p(1 - p)}{n}} \\approx \\sqrt{\\dfrac{\\hat p(1 - \\hat p)}{n}}$.",
         proof: [
-          "The first is $\\operatorname{Var}(\\bar X) = \\sigma^2/n$ (§7.4), with $s$ standing in for the unknown $\\sigma$.",
+          "The first is $\\operatorname{Var}(\\bar X) = \\sigma^2/n$ (§{clt}), with $s$ standing in for the unknown $\\sigma$.",
           "$\\hat p$ is the mean of $n$ Bernoulli values, each with variance $p(1 - p)$.",
         ],
       },
@@ -439,7 +439,7 @@ export const DISTRIBUTIONS_DEPTH: Record<string, Depth> = {
         type: "theorem",
         name: "difference of two estimates",
         statement: "For independent samples, $\\text{SE}(\\bar x_1 - \\bar x_2) = \\sqrt{\\text{SE}_1^2 + \\text{SE}_2^2}$, and likewise for $\\hat p_1 - \\hat p_2$.",
-        proof: ["Independent variances add, even for a difference (§6.1); take the square root."],
+        proof: ["Independent variances add, even for a difference (§{variance}); take the square root."],
       },
       {
         type: "theorem",
@@ -473,7 +473,7 @@ export const DISTRIBUTIONS_DEPTH: Record<string, Depth> = {
         solution: [
           "$\\text{SE}_A^2 = \\dfrac{0.1 \\times 0.9}{1000} = 0.00009$ and $\\text{SE}_B^2 = \\dfrac{0.12 \\times 0.88}{1000} = 0.0001056$.",
           "$\\text{SE} = \\sqrt{0.0001956} \\approx 0.014$.",
-          "The gap of 0.02 is about $1.4$ standard errors: suggestive, but well within what chance often produces (§8.2).",
+          "The gap of 0.02 is about $1.4$ standard errors: suggestive, but well within what chance often produces (§{hypothesis-tests}).",
         ],
         result: "SE about 1.4 points; the gap is about 1.4 SE.",
       },

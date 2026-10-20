@@ -10,7 +10,7 @@ const M = (a: string, b: string, c: string, d: string) => `\\begin{bmatrix} ${a}
 const C = (a: string, b: string) => `\\begin{bmatrix} ${a} \\\\ ${b} \\end{bmatrix}`;
 
 export const UNIT1_DEPTH: Record<string, Depth> = {
-  // §1.1
+  // §{vector}
   vector: {
     definitions: [
       {
@@ -121,7 +121,7 @@ export const UNIT1_DEPTH: Record<string, Depth> = {
     ],
   },
 
-  // §1.2
+  // §{vector-add}
   "vector-add": {
     definitions: [
       {
@@ -232,7 +232,7 @@ export const UNIT1_DEPTH: Record<string, Depth> = {
     ],
   },
 
-  // §1.3
+  // §{scalar}
   scalar: {
     definitions: [
       {
@@ -341,7 +341,7 @@ export const UNIT1_DEPTH: Record<string, Depth> = {
     ],
   },
 
-  // §1.4
+  // §{linear-combination}
   "linear-combination": {
     definitions: [
       {
@@ -435,7 +435,7 @@ export const UNIT1_DEPTH: Record<string, Depth> = {
     ],
   },
 
-  // §1.5
+  // §{basis}
   basis: {
     definitions: [
       {
@@ -457,7 +457,7 @@ export const UNIT1_DEPTH: Record<string, Depth> = {
         statement:
           "If $\\vec b_1 = (p, r)$ and $\\vec b_2 = (q, s)$ with $ps - qr \\neq 0$, then the coordinates of $\\vec v = (x, y)$ in the basis $\\{\\vec b_1, \\vec b_2\\}$ are $c_1 = \\dfrac{sx - qy}{ps - qr}$ and $c_2 = \\dfrac{py - rx}{ps - qr}$.",
         proof: [
-          "This is the unique-coefficients theorem of §1.4 with $\\vec v$ and $\\vec w$ replaced by $\\vec b_1$ and $\\vec b_2$.",
+          "This is the unique-coefficients theorem of §{linear-combination} with $\\vec v$ and $\\vec w$ replaced by $\\vec b_1$ and $\\vec b_2$.",
           "Check: $c_1p + c_2q = \\dfrac{psx - pqy + pqy - qrx}{ps - qr} = x$, and in the same way $c_1r + c_2s = y$.",
         ],
       },
@@ -531,7 +531,7 @@ export const UNIT1_DEPTH: Record<string, Depth> = {
     ],
   },
 
-  // §1.6
+  // §{matrix-transform}
   "matrix-transform": {
     definitions: [
       {
@@ -633,7 +633,7 @@ export const UNIT1_DEPTH: Record<string, Depth> = {
     ],
   },
 
-  // §1.7
+  // §{matrix-vector}
   "matrix-vector": {
     definitions: [
       {
@@ -656,7 +656,7 @@ export const UNIT1_DEPTH: Record<string, Depth> = {
         type: "theorem",
         kind: "Corollary",
         statement: "A matrix is determined by its action on any basis: if $A\\vec b_1$ and $A\\vec b_2$ are known, then $A\\vec v = c_1A\\vec b_1 + c_2A\\vec b_2$, where $(c_1, c_2)$ are the coordinates of $\\vec v$ in the basis.",
-        proof: ["Write $\\vec v = c_1\\vec b_1 + c_2\\vec b_2$, which is possible in exactly one way by §1.5, and apply linearity."],
+        proof: ["Write $\\vec v = c_1\\vec b_1 + c_2\\vec b_2$, which is possible in exactly one way by §{basis}, and apply linearity."],
       },
     ],
     examples: [
@@ -718,7 +718,7 @@ export const UNIT1_DEPTH: Record<string, Depth> = {
     ],
   },
 
-  // §1.8
+  // §{composition}
   composition: {
     definitions: [
       {
