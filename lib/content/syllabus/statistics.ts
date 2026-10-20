@@ -15,11 +15,6 @@ export const PLANNED: Record<string, { title: string; chapter: string }> = {
   // ANOVA, nonparametric, robust
   // Bayesian, multivariate
   // Time series, causal, survival
-  "ts-components": { title: "Trend, seasonality & moving averages", chapter: "Time Series" },
-  "exponential-smoothing": { title: "Exponential smoothing", chapter: "Time Series" },
-  "stationarity-acf": { title: "Stationarity & autocorrelation", chapter: "Time Series" },
-  arima: { title: "AR, MA & ARIMA models", chapter: "Time Series" },
-  forecasting: { title: "Forecasting & evaluation", chapter: "Time Series" },
   "potential-outcomes": { title: "Potential outcomes & DAGs", chapter: "Causal Inference" },
   "propensity-scores": { title: "Matching, weighting & propensity scores", chapter: "Causal Inference" },
   "quasi-experiments": { title: "Instruments, differences-in-differences & discontinuities", chapter: "Causal Inference" },
@@ -278,7 +273,8 @@ export const STATISTICS_SYLLABUS: Area[] = [
       ...T("exponential-smoothing", "Exponential smoothing", "Exponential smoothing state-space models"),
       ...T("stationarity-acf", "Stationarity", "Autocorrelation function (ACF)", "Partial autocorrelation function (PACF)", "White noise"),
       ...T("arima", "Autoregressive models (AR)", "Moving-average models (MA)", "ARMA models", "ARIMA models", "Seasonal ARIMA", "ARIMAX and regression with time-series errors"),
-      ...T("forecasting", "Forecast intervals", "Forecast error metrics", "Volatility modeling", "ARCH and GARCH", "State-space models", "Kalman filtering", "Change-point detection", "Interrupted time-series analysis", "Vector autoregression (VAR)", "Cointegration", "Granger causality", "Spectral analysis", "Frequency-domain methods"),
+      ...T("forecasting", "Forecast intervals", "Forecast error metrics", "State-space models", "Kalman filtering", "Change-point detection", "Interrupted time-series analysis"),
+      ...T("advanced-time-series", "Volatility modeling", "ARCH and GARCH", "Vector autoregression (VAR)", "Cointegration", "Granger causality", "Spectral analysis", "Frequency-domain methods"),
       ...T("hierarchical-models", "Longitudinal data analysis", "Panel data models"),
       ...T("survival-functions", "Survival and event-history data"),
     ],

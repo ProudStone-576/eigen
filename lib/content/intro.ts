@@ -111,6 +111,12 @@ const OVERRIDES: Record<string, IntroSpec> = {
   clustering: { kind: "bars", dist: { type: "values", values: [1, 2, 2, 3, 3, 9, 10, 10, 11, 12], max: 15 }, marks: "box" },
   "gmm-em": { kind: "bars", dist: { type: "values", values: [2, 3, 3, 4, 4, 4, 5, 10, 11, 11, 12, 13], max: 15 }, marks: "mean" },
   "factor-analysis": { kind: "cloud", flatten: true },
+  "ts-components": { kind: "scatter", points: [[1, 2], [2, 3.4], [3, 2.9], [4, 4.5], [5, 4.1], [6, 5.8], [7, 5.2], [8, 6.9]], fit: "line" },
+  "exponential-smoothing": { kind: "bars", dist: { type: "values", values: [40, 44, 41, 47, 45, 50, 48, 53], max: 60 }, marks: "mean" },
+  "stationarity-acf": { kind: "bars", dist: { type: "normal" }, marks: "spread" },
+  arima: { kind: "cloud", flatten: false },
+  forecasting: { kind: "intervals" },
+  "advanced-time-series": { kind: "bars", dist: { type: "values", values: [1, 0, 1, 0, 4, 5, 6, 4, 0, 1, 1, 0], max: 8 }, marks: "spread" },
 };
 
 const MARKS: Record<string, "mean" | "box" | "spread"> = {

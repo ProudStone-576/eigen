@@ -1,4 +1,6 @@
 import type { Template } from "../templates";
+import * as advancedTimeSeries from "./advanced-time-series";
+import * as arima from "./arima";
 import * as bayesFactors from "./bayes-factors";
 import * as bayesianInference from "./bayesian-inference";
 import * as bootstrap from "./bootstrap";
@@ -13,8 +15,10 @@ import * as discriminantAnalysis from "./discriminant-analysis";
 import * as doeAdvanced from "./doe-advanced";
 import * as estimatorProperties from "./estimator-properties";
 import * as experimentDesign from "./experiment-design";
+import * as exponentialSmoothing from "./exponential-smoothing";
 import * as factorAnalysis from "./factor-analysis";
 import * as fisherInformation from "./fisher-information";
+import * as forecasting from "./forecasting";
 import * as frequencyTables from "./frequency-tables";
 import * as glm from "./glm";
 import * as gmmEm from "./gmm-em";
@@ -44,8 +48,10 @@ import * as regressionInference from "./regression-inference";
 import * as robustEstimation from "./robust-estimation";
 import * as samplingDistributions from "./sampling-distributions";
 import * as spreadMeasures from "./spread-measures";
+import * as stationarityAcf from "./stationarity-acf";
 import * as surveyDesign from "./survey-design";
 import * as transformations from "./transformations";
+import * as tsComponents from "./ts-components";
 import * as twoSampleTests from "./two-sample-tests";
 import * as twoWayAnova from "./two-way-anova";
 
@@ -55,6 +61,8 @@ import * as twoWayAnova from "./two-way-anova";
  * templates to the practice generator.
  */
 const SECTIONS = [
+  advancedTimeSeries,
+  arima,
   bayesFactors,
   bayesianInference,
   bootstrap,
@@ -69,8 +77,10 @@ const SECTIONS = [
   doeAdvanced,
   estimatorProperties,
   experimentDesign,
+  exponentialSmoothing,
   factorAnalysis,
   fisherInformation,
+  forecasting,
   frequencyTables,
   glm,
   gmmEm,
@@ -100,8 +110,10 @@ const SECTIONS = [
   robustEstimation,
   samplingDistributions,
   spreadMeasures,
+  stationarityAcf,
   surveyDesign,
   transformations,
+  tsComponents,
   twoSampleTests,
   twoWayAnova,
 ];
