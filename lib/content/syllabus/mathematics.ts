@@ -9,10 +9,6 @@ import type { Area } from "./statistics";
 
 /** Sections still to be written, with the chapter each will join. */
 export const MATH_PLANNED: Record<string, { title: string; chapter: string }> = {
-  "tangents-normals": { title: "Tangents, normals & rates of change", chapter: "Applications of Derivatives" },
-  monotonicity: { title: "Increasing & decreasing functions", chapter: "Applications of Derivatives" },
-  "maxima-minima": { title: "Maxima & minima", chapter: "Applications of Derivatives" },
-  "mean-value-theorems": { title: "Rolle's & mean value theorems", chapter: "Applications of Derivatives" },
   "indefinite-integrals": { title: "Indefinite integrals & substitution", chapter: "Integral Calculus" },
   "integration-techniques": { title: "Integration by parts & partial fractions", chapter: "Integral Calculus" },
   "definite-integrals": { title: "Definite integrals", chapter: "Integral Calculus" },

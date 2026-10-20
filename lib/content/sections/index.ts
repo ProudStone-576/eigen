@@ -68,13 +68,16 @@ import * as linearEquations from "./linear-equations";
 import * as lln from "./lln-inequalities";
 import * as mahalanobis from "./mahalanobis";
 import * as matrixAlgebra from "./matrix-algebra";
+import * as maximaMinima from "./maxima-minima";
 import * as mcmc from "./mcmc";
 import * as meansInequalities from "./means-inequalities";
+import * as meanValueTheorems from "./mean-value-theorems";
 import * as mediationSensitivity from "./mediation-sensitivity";
 import * as mensuration from "./mensuration";
 import * as methodOfMoments from "./method-of-moments";
 import * as mgf from "./mgf";
 import * as mixtures from "./mixtures";
+import * as monotonicity from "./monotonicity";
 import * as monteCarlo from "./monte-carlo";
 import * as multipleTesting from "./multiple-testing";
 import * as multivariateNormal from "./multivariate-normal";
@@ -117,6 +120,7 @@ import * as surveyDesign from "./survey-design";
 import * as survivalExtensions from "./survival-extensions";
 import * as survivalFunctions from "./survival-functions";
 import * as svmKnnNb from "./svm-knn-nb";
+import * as tangentsNormals from "./tangents-normals";
 import * as transformations from "./transformations";
 import * as treesEnsembles from "./trees-ensembles";
 import * as trianglesTrig from "./triangles-trig";
@@ -203,13 +207,16 @@ const SECTIONS = [
   lln,
   mahalanobis,
   matrixAlgebra,
+  maximaMinima,
   mcmc,
   meansInequalities,
+  meanValueTheorems,
   mediationSensitivity,
   mensuration,
   methodOfMoments,
   mgf,
   mixtures,
+  monotonicity,
   monteCarlo,
   multipleTesting,
   multivariateNormal,
@@ -252,6 +259,7 @@ const SECTIONS = [
   survivalExtensions,
   survivalFunctions,
   svmKnnNb,
+  tangentsNormals,
   transformations,
   treesEnsembles,
   trianglesTrig,

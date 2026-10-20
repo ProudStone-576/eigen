@@ -41,6 +41,10 @@ import { node as limits } from "../sections/limits";
 import { node as continuity } from "../sections/continuity";
 import { node as differentiability } from "../sections/differentiability";
 import { node as differentiationMethods } from "../sections/differentiation-methods";
+import { node as tangentsNormals } from "../sections/tangents-normals";
+import { node as monotonicity } from "../sections/monotonicity";
+import { node as maximaMinima } from "../sections/maxima-minima";
+import { node as meanValueTheorems } from "../sections/mean-value-theorems";
 
 /** Part I: the exam mathematics syllabus (JEE Main and Advanced, SAT), in teaching order. */
 
@@ -124,4 +128,12 @@ export const limitsUnit: Unit = {
   nodes: [limits, continuity, differentiability, differentiationMethods],
 };
 
-export const mathematicsUnits: Unit[] = [algebraUnit, geometryUnit, functionsUnit, trigUnit, complexUnit, sequencesUnit, countingUnit, matricesUnit, coordinateUnit, limitsUnit];
+export const applicationsUnit: Unit = {
+  id: "ma-11",
+  track: "Mathematics",
+  title: "Applications of Derivatives",
+  blurb: "Tangents, normals and related rates, increasing and decreasing functions, maxima and minima with optimisation, and Rolle's and the mean value theorems.",
+  nodes: [tangentsNormals, monotonicity, maximaMinima, meanValueTheorems],
+};
+
+export const mathematicsUnits: Unit[] = [algebraUnit, geometryUnit, functionsUnit, trigUnit, complexUnit, sequencesUnit, countingUnit, matricesUnit, coordinateUnit, limitsUnit, applicationsUnit];

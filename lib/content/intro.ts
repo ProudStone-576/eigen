@@ -190,6 +190,10 @@ const OVERRIDES: Record<string, IntroSpec> = {
   continuity: { kind: "threshold" },
   differentiability: { kind: "curve", fn: "cubic", a: 0.5 },
   "differentiation-methods": { kind: "curve", fn: "chain", a: 1 },
+  "tangents-normals": { kind: "curve", fn: "square", a: 1.5 },
+  monotonicity: { kind: "curve", fn: "cubic", a: 1 },
+  "maxima-minima": { kind: "surface" },
+  "mean-value-theorems": { kind: "curve", fn: "cubic", a: 2 },
 };
 
 const MARKS: Record<string, "mean" | "box" | "spread"> = {
