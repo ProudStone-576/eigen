@@ -101,6 +101,16 @@ const OVERRIDES: Record<string, IntroSpec> = {
   "kruskal-friedman": { kind: "bars", dist: { type: "values", values: [5, 8, 9, 12, 14, 15, 18, 22, 30, 41], max: 50 }, marks: "box" },
   "normality-tests": { kind: "bars", dist: { type: "normal" }, marks: "spread" },
   "robust-estimation": { kind: "bars", dist: { type: "values", values: [4, 5, 5, 6, 6, 7, 95], max: 100 }, marks: "mean" },
+  "bayesian-inference": { kind: "bars", dist: { type: "likelihood", heads: 7, flips: 10 } },
+  "conjugate-priors": { kind: "bars", dist: { type: "likelihood", heads: 3, flips: 4 } },
+  "bayes-factors": { kind: "people", mode: "bayes", prevalence: 0.5, sensitivity: 0.8, falsePositive: 0.2 },
+  "hierarchical-models": { kind: "bars", dist: { type: "values", values: [62, 65, 68, 70, 70, 72, 75, 78, 80], max: 100 }, marks: "mean" },
+  mcmc: { kind: "bars", dist: { type: "normal" }, marks: "spread" },
+  mahalanobis: { kind: "cloud", flatten: false },
+  "discriminant-analysis": { kind: "threshold" },
+  clustering: { kind: "bars", dist: { type: "values", values: [1, 2, 2, 3, 3, 9, 10, 10, 11, 12], max: 15 }, marks: "box" },
+  "gmm-em": { kind: "bars", dist: { type: "values", values: [2, 3, 3, 4, 4, 4, 5, 10, 11, 11, 12, 13], max: 15 }, marks: "mean" },
+  "factor-analysis": { kind: "cloud", flatten: true },
 };
 
 const MARKS: Record<string, "mean" | "box" | "spread"> = {

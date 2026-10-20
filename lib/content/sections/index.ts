@@ -1,21 +1,31 @@
 import type { Template } from "../templates";
+import * as bayesFactors from "./bayes-factors";
+import * as bayesianInference from "./bayesian-inference";
 import * as bootstrap from "./bootstrap";
+import * as clustering from "./clustering";
+import * as conjugatePriors from "./conjugate-priors";
 import * as continuousFamily from "./continuous-family";
 import * as counting from "./counting";
 import * as dataQuality from "./data-quality";
 import * as dataVariables from "./data-variables";
 import * as discreteFamily from "./discrete-family";
+import * as discriminantAnalysis from "./discriminant-analysis";
 import * as doeAdvanced from "./doe-advanced";
 import * as estimatorProperties from "./estimator-properties";
 import * as experimentDesign from "./experiment-design";
+import * as factorAnalysis from "./factor-analysis";
 import * as fisherInformation from "./fisher-information";
 import * as frequencyTables from "./frequency-tables";
+import * as glm from "./glm";
+import * as gmmEm from "./gmm-em";
+import * as hierarchicalModels from "./hierarchical-models";
 import * as intervalsMore from "./intervals-more";
 import * as jointDistributions from "./joint-distributions";
 import * as kruskalFriedman from "./kruskal-friedman";
-import * as glm from "./glm";
 import * as likelihoodRatio from "./likelihood-ratio";
 import * as lln from "./lln-inequalities";
+import * as mahalanobis from "./mahalanobis";
+import * as mcmc from "./mcmc";
 import * as methodOfMoments from "./method-of-moments";
 import * as mgf from "./mgf";
 import * as mixtures from "./mixtures";
@@ -45,23 +55,33 @@ import * as twoWayAnova from "./two-way-anova";
  * templates to the practice generator.
  */
 const SECTIONS = [
+  bayesFactors,
+  bayesianInference,
   bootstrap,
+  clustering,
+  conjugatePriors,
   continuousFamily,
   counting,
   dataQuality,
   dataVariables,
   discreteFamily,
+  discriminantAnalysis,
   doeAdvanced,
   estimatorProperties,
   experimentDesign,
+  factorAnalysis,
   fisherInformation,
   frequencyTables,
   glm,
+  gmmEm,
+  hierarchicalModels,
   intervalsMore,
   jointDistributions,
   kruskalFriedman,
   likelihoodRatio,
   lln,
+  mahalanobis,
+  mcmc,
   methodOfMoments,
   mgf,
   mixtures,

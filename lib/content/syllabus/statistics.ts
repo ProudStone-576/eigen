@@ -14,16 +14,6 @@ export const PLANNED: Record<string, { title: string; chapter: string }> = {
   // Testing, association, regression
   // ANOVA, nonparametric, robust
   // Bayesian, multivariate
-  "bayesian-inference": { title: "Bayesian inference", chapter: "Bayesian Statistics" },
-  "conjugate-priors": { title: "Conjugate priors", chapter: "Bayesian Statistics" },
-  "bayes-factors": { title: "Bayes factors & decisions", chapter: "Bayesian Statistics" },
-  "hierarchical-models": { title: "Hierarchical models & shrinkage", chapter: "Bayesian Statistics" },
-  mcmc: { title: "Markov chain Monte Carlo", chapter: "Bayesian Statistics" },
-  mahalanobis: { title: "Mahalanobis distance & Hotelling's T²", chapter: "Multivariate Statistics" },
-  "discriminant-analysis": { title: "Discriminant analysis", chapter: "Multivariate Statistics" },
-  clustering: { title: "Clustering", chapter: "Multivariate Statistics" },
-  "gmm-em": { title: "Gaussian mixtures & the EM algorithm", chapter: "Multivariate Statistics" },
-  "factor-analysis": { title: "Factor analysis & other latent-variable methods", chapter: "Multivariate Statistics" },
   // Time series, causal, survival
   "ts-components": { title: "Trend, seasonality & moving averages", chapter: "Time Series" },
   "exponential-smoothing": { title: "Exponential smoothing", chapter: "Time Series" },

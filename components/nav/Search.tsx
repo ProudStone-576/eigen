@@ -21,7 +21,7 @@ export function searchConcepts(entries: SearchEntry[], query: string, limit = 8)
   return entries
     .map((e) => ({ e, s: score(e) }))
     .filter((x) => x.s < 9)
-    .sort((a, b) => a.s - b.s || a.e.title.localeCompare(b.e.title))
+    .sort((a, b) => a.s - b.s || a.e.title.length - b.e.title.length || a.e.title.localeCompare(b.e.title))
     .slice(0, limit)
     .map((x) => x.e);
 }
