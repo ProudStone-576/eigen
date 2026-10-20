@@ -45,6 +45,10 @@ import { node as tangentsNormals } from "../sections/tangents-normals";
 import { node as monotonicity } from "../sections/monotonicity";
 import { node as maximaMinima } from "../sections/maxima-minima";
 import { node as meanValueTheorems } from "../sections/mean-value-theorems";
+import { node as indefiniteIntegrals } from "../sections/indefinite-integrals";
+import { node as integrationTechniques } from "../sections/integration-techniques";
+import { node as definiteIntegrals } from "../sections/definite-integrals";
+import { node as areaUnderCurves } from "../sections/area-under-curves";
 
 /** Part I: the exam mathematics syllabus (JEE Main and Advanced, SAT), in teaching order. */
 
@@ -136,4 +140,12 @@ export const applicationsUnit: Unit = {
   nodes: [tangentsNormals, monotonicity, maximaMinima, meanValueTheorems],
 };
 
-export const mathematicsUnits: Unit[] = [algebraUnit, geometryUnit, functionsUnit, trigUnit, complexUnit, sequencesUnit, countingUnit, matricesUnit, coordinateUnit, limitsUnit, applicationsUnit];
+export const integralUnit: Unit = {
+  id: "ma-12",
+  track: "Mathematics",
+  title: "Integral Calculus",
+  blurb: "Antiderivatives and substitution, integration by parts and partial fractions, definite integrals with their properties, and areas between curves.",
+  nodes: [indefiniteIntegrals, integrationTechniques, definiteIntegrals, areaUnderCurves],
+};
+
+export const mathematicsUnits: Unit[] = [algebraUnit, geometryUnit, functionsUnit, trigUnit, complexUnit, sequencesUnit, countingUnit, matricesUnit, coordinateUnit, limitsUnit, applicationsUnit, integralUnit];

@@ -9,10 +9,6 @@ import type { Area } from "./statistics";
 
 /** Sections still to be written, with the chapter each will join. */
 export const MATH_PLANNED: Record<string, { title: string; chapter: string }> = {
-  "indefinite-integrals": { title: "Indefinite integrals & substitution", chapter: "Integral Calculus" },
-  "integration-techniques": { title: "Integration by parts & partial fractions", chapter: "Integral Calculus" },
-  "definite-integrals": { title: "Definite integrals", chapter: "Integral Calculus" },
-  "area-under-curves": { title: "Areas between curves", chapter: "Integral Calculus" },
   "de-basics": { title: "Differential equations: order, degree & formation", chapter: "Differential Equations" },
   "separable-homogeneous": { title: "Separable & homogeneous equations", chapter: "Differential Equations" },
   "linear-de": { title: "Linear first-order equations", chapter: "Differential Equations" },

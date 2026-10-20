@@ -194,6 +194,10 @@ const OVERRIDES: Record<string, IntroSpec> = {
   monotonicity: { kind: "curve", fn: "cubic", a: 1 },
   "maxima-minima": { kind: "surface" },
   "mean-value-theorems": { kind: "curve", fn: "cubic", a: 2 },
+  "indefinite-integrals": { kind: "curve", fn: "chain", a: 0.5 },
+  "integration-techniques": { kind: "curve", fn: "cubic", a: 1.5 },
+  "definite-integrals": { kind: "bars", dist: { type: "values", values: [1, 4, 9, 16, 25, 36], max: 36 } },
+  "area-under-curves": { kind: "bars", dist: { type: "values", values: [2, 3.5, 4.5, 5, 4.5, 3.5, 2], max: 6 } },
 };
 
 const MARKS: Record<string, "mean" | "box" | "spread"> = {

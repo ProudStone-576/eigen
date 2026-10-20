@@ -2,6 +2,7 @@ import type { Template } from "../templates";
 import * as adjointSystems from "./adjoint-systems";
 import * as advancedAsymptotics from "./advanced-asymptotics";
 import * as advancedTimeSeries from "./advanced-time-series";
+import * as areaUnderCurves from "./area-under-curves";
 import * as arima from "./arima";
 import * as arithmeticProgressions from "./arithmetic-progressions";
 import * as asymptotics from "./asymptotics";
@@ -27,6 +28,7 @@ import * as coxModel from "./cox-model";
 import * as dataQuality from "./data-quality";
 import * as dataVariables from "./data-variables";
 import * as decisionTheory from "./decision-theory";
+import * as definiteIntegrals from "./definite-integrals";
 import * as determinantsProperties from "./determinants-properties";
 import * as differentiability from "./differentiability";
 import * as differentiationMethods from "./differentiation-methods";
@@ -53,7 +55,9 @@ import * as heterogeneousEffects from "./heterogeneous-effects";
 import * as hierarchicalModels from "./hierarchical-models";
 import * as highDimensional from "./high-dimensional";
 import * as hyperbola from "./hyperbola";
+import * as indefiniteIntegrals from "./indefinite-integrals";
 import * as induction from "./induction";
+import * as integrationTechniques from "./integration-techniques";
 import * as interpretability from "./interpretability";
 import * as intervalsMore from "./intervals-more";
 import * as inverseTrig from "./inverse-trig";
@@ -141,6 +145,7 @@ const SECTIONS = [
   adjointSystems,
   advancedAsymptotics,
   advancedTimeSeries,
+  areaUnderCurves,
   arima,
   arithmeticProgressions,
   asymptotics,
@@ -166,6 +171,7 @@ const SECTIONS = [
   dataQuality,
   dataVariables,
   decisionTheory,
+  definiteIntegrals,
   determinantsProperties,
   differentiability,
   differentiationMethods,
@@ -192,7 +198,9 @@ const SECTIONS = [
   hierarchicalModels,
   highDimensional,
   hyperbola,
+  indefiniteIntegrals,
   induction,
+  integrationTechniques,
   interpretability,
   intervalsMore,
   inverseTrig,
