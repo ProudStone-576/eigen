@@ -20,12 +20,13 @@ import { multivariateUnit } from "./modelling/multivariate";
 import { timeSeriesUnit } from "./modelling/time-series";
 import { causalUnit } from "./modelling/causal";
 import { survivalUnit } from "./modelling/survival";
+import { learningUnit } from "./modelling/learning";
 import { fromGeneratedId } from "./templates";
 
 export const course: Course = {
   id: "math-for-ml",
   title: "Math for Machine Learning",
-  units: [unit1, unit2, unit3, describingUnit, collectingUnit, unit4, unit5, distributionsUnit, inferenceUnit, estimationUnit, unit6, unit7, evaluationUnit, regressionUnit, anovaUnit, nonparametricUnit, bayesianUnit, multivariateUnit, timeSeriesUnit, causalUnit, survivalUnit],
+  units: [unit1, unit2, unit3, describingUnit, collectingUnit, unit4, unit5, distributionsUnit, inferenceUnit, estimationUnit, unit6, unit7, evaluationUnit, regressionUnit, anovaUnit, nonparametricUnit, bayesianUnit, multivariateUnit, timeSeriesUnit, causalUnit, survivalUnit, learningUnit],
 };
 
 export const allNodes: ConceptNode[] = course.units.flatMap((u) => u.nodes);

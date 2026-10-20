@@ -16,11 +16,6 @@ export const PLANNED: Record<string, { title: string; chapter: string }> = {
   // Bayesian, multivariate
   // Time series, causal, survival
   // Learning, theory, computing, practice
-  "trees-ensembles": { title: "Trees, forests & boosting", chapter: "More Statistical Learning" },
-  "svm-knn-nb": { title: "SVMs, nearest neighbours & naive Bayes", chapter: "More Statistical Learning" },
-  "calibration-imbalance": { title: "Calibration & class imbalance", chapter: "More Statistical Learning" },
-  interpretability: { title: "Interpreting models", chapter: "More Statistical Learning" },
-  "uncertainty-shift": { title: "Conformal prediction & distribution shift", chapter: "More Statistical Learning" },
   sufficiency: { title: "Sufficiency & exponential families", chapter: "Mathematical Statistics" },
   asymptotics: { title: "Asymptotics & the delta method", chapter: "Mathematical Statistics" },
   "decision-theory": { title: "Decision theory", chapter: "Mathematical Statistics" },

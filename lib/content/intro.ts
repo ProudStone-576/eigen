@@ -126,6 +126,11 @@ const OVERRIDES: Record<string, IntroSpec> = {
   "kaplan-meier": { kind: "bars", dist: { type: "values", values: [2, 3, 5, 6, 6, 8, 9, 12, 14, 20], max: 24 }, marks: "box" },
   "cox-model": { kind: "bars", dist: { type: "exponential" }, marks: "mean" },
   "survival-extensions": { kind: "bars", dist: { type: "poisson", lambda: 2 }, marks: "mean" },
+  "trees-ensembles": { kind: "scatter", points: [], fit: "wiggle" },
+  "svm-knn-nb": { kind: "threshold" },
+  "calibration-imbalance": { kind: "threshold", imbalanced: true },
+  interpretability: { kind: "scatter", points: [], fit: "plane" },
+  "uncertainty-shift": { kind: "intervals" },
 };
 
 const MARKS: Record<string, "mean" | "box" | "spread"> = {

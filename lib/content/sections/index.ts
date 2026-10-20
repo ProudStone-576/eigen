@@ -4,6 +4,7 @@ import * as arima from "./arima";
 import * as bayesFactors from "./bayes-factors";
 import * as bayesianInference from "./bayesian-inference";
 import * as bootstrap from "./bootstrap";
+import * as calibrationImbalance from "./calibration-imbalance";
 import * as clustering from "./clustering";
 import * as conjugatePriors from "./conjugate-priors";
 import * as continuousFamily from "./continuous-family";
@@ -25,6 +26,7 @@ import * as glm from "./glm";
 import * as gmmEm from "./gmm-em";
 import * as heterogeneousEffects from "./heterogeneous-effects";
 import * as hierarchicalModels from "./hierarchical-models";
+import * as interpretability from "./interpretability";
 import * as intervalsMore from "./intervals-more";
 import * as jointDistributions from "./joint-distributions";
 import * as kaplanMeier from "./kaplan-meier";
@@ -59,10 +61,13 @@ import * as stationarityAcf from "./stationarity-acf";
 import * as surveyDesign from "./survey-design";
 import * as survivalExtensions from "./survival-extensions";
 import * as survivalFunctions from "./survival-functions";
+import * as svmKnnNb from "./svm-knn-nb";
 import * as transformations from "./transformations";
+import * as treesEnsembles from "./trees-ensembles";
 import * as tsComponents from "./ts-components";
 import * as twoSampleTests from "./two-sample-tests";
 import * as twoWayAnova from "./two-way-anova";
+import * as uncertaintyShift from "./uncertainty-shift";
 
 /**
  * Self-contained sections: each file holds the lesson, its exam-depth material
@@ -75,6 +80,7 @@ const SECTIONS = [
   bayesFactors,
   bayesianInference,
   bootstrap,
+  calibrationImbalance,
   clustering,
   conjugatePriors,
   continuousFamily,
@@ -96,6 +102,7 @@ const SECTIONS = [
   gmmEm,
   heterogeneousEffects,
   hierarchicalModels,
+  interpretability,
   intervalsMore,
   jointDistributions,
   kaplanMeier,
@@ -130,10 +137,13 @@ const SECTIONS = [
   surveyDesign,
   survivalExtensions,
   survivalFunctions,
+  svmKnnNb,
   transformations,
+  treesEnsembles,
   tsComponents,
   twoSampleTests,
   twoWayAnova,
+  uncertaintyShift,
 ];
 
 export const SECTION_TEMPLATES: Record<string, Template[]> = Object.fromEntries(SECTIONS.map((s) => [s.node.id, s.templates]));
