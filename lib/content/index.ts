@@ -36,8 +36,9 @@ export const allNodes: ConceptNode[] = course.units.flatMap((u) => u.nodes);
 const byId = new Map(allNodes.map((n) => [n.id, n]));
 
 // ---------- Cross-references ----------
-// Content cites other sections as §{node-id}; the number is filled in here from the
-// book's current order, so chapters and sections can be reordered without editing text.
+// Content cites other sections as §{node-id}, an authoring token that is never shown: it
+// becomes "Section 4.2", numbered from the book's current order, so chapters and sections
+// can be reordered without editing text.
 
 const sectionNo = new Map<string, string>();
 course.units.forEach((u, ci) => u.nodes.forEach((n, si) => sectionNo.set(n.id, `${ci + 1}.${si + 1}`)));
@@ -46,7 +47,7 @@ export function resolveRefs(text: string): string {
   return text.replace(/§\{([a-z0-9-]+)\}/g, (ref, id: string) => {
     const no = sectionNo.get(id);
     if (!no) throw new Error(`Unknown section reference ${ref}`);
-    return `§${no}`;
+    return `Section ${no}`;
   });
 }
 

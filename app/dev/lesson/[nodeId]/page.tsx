@@ -22,7 +22,7 @@ export default async function LessonPreview({ params }: { params: Promise<{ node
         Part {at.part.roman} · {at.part.track} / Chapter {at.chapter} · {at.unit.title} · <span className="text-[var(--mis)]">dev preview</span>
       </p>
       <h1 className="mt-3 font-serif text-[2.6rem] leading-tight font-semibold">
-        <span className="text-[var(--muted)]">§{at.number}</span> {node.title}
+        <span className="text-[var(--muted)]">{at.number}</span> {node.title}
       </h1>
       <MathText as="p" text={node.summary} className="mt-4 block font-serif text-xl leading-relaxed text-[var(--muted)]" />
       <Section

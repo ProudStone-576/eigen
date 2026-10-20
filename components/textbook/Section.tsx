@@ -245,7 +245,7 @@ export function Section({
               <section key={i} className="my-12">
                 <div className="tb-rule pt-6">
                   <h2 className="font-serif text-2xl font-semibold">Mastery check</h2>
-                  <p className="mt-1 text-[var(--muted)]">Without notes. All correct marks §{number} as mastered and schedules it for review.</p>
+                  <p className="mt-1 text-[var(--muted)]">Without notes. All correct marks section {number} as mastered and schedules it for review.</p>
                 </div>
                 <ol className="mt-6 space-y-8 font-sans text-base">
                   {s.items.map((item, k) => (
@@ -290,14 +290,14 @@ export function Section({
 
       <footer className="tb-rule mt-14 pt-6 font-sans text-base">
         <p>
-          <span className="tb-label">Status of §{number}</span> <span className="ml-2 font-medium">{STATUS_WORD[status]}</span>
+          <span className="tb-label">Status of section {number}</span> <span className="ml-2 font-medium">{STATUS_WORD[status]}</span>
         </p>
         {STATUS_NOTE[status] && <p className="mt-1 text-[var(--muted)]">{STATUS_NOTE[status]}</p>}
         <div className="mt-5 flex flex-wrap gap-3">
-          <Link href={`/practice/${nodeId}`} className="btn-ghost">Practise §{number}</Link>
+          <Link href={`/practice/${nodeId}`} className="btn-ghost">Practise section {number}</Link>
           {nextNode && (
             <Link href={`/learn/${nextNode.id}`} className="btn">
-              §{nextNode.number} {nextNode.title} →
+              {nextNode.number} {nextNode.title} →
             </Link>
           )}
         </div>

@@ -13,7 +13,7 @@ import { tutorEnabled } from "@/lib/tutor";
 export async function generateMetadata({ params }: { params: Promise<{ nodeId: string }> }) {
   const { nodeId } = await params;
   const node = getNode(nodeId);
-  return { title: node ? `§${sectionNumber(nodeId)} ${node.title}` : "Section" };
+  return { title: node ? `${sectionNumber(nodeId)} ${node.title}` : "Section" };
 }
 
 export default async function LessonPage({ params }: { params: Promise<{ nodeId: string }> }) {
@@ -40,14 +40,14 @@ export default async function LessonPage({ params }: { params: Promise<{ nodeId:
       <div className="mx-auto max-w-2xl py-6">
         {crumbs}
         <h1 className="mt-3 font-serif text-4xl font-semibold">
-          §{at.number} {node.title}
+          {at.number} {node.title}
         </h1>
         <p className="mt-6 tb">This section assumes the following. Learn them first:</p>
         <ul className="mt-3 space-y-1 tb">
           {missing.map((d) => (
             <li key={d.id}>
               <Link href={`/learn/${d.id}`} className="text-[var(--accent)] hover:underline underline-offset-4">
-                §{sectionNumber(d.id)} {d.title}
+                {sectionNumber(d.id)} {d.title}
               </Link>
             </li>
           ))}
@@ -73,7 +73,7 @@ export default async function LessonPage({ params }: { params: Promise<{ nodeId:
       <div>
         {crumbs}
         <h1 className="mt-3 font-serif text-[2.6rem] leading-tight font-semibold">
-          <span className="text-[var(--muted)]">§{at.number}</span> {node.title}
+          <span className="text-[var(--muted)]">{at.number}</span> {node.title}
         </h1>
         <MathText as="p" text={node.summary} className="mt-4 block font-serif text-xl leading-relaxed text-[var(--muted)]" />
         <Section
@@ -124,7 +124,7 @@ export default async function LessonPage({ params }: { params: Promise<{ nodeId:
                 {node.deps.map((d) => (
                   <li key={d}>
                     <Link href={`/learn/${d}`} className="hover:text-[var(--accent)]">
-                      §{sectionNumber(d)} {getNode(d)?.title}
+                      {sectionNumber(d)} {getNode(d)?.title}
                     </Link>
                   </li>
                 ))}
@@ -135,13 +135,13 @@ export default async function LessonPage({ params }: { params: Promise<{ nodeId:
             <p className="tb-label">Chapter {chapterNumber(at.unit)}</p>
             {at.unit.nodes.map((n) => (
               <Link key={n.id} href={`/learn/${n.id}`} className={`block ${n.id === node.id ? "font-medium text-[var(--fg)]" : "text-[var(--muted)] hover:text-[var(--fg)]"}`}>
-                §{sectionNumber(n.id)} {n.title}
+                {sectionNumber(n.id)} {n.title}
               </Link>
             ))}
           </div>
           {prev && (
             <Link href={`/learn/${prev.id}`} className="block text-[var(--muted)] hover:text-[var(--fg)]">
-              ← §{sectionNumber(prev.id)} {prev.title}
+              ← {sectionNumber(prev.id)} {prev.title}
             </Link>
           )}
         </div>

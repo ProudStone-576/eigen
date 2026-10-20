@@ -3,7 +3,7 @@ import { mcNumbers, r2 } from "../generators";
 import type { Template } from "../templates";
 import type { ConceptNode, Item } from "../types";
 
-/** §4.4 Weighted, geometric, harmonic and trimmed means; grouped mean and mode. */
+/** Weighted, geometric, harmonic and trimmed means; grouped mean and mode. */
 
 /** Accepts 3 decimal places. */
 const dp = (id: string, prompt: string, value: number, explain: string) => num(id, `${prompt} Give 3 decimal places.`, value, explain, 0.0006);

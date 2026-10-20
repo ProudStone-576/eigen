@@ -3,7 +3,7 @@ import { mcNumbers, r2 } from "../generators";
 import type { Template } from "../templates";
 import type { ConceptNode, Item } from "../types";
 
-/** §4.2 Frequency tables, histograms, ogives and grouped percentiles. */
+/** Frequency tables, histograms, ogives and grouped percentiles. */
 
 const base: ConceptNode = {
   id: "frequency-tables",

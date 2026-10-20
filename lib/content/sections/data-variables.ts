@@ -3,7 +3,7 @@ import { mcNumbers } from "../generators";
 import type { Template } from "../templates";
 import type { ConceptNode } from "../types";
 
-/** §4.1 Data, variables and measurement scales. */
+/** Data, variables and measurement scales. */
 
 const base: ConceptNode = {
   id: "data-variables",

@@ -66,7 +66,7 @@ export function SyllabusView({ name, streakDays, statusOf, unlockedIds, due, ass
         {cont && (
           <AgendaRow label="Continue" action={<Link href={`/learn/${cont.id}`} className="link-more">Open</Link>}>
             <Link href={`/learn/${cont.id}`} className="hover:text-[var(--accent)]">
-              §{sectionNumber(cont.id)} {cont.title}
+              {sectionNumber(cont.id)} {cont.title}
             </Link>
           </AgendaRow>
         )}
@@ -76,7 +76,7 @@ export function SyllabusView({ name, streakDays, statusOf, unlockedIds, due, ass
             <span className="text-[var(--muted)]">
               {due
                 .slice(0, 4)
-                .map((id) => `§${sectionNumber(id)} ${getNode(id)?.title}`)
+                .map((id) => `${sectionNumber(id)} ${getNode(id)?.title}`)
                 .join(", ")}
               {due.length > 4 ? ", …" : ""}
             </span>
@@ -90,7 +90,7 @@ export function SyllabusView({ name, streakDays, statusOf, unlockedIds, due, ass
               label="Assigned"
               action={
                 next && unlocked(next.id) ? (
-                  <Link href={`/learn/${next.id}`} className="link-more">§{sectionNumber(next.id)}</Link>
+                  <Link href={`/learn/${next.id}`} className="link-more">{sectionNumber(next.id)}</Link>
                 ) : !next && a.unitId && !pr.exam ? (
                   <Link href={`/exam/${a.unitId}`} className="link-more">Take the test</Link>
                 ) : null
@@ -107,7 +107,7 @@ export function SyllabusView({ name, streakDays, statusOf, unlockedIds, due, ass
         })}
         {struggling.map((s) => (
           <AgendaRow key={s.id} label="Revisit" action={<Link href={`/practice/${s.id}`} className="link-more">Practise</Link>}>
-            §{sectionNumber(s.id)} {s.title} <span className="text-[var(--muted)]">· {s.reason}</span>
+            {sectionNumber(s.id)} {s.title} <span className="text-[var(--muted)]">· {s.reason}</span>
           </AgendaRow>
         ))}
         <AgendaRow label="Tests" action={<Link href="/exam" className="link-more">Tests</Link>}>
@@ -159,7 +159,7 @@ export function SyllabusView({ name, streakDays, statusOf, unlockedIds, due, ass
                             <span className="dotleader" aria-hidden />
                             <span className={`shrink-0 text-sm ${TONE[st]}`}>
                               {WORD[st]}
-                              {needs.length > 0 && <span className="hidden sm:inline"> · needs §{sectionNumber(needs[0])}</span>}
+                              {needs.length > 0 && <span className="hidden sm:inline"> · needs {sectionNumber(needs[0])}</span>}
                             </span>
                           </>
                         );

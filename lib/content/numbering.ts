@@ -3,7 +3,7 @@ import type { Unit } from "./types";
 
 /**
  * Book structure: tracks are Parts (I, II, …), units are Chapters numbered
- * through the whole book, concepts are sections §chapter.section.
+ * through the whole book, concepts are sections numbered chapter.section.
  */
 
 const ROMAN = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII"];

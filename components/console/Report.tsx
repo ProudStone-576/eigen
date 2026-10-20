@@ -87,7 +87,7 @@ export function Report({ data, exportHref }: { data: Data; exportHref: string })
                 {hardest.map((h) => (
                   <tr key={h.nodeId}>
                     <td>
-                      <span className="tabular-nums text-[var(--muted)] mr-2">§{sectionNumber(h.nodeId)}</span>
+                      <span className="tabular-nums text-[var(--muted)] mr-2">{sectionNumber(h.nodeId)}</span>
                       {h.title}
                     </td>
                     <td className="num">{h.total}</td>

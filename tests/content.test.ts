@@ -115,7 +115,7 @@ it("getNode resolves", () => expect(getNode("vector")?.title).toBeTruthy());
 
 it("every §{id} cross-reference is resolved to the section's current number", () => {
   expect(JSON.stringify(allNodes)).not.toMatch(/§\{/);
-  expect(resolveRefs("see §{variance}")).toBe(`see §${sectionNumber("variance")}`);
+  expect(resolveRefs("see §{variance}")).toBe(`see Section ${sectionNumber("variance")}`);
   expect(() => resolveRefs("§{no-such-section}")).toThrow();
 });
 

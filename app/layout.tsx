@@ -13,7 +13,7 @@ import { MobileMenu, type NavLink } from "@/components/nav/MobileMenu";
 const serif = Source_Serif_4({ subsets: ["latin"], variable: "--font-source-serif", display: "swap", style: ["normal", "italic"] });
 
 const SEARCH: SearchEntry[] = course.units.flatMap((u, ci) =>
-  u.nodes.map((n, si) => ({ id: n.id, title: n.title, where: `§${ci + 1}.${si + 1} · ${u.track} · ${u.title}`, terms: n.glossary.map((g) => g.term) })),
+  u.nodes.map((n, si) => ({ id: n.id, title: n.title, where: `${ci + 1}.${si + 1} · ${u.track} · ${u.title}`, terms: n.glossary.map((g) => g.term) })),
 );
 
 export const metadata: Metadata = {
