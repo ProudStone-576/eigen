@@ -155,6 +155,15 @@ const OVERRIDES: Record<string, IntroSpec> = {
   quadratics: { kind: "curve", fn: "square", a: 1 },
   "plane-geometry": { kind: "vectors", op: "add", v: [3, 1], w: [1, 2] },
   mensuration: { kind: "lattice" },
+  "sets-relations": { kind: "people", mode: "table-same" },
+  "functions-basics": { kind: "scatter", points: [[-2, 4.1], [-1, 1.2], [0, 0.1], [1, 0.9], [2, 4.2], [3, 8.8]], fit: "wiggle" },
+  "function-graphs": { kind: "curve", fn: "cubic", a: 1 },
+  "composition-inverse": { kind: "plane", m: [[0, 1], [1, 0]], firstName: "reflect in y = x" },
+  "trig-ratios": { kind: "plane", m: [[0.866, -0.5], [0.5, 0.866]], firstName: "rotate 30°" },
+  "trig-identities": { kind: "plane", m: [[0.866, -0.5], [0.5, 0.866]], then: [[0.707, -0.707], [0.707, 0.707]], firstName: "rotate 30°", thenName: "rotate 45°" },
+  "trig-equations": { kind: "bars", dist: { type: "values", values: [5, 8, 10, 8, 5, 2, 0, 2, 5, 8, 10, 8, 5], max: 10 }, marks: "mean" },
+  "inverse-trig": { kind: "plane", m: [[0, 1], [1, 0]], firstName: "reflect in y = x" },
+  "triangles-trig": { kind: "vectors", op: "add", v: [4, 1], w: [-1, 3] },
 };
 
 const MARKS: Record<string, "mean" | "box" | "spread"> = {

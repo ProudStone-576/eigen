@@ -9,6 +9,7 @@ import * as bootstrap from "./bootstrap";
 import * as calibrationImbalance from "./calibration-imbalance";
 import * as clinicalEpi from "./clinical-epi";
 import * as clustering from "./clustering";
+import * as compositionInverse from "./composition-inverse";
 import * as conjugatePriors from "./conjugate-priors";
 import * as continuousFamily from "./continuous-family";
 import * as counting from "./counting";
@@ -28,6 +29,8 @@ import * as factorAnalysis from "./factor-analysis";
 import * as fisherInformation from "./fisher-information";
 import * as forecasting from "./forecasting";
 import * as frequencyTables from "./frequency-tables";
+import * as functionGraphs from "./function-graphs";
+import * as functionsBasics from "./functions-basics";
 import * as geneticsNetworksText from "./genetics-networks-text";
 import * as glm from "./glm";
 import * as gmmEm from "./gmm-em";
@@ -36,6 +39,7 @@ import * as hierarchicalModels from "./hierarchical-models";
 import * as highDimensional from "./high-dimensional";
 import * as interpretability from "./interpretability";
 import * as intervalsMore from "./intervals-more";
+import * as inverseTrig from "./inverse-trig";
 import * as jointDistributions from "./joint-distributions";
 import * as kaplanMeier from "./kaplan-meier";
 import * as kde from "./kde";
@@ -76,6 +80,7 @@ import * as regressionInference from "./regression-inference";
 import * as reproduciblePractice from "./reproducible-practice";
 import * as robustEstimation from "./robust-estimation";
 import * as samplingDistributions from "./sampling-distributions";
+import * as setsRelations from "./sets-relations";
 import * as spatialEnvironmental from "./spatial-environmental";
 import * as sportsForensic from "./sports-forensic";
 import * as spreadMeasures from "./spread-measures";
@@ -88,6 +93,10 @@ import * as survivalFunctions from "./survival-functions";
 import * as svmKnnNb from "./svm-knn-nb";
 import * as transformations from "./transformations";
 import * as treesEnsembles from "./trees-ensembles";
+import * as trianglesTrig from "./triangles-trig";
+import * as trigEquations from "./trig-equations";
+import * as trigIdentities from "./trig-identities";
+import * as trigRatios from "./trig-ratios";
 import * as tsComponents from "./ts-components";
 import * as twoSampleTests from "./two-sample-tests";
 import * as twoWayAnova from "./two-way-anova";
@@ -109,6 +118,7 @@ const SECTIONS = [
   calibrationImbalance,
   clinicalEpi,
   clustering,
+  compositionInverse,
   conjugatePriors,
   continuousFamily,
   counting,
@@ -128,6 +138,8 @@ const SECTIONS = [
   fisherInformation,
   forecasting,
   frequencyTables,
+  functionGraphs,
+  functionsBasics,
   geneticsNetworksText,
   glm,
   gmmEm,
@@ -136,6 +148,7 @@ const SECTIONS = [
   highDimensional,
   interpretability,
   intervalsMore,
+  inverseTrig,
   jointDistributions,
   kaplanMeier,
   kde,
@@ -176,6 +189,7 @@ const SECTIONS = [
   reproduciblePractice,
   robustEstimation,
   samplingDistributions,
+  setsRelations,
   spatialEnvironmental,
   sportsForensic,
   spreadMeasures,
@@ -188,6 +202,10 @@ const SECTIONS = [
   svmKnnNb,
   transformations,
   treesEnsembles,
+  trianglesTrig,
+  trigEquations,
+  trigIdentities,
+  trigRatios,
   tsComponents,
   twoSampleTests,
   twoWayAnova,

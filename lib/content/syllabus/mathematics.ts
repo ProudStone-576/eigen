@@ -9,15 +9,6 @@ import type { Area } from "./statistics";
 
 /** Sections still to be written, with the chapter each will join. */
 export const MATH_PLANNED: Record<string, { title: string; chapter: string }> = {
-  "sets-relations": { title: "Sets & relations", chapter: "Sets, Relations & Functions" },
-  "functions-basics": { title: "Functions: domain, range & types", chapter: "Sets, Relations & Functions" },
-  "function-graphs": { title: "Special functions & graph transformations", chapter: "Sets, Relations & Functions" },
-  "composition-inverse": { title: "Composition, inverses, even, odd & periodic functions", chapter: "Sets, Relations & Functions" },
-  "trig-ratios": { title: "Angles, radians & trigonometric ratios", chapter: "Trigonometry" },
-  "trig-identities": { title: "Trigonometric identities", chapter: "Trigonometry" },
-  "trig-equations": { title: "Trigonometric equations", chapter: "Trigonometry" },
-  "inverse-trig": { title: "Inverse trigonometric functions", chapter: "Trigonometry" },
-  "triangles-trig": { title: "Solving triangles", chapter: "Trigonometry" },
   "complex-algebra": { title: "Complex numbers & the Argand plane", chapter: "Complex Numbers" },
   "complex-polar": { title: "Polar form & De Moivre's theorem", chapter: "Complex Numbers" },
   "roots-of-unity": { title: "Roots of unity", chapter: "Complex Numbers" },

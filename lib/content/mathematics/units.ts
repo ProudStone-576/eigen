@@ -6,6 +6,15 @@ import { node as polynomials } from "../sections/polynomials";
 import { node as quadratics } from "../sections/quadratics";
 import { node as planeGeometry } from "../sections/plane-geometry";
 import { node as mensuration } from "../sections/mensuration";
+import { node as setsRelations } from "../sections/sets-relations";
+import { node as functionsBasics } from "../sections/functions-basics";
+import { node as functionGraphs } from "../sections/function-graphs";
+import { node as compositionInverse } from "../sections/composition-inverse";
+import { node as trigRatios } from "../sections/trig-ratios";
+import { node as trigIdentities } from "../sections/trig-identities";
+import { node as trigEquations } from "../sections/trig-equations";
+import { node as inverseTrig } from "../sections/inverse-trig";
+import { node as trianglesTrig } from "../sections/triangles-trig";
 
 /** Part I: the exam mathematics syllabus (JEE Main and Advanced, SAT), in teaching order. */
 
@@ -25,4 +34,20 @@ export const geometryUnit: Unit = {
   nodes: [planeGeometry, mensuration],
 };
 
-export const mathematicsUnits: Unit[] = [algebraUnit, geometryUnit];
+export const functionsUnit: Unit = {
+  id: "ma-3",
+  track: "Mathematics",
+  title: "Sets, Relations & Functions",
+  blurb: "Sets and counting with Venn diagrams, relations and equivalence classes, functions with their domains and ranges, special graphs and transformations, composition and inverses.",
+  nodes: [setsRelations, functionsBasics, functionGraphs, compositionInverse],
+};
+
+export const trigUnit: Unit = {
+  id: "ma-4",
+  track: "Mathematics",
+  title: "Trigonometry",
+  blurb: "Ratios on the unit circle, identities from compound angles, equations and their general solutions, inverse functions, and solving any triangle.",
+  nodes: [trigRatios, trigIdentities, trigEquations, inverseTrig, trianglesTrig],
+};
+
+export const mathematicsUnits: Unit[] = [algebraUnit, geometryUnit, functionsUnit, trigUnit];
