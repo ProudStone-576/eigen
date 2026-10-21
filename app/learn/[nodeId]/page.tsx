@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { requireOrg } from "@/lib/auth/context";
+import { opensEverySection } from "@/lib/auth/permissions";
 import { notFound } from "next/navigation";
 import { MathText } from "@/components/MathText";
 import { Section, STATUS_WORD } from "@/components/textbook/Section";
@@ -21,9 +22,12 @@ export default async function LessonPage({ params }: { params: Promise<{ nodeId:
   const node = getNode(nodeId);
   const at = node && locate(node.id);
   if (!node || !at) notFound();
-  const user = (await requireOrg()).user;
+  const ctx = await requireOrg();
+  const user = ctx.user;
+  const openAll = opensEverySection(ctx.role, user.platformAdmin);
   const progress = await loadProgress(user.id);
   const status = statusIn(progress);
+  const previewing = openAll && !unlocked(node.id, progress);
 
   const crumbs = (
     <p className="tb-label">
@@ -31,7 +35,7 @@ export default async function LessonPage({ params }: { params: Promise<{ nodeId:
     </p>
   );
 
-  if (!unlocked(node.id, progress)) {
+  if (!unlocked(node.id, progress, openAll)) {
     const missing = node.deps.flatMap((id) => {
       const d = getNode(id);
       return d && !["LANDED", "SOLID"].includes(status(id)) ? [d] : [];
@@ -76,6 +80,7 @@ export default async function LessonPage({ params }: { params: Promise<{ nodeId:
           <span className="text-[var(--muted)]">{at.number}</span> {node.title}
         </h1>
         <MathText as="p" text={node.summary} className="mt-4 block font-serif text-xl leading-relaxed text-[var(--muted)]" />
+        {previewing && <p className="mt-4 text-sm text-[var(--muted)]">Admin view: opened before its prerequisites. Students see this section once they have learned {node.deps.filter((d) => !["LANDED", "SOLID"].includes(status(d))).map((d) => sectionNumber(d)).join(", ")}.</p>}
         <Section
           nodeId={node.id}
           number={at.number}

@@ -41,10 +41,12 @@ export type SyllabusData = {
   due: string[];
   assigned: { a: { id: string; title: string; note: string | null; dueAt: Date | null; unitId: string | null }; pr: ReturnType<typeof assignmentProgress> }[];
   struggling: { id: string; title: string; reason: string }[];
+  /** Admin view: every section is open regardless of prerequisites. */
+  openAll?: boolean;
 };
 
 /** The syllabus page, given plain data (also rendered by the dev preview). */
-export function SyllabusView({ name, streakDays, statusOf, unlockedIds, due, assigned, struggling }: SyllabusData) {
+export function SyllabusView({ name, streakDays, statusOf, unlockedIds, due, assigned, struggling, openAll = false }: SyllabusData) {
   const open = new Set(unlockedIds);
   const status = (id: string): Status => statusOf[id] ?? "UNKNOWN";
   const unlocked = (id: string) => open.has(id);
@@ -60,6 +62,7 @@ export function SyllabusView({ name, streakDays, statusOf, unlockedIds, due, ass
         <p className="mt-2 text-[var(--muted)]">
           {user.name} · {mastered} of {allNodes.length} sections mastered{user.streakDays > 0 ? ` · ${user.streakDays}-day streak` : ""}
         </p>
+        {openAll && <p className="mt-2 text-sm text-[var(--muted)]">Admin view: every section is open, whatever its prerequisites. Students still unlock sections in order.</p>}
       </header>
 
       <ul className="mt-8 border-y border-[var(--rule)]">

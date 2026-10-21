@@ -7,6 +7,7 @@ import { hashPassword, verifyPassword } from "@/lib/auth/password";
 import { createSession, currentSession, currentUser, destroyAllSessions, destroySession, SESSION_COOKIE, setSessionOrg, type SessionUser } from "@/lib/auth/session";
 import { cookies } from "next/headers";
 import { currentContext } from "@/lib/auth/context";
+import { opensEverySection } from "@/lib/auth/permissions";
 import { safeNext } from "@/lib/auth/redirect";
 import { clientIp, rateLimit } from "@/lib/security/rateLimit";
 import { audit } from "@/lib/audit";
@@ -195,27 +196,27 @@ const responseSchema: z.ZodType<Response> = z.discriminatedUnion("kind", [
 ]);
 
 /** A signed-in member of an organisation, or the error a learner action returns. */
-async function learner(): Promise<{ user: SessionUser; orgId: string } | { error: string }> {
+async function learner(): Promise<{ user: SessionUser; orgId: string; openAll: boolean } | { error: string }> {
   const ctx = await currentContext();
   if (!ctx) return { error: "Your session ended. Log in again." };
   if (!ctx.org) return { error: "Join a class to continue: Account, then Join a class." };
-  return { user: ctx.user, orgId: ctx.org.id };
+  return { user: ctx.user, orgId: ctx.org.id, openAll: opensEverySection(ctx.role, ctx.user.platformAdmin) };
 }
 
 export async function nextPractice(input: { nodeId: string; index: number }): Promise<PracticeQuestion | { error: string }> {
   const l = await learner();
   if ("error" in l) return l;
-  const { user, orgId } = l;
+  const { user, orgId, openAll } = l;
   const index = Number.isInteger(input.index) && input.index >= 0 ? input.index : 0;
-  return nextPracticeQuestion(user.id, String(input.nodeId), index, orgId);
+  return nextPracticeQuestion(user.id, String(input.nodeId), index, orgId, openAll);
 }
 
 export async function startExam(input: { scope: string }): Promise<ExamPaper> {
   const l = await learner();
   if ("error" in l) return l;
-  const { user, orgId } = l;
+  const { user, openAll } = l;
   const scope = String(input.scope);
-  return buildExam(user.id, scope === "mock" ? { kind: "mock" } : { kind: "unit", unitId: scope });
+  return buildExam(user.id, scope === "mock" ? { kind: "mock" } : { kind: "unit", unitId: scope }, openAll);
 }
 
 export async function submitExam(input: { scope?: string; durationSec?: number; answers: ExamAnswer[]; timeZone?: string }): Promise<ExamResult | { error: string }> {

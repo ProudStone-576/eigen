@@ -1,15 +1,17 @@
 import Link from "next/link";
 import { requireOrg } from "@/lib/auth/context";
+import { opensEverySection } from "@/lib/auth/permissions";
 import { course } from "@/lib/content";
 import { loadProgress, statusIn, unlocked } from "@/lib/learning/progress";
 
 export const metadata = { title: "Tests" };
 
 export default async function ExamHome() {
-  const user = (await requireOrg()).user;
-  const map = await loadProgress(user.id);
+  const ctx = await requireOrg();
+  const openAll = opensEverySection(ctx.role, ctx.user.platformAdmin);
+  const map = await loadProgress(ctx.user.id);
   const status = statusIn(map);
-  const learned = course.units.flatMap((u) => u.nodes).filter((n) => unlocked(n.id, map) && status(n.id) !== "UNKNOWN").length;
+  const learned = course.units.flatMap((u) => u.nodes).filter((n) => unlocked(n.id, map, openAll) && status(n.id) !== "UNKNOWN").length;
 
   return (
     <div className="max-w-3xl mx-auto space-y-6">
@@ -36,7 +38,7 @@ export default async function ExamHome() {
         <h2 className="text-xl font-bold">Unit tests</h2>
         <div className="grid sm:grid-cols-2 gap-3">
           {course.units.map((u) => {
-            const open = u.nodes.filter((n) => unlocked(n.id, map)).length;
+            const open = u.nodes.filter((n) => unlocked(n.id, map, openAll)).length;
             return (
               <div key={u.id} className="card p-4! space-y-2">
                 <p className="text-xs uppercase tracking-widest text-[var(--accent)]">{u.track}</p>

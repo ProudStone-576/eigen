@@ -43,21 +43,21 @@ function questionsFor(nodeId: string, count: number, hard: boolean): PublicItem[
   return out;
 }
 
-export async function buildExam(userId: string, scope: ExamScope): Promise<ExamPaper> {
+export async function buildExam(userId: string, scope: ExamScope, openAll = false): Promise<ExamPaper> {
   const map = await loadProgress(userId);
   const status = statusIn(map);
 
   if (scope.kind === "unit") {
     const unit = course.units.find((u) => u.id === scope.unitId);
     if (!unit) return { error: "Unknown unit." };
-    const open = unit.nodes.filter((n) => unlocked(n.id, map));
+    const open = unit.nodes.filter((n) => unlocked(n.id, map, openAll));
     if (open.length === 0) return { error: "Unlock at least one concept in this unit first." };
     const questions = shuffle(open.flatMap((n) => questionsFor(n.id, 2, false).map((item) => ({ nodeId: n.id, title: n.title, item }))));
     return { title: `Unit test: ${unit.title}`, questions: questions.slice(0, 16) };
   }
 
   // Mock exam: everything learned so far, weighted towards what's weakest.
-  const learned = course.units.flatMap((u) => u.nodes).filter((n) => unlocked(n.id, map) && status(n.id) !== "UNKNOWN");
+  const learned = course.units.flatMap((u) => u.nodes).filter((n) => unlocked(n.id, map, openAll) && status(n.id) !== "UNKNOWN");
   if (learned.length < 3) return { error: "Learn at least three concepts before a mock exam." };
   const weight = (s: Status) => (s === "MISCONCEPTION" ? 3 : s === "EDGE" ? 3 : s === "LANDED" ? 2 : 1);
   const bag = learned.flatMap((n) => Array(weight(status(n.id))).fill(n));

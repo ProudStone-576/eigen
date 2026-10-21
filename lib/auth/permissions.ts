@@ -20,6 +20,12 @@ export const atLeast = (role: OrgRole, min: OrgRole) => RANK[role] >= RANK[min];
 export const isStaff = (role: OrgRole) => atLeast(role, "TEACHER");
 export const isAdmin = (role: OrgRole) => atLeast(role, "ADMIN");
 
+/**
+ * Platform admins and organisation admins open every section whatever its
+ * prerequisites, to review content; teachers and students follow the order.
+ */
+export const opensEverySection = (role: OrgRole | null, platformAdmin: boolean) => platformAdmin || (!!role && isAdmin(role));
+
 /** Organisation-wide abilities that don't depend on a particular class or person. */
 export type OrgAction =
   | "members.view"

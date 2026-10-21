@@ -27,9 +27,10 @@ export async function loadProgress(userId: string): Promise<ProgressMap> {
 
 export const statusIn = (map: ProgressMap) => (id: string): Status => map.get(id)?.status ?? "UNKNOWN";
 
-export function unlocked(nodeId: string, map: ProgressMap): boolean {
+/** Whether a section is open: its prerequisites are learned, or `openAll` (admins, see opensEverySection). */
+export function unlocked(nodeId: string, map: ProgressMap, openAll = false): boolean {
   const node = getNode(nodeId);
-  return !!node && isUnlocked(node.deps, statusIn(map));
+  return !!node && (openAll || isUnlocked(node.deps, statusIn(map)));
 }
 
 export function dueNodes(map: ProgressMap, now = new Date()): string[] {

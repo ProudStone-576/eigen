@@ -7,6 +7,7 @@ import {
   canManageMember,
   canResetPassword,
   canViewStudent,
+  opensEverySection,
   ORG_ROLES,
   roleChangeError,
   type OrgAction,
@@ -37,6 +38,16 @@ describe("permissions", () => {
     expect(can("TEACHER", "classes.create")).toBe(true);
     expect(can("TEACHER", "content.edit")).toBe(true);
     for (const a of ["members.manage", "invites.manage", "audit.view", "org.settings", "classes.viewAll", "analytics.org"] as OrgAction[]) expect(can("TEACHER", a), a).toBe(false);
+  });
+
+  it("admins open every section; teachers and students follow the prerequisites", () => {
+    expect(opensEverySection("OWNER", false)).toBe(true);
+    expect(opensEverySection("ADMIN", false)).toBe(true);
+    expect(opensEverySection("TEACHER", false)).toBe(false);
+    expect(opensEverySection("STUDENT", false)).toBe(false);
+    expect(opensEverySection("STUDENT", true)).toBe(true);
+    expect(opensEverySection(null, true)).toBe(true);
+    expect(opensEverySection(null, false)).toBe(false);
   });
 
   it("teachers manage only the classes they teach; admins manage all", () => {

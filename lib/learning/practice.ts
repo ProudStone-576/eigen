@@ -93,11 +93,11 @@ async function pickFor(node: ConceptNode, misconception: string | null, level: L
   return generate(node.id, freshSeed(), { template: nextTemplate(node.id, lastTemplate), level }) ?? staticPool(node)[randomInt(staticPool(node).length)];
 }
 
-export async function nextPracticeQuestion(userId: string, nodeId: string, index: number, orgId: string | null): Promise<PracticeQuestion | { error: string }> {
+export async function nextPracticeQuestion(userId: string, nodeId: string, index: number, orgId: string | null, openAll = false): Promise<PracticeQuestion | { error: string }> {
   const node = getNode(nodeId);
   if (!node) return { error: "Unknown concept." };
   const map = await loadProgress(userId);
-  if (!unlocked(node.id, map)) return { error: "Finish the concepts this one depends on first." };
+  if (!unlocked(node.id, map, openAll)) return { error: "Finish the concepts this one depends on first." };
 
   const prereqs = ancestors(node);
   const mixIn = prereqs.length > 0 && index % 3 === 2;
@@ -132,7 +132,7 @@ export async function nextPracticeQuestion(userId: string, nodeId: string, index
  * Concepts a student is struggling with: a live misconception, or two or more
  * wrong answers in the last two weeks on a concept that isn't solid.
  */
-export async function strugglingNodes(userId: string): Promise<{ id: string; title: string; reason: string }[]> {
+export async function strugglingNodes(userId: string, openAll = false): Promise<{ id: string; title: string; reason: string }[]> {
   const map = await loadProgress(userId);
   const since = new Date(Date.now() - 14 * 86_400_000);
   const misses = await prisma.attempt.groupBy({
@@ -144,7 +144,7 @@ export async function strugglingNodes(userId: string): Promise<{ id: string; tit
   const out: { id: string; title: string; reason: string }[] = [];
   for (const [id, p] of map) {
     const node = getNode(id);
-    if (!node || !unlocked(id, map)) continue;
+    if (!node || !unlocked(id, map, openAll)) continue;
     if (p.status === "MISCONCEPTION") {
       out.push({ id, title: node.title, reason: node.misconceptions[p.misconceptionId ?? ""] ?? "A mix-up to untangle." });
     } else if (p.status !== "SOLID" && (missCount.get(id) ?? 0) >= 2) {

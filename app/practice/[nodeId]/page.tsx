@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { requireOrg } from "@/lib/auth/context";
+import { opensEverySection } from "@/lib/auth/permissions";
 import { notFound } from "next/navigation";
 import { getNode } from "@/lib/content";
 import { loadProgress, statusIn, unlocked } from "@/lib/learning/progress";
@@ -16,9 +17,10 @@ export default async function PracticePage({ params }: { params: Promise<{ nodeI
   const { nodeId } = await params;
   const node = getNode(nodeId);
   if (!node) notFound();
-  const user = (await requireOrg()).user;
+  const ctx = await requireOrg();
+  const user = ctx.user;
   const progress = await loadProgress(user.id);
-  if (!unlocked(node.id, progress)) {
+  if (!unlocked(node.id, progress, opensEverySection(ctx.role, user.platformAdmin))) {
     return (
       <div className="card max-w-lg mx-auto text-center space-y-4">
         <p>Land the concepts this builds on first.</p>

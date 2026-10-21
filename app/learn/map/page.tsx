@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { requireOrg } from "@/lib/auth/context";
+import { opensEverySection } from "@/lib/auth/permissions";
 import { ConceptMap, STATUS_STYLE } from "@/components/ConceptMap";
 import { course } from "@/lib/content";
 import { chapterNumber } from "@/lib/content/numbering";
@@ -10,8 +11,9 @@ export const metadata = { title: "Dependency map" };
 
 /** The prerequisite graph of every chapter, for students who like to see how sections connect. */
 export default async function MapPage() {
-  const user = (await requireOrg()).user;
-  const progress = await loadProgress(user.id);
+  const ctx = await requireOrg();
+  const openAll = opensEverySection(ctx.role, ctx.user.platformAdmin);
+  const progress = await loadProgress(ctx.user.id);
   const status = statusIn(progress);
   return (
     <div className="mx-auto max-w-5xl space-y-10">
@@ -29,7 +31,7 @@ export default async function MapPage() {
         </ul>
       </div>
       {course.units.map((u) => {
-        const state: Record<string, Status | "LOCKED"> = Object.fromEntries(u.nodes.map((n) => [n.id, unlocked(n.id, progress) ? status(n.id) : "LOCKED"]));
+        const state: Record<string, Status | "LOCKED"> = Object.fromEntries(u.nodes.map((n) => [n.id, unlocked(n.id, progress, openAll) ? status(n.id) : "LOCKED"]));
         return (
           <section key={u.id}>
             <h2 className="font-serif text-xl font-semibold">
