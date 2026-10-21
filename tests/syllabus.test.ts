@@ -1,11 +1,13 @@
 import { describe, expect, it } from "vitest";
 import { getNode } from "@/lib/content";
 import { MATH_PLANNED, MATHEMATICS_SYLLABUS } from "@/lib/content/syllabus/mathematics";
+import { ML_PLANNED, ML_SYLLABUS } from "@/lib/content/syllabus/ml";
 import { PLANNED, STATISTICS_SYLLABUS, type Area } from "@/lib/content/syllabus/statistics";
 
 const maps: { name: string; areas: Area[]; planned: Record<string, unknown> }[] = [
   { name: "Statistics", areas: STATISTICS_SYLLABUS, planned: PLANNED },
   { name: "Mathematics", areas: MATHEMATICS_SYLLABUS, planned: MATH_PLANNED },
+  { name: "Machine learning", areas: ML_SYLLABUS, planned: ML_PLANNED },
 ];
 
 for (const { name, areas, planned } of maps) {
