@@ -6,6 +6,11 @@ import { FigurePlate } from "@/components/intro/FigurePlate";
 import { allNodes, getNode, publicSteps } from "@/lib/content";
 import { introCaption, introFor } from "@/lib/content/intro";
 import { locate, sectionNumber } from "@/lib/content/numbering";
+import { ChapterContents } from "@/components/course/ChapterContents";
+import { LessonFrame } from "@/components/course/LessonFrame";
+import type { CellState } from "@/components/course/Mastery";
+
+const SAMPLE: CellState[] = ["SOLID", "LANDED", "EDGE", "MISCONCEPTION", "UNKNOWN", "LOCKED"];
 
 /** Development-only preview of a section as a student sees it (no account; answers won't save). 404s in production. */
 export default async function LessonPreview({ params }: { params: Promise<{ nodeId: string }> }) {
@@ -17,7 +22,7 @@ export default async function LessonPreview({ params }: { params: Promise<{ node
   const next = allNodes[i + 1] ?? null;
   const spec = introFor(node);
   return (
-    <div className="mx-auto max-w-[44rem]">
+    <LessonFrame panel={<ChapterContents unit={at.unit} node={node} state={(id) => SAMPLE[at.unit.nodes.findIndex((n) => n.id === id) % SAMPLE.length]} counts="Sample margin note" />}>
       <p className="tb-label">
         Part {at.part.roman} · {at.part.track} / Chapter {at.chapter} · {at.unit.title} · <span className="text-[var(--mis)]">dev preview</span>
       </p>
@@ -39,6 +44,6 @@ export default async function LessonPreview({ params }: { params: Promise<{ node
         {i > 0 && <Link href={`/dev/lesson/${allNodes[i - 1].id}`}>← preview previous</Link>}{" "}
         {next && <Link href={`/dev/lesson/${next.id}`}>preview next →</Link>}
       </p>
-    </div>
+    </LessonFrame>
   );
 }

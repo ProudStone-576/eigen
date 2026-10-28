@@ -27,7 +27,7 @@ export function MobileMenu({ links, name }: { links: NavLink[]; name: string }) 
         </svg>
       </button>
       {open && (
-        <div className="fixed inset-x-0 top-12 z-[90] border-b border-[var(--border)] bg-[var(--bg)] px-4 pb-6 pt-2 shadow-xl">
+        <div className="fixed inset-x-0 top-14 z-[90] border-b border-[var(--border)] bg-[var(--bg)] px-4 pb-6 pt-2 shadow-xl">
           <p className="py-2 text-xs text-[var(--muted)]">{name}</p>
           <nav className="flex flex-col">
             {links.map((l) => (

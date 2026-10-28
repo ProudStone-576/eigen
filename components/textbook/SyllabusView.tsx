@@ -2,6 +2,7 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 import { allNodes, getNode } from "@/lib/content";
 import { chapterNumber, parts, sectionNumber } from "@/lib/content/numbering";
+import { chapterHref, courseHref } from "@/lib/content/catalog";
 import type { Status } from "@/lib/learning/rules";
 import type { assignmentProgress } from "@/lib/learning/summary";
 
@@ -126,7 +127,9 @@ export function SyllabusView({ name, streakDays, statusOf, unlockedIds, due, ass
             <section key={part.track}>
               <div className="flex items-baseline justify-between border-b border-[var(--fg)] pb-2">
                 <h2 className="font-serif text-2xl font-semibold">
-                  <span className="text-[var(--muted)]">Part {part.roman}</span> {part.track}
+                  <Link href={courseHref(part)} className="hover:text-[var(--accent)]">
+                    <span className="text-[var(--muted)]">Part {part.roman}</span> {part.track}
+                  </Link>
                 </h2>
                 <span className="text-sm tabular-nums text-[var(--muted)]">
                   {done} / {nodes.length} mastered
@@ -140,12 +143,15 @@ export function SyllabusView({ name, streakDays, statusOf, unlockedIds, due, ass
                   <div key={u.id} className="mt-7">
                     <div className="flex items-baseline justify-between gap-4">
                       <h3 className="font-serif text-lg font-semibold">
-                        Chapter {ch} <span className="font-normal">· {u.title}</span>
+                        <Link href={chapterHref(u)} className="hover:text-[var(--accent)]">
+                          Chapter {ch} <span className="font-normal">· {u.title}</span>
+                        </Link>
                       </h3>
                       <span className="flex items-center gap-2 text-xs text-[var(--muted)] tabular-nums" title={`${m} mastered, ${l} learned`}>
-                        <span className="flex h-1.5 w-24 overflow-hidden bg-[var(--border)]">
-                          <span className="bg-[var(--solid)]" style={{ width: `${(100 * m) / u.nodes.length}%` }} />
-                          <span className="bg-[var(--landed)]" style={{ width: `${(100 * l) / u.nodes.length}%` }} />
+                        <span className="flex flex-wrap justify-end gap-[3px]" aria-hidden>
+                          {u.nodes.map((n) => (
+                            <span key={n.id} className={`sq sq-sm sq-${state(n.id).toLowerCase()}`} />
+                          ))}
                         </span>
                         {m}/{u.nodes.length}
                       </span>

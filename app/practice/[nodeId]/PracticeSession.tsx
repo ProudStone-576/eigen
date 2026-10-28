@@ -45,41 +45,41 @@ export function PracticeSession({ nodeId, title, alreadySolid, tutor, need }: { 
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between gap-4 flex-wrap">
-        <div className="flex items-center gap-2" aria-label={`${Math.min(streak, need)} of ${need} in a row`}>
-          {Array.from({ length: need }, (_, i) => (
-            <span key={i} className={`h-3 w-8 rounded-full ${i < streak ? "bg-[var(--solid)]" : "bg-[var(--border)]"}`} />
-          ))}
-          <span className="text-sm text-[var(--muted)] ml-1">{mastered ? "mastered" : `${Math.min(streak, need)}/${need} in a row`}</span>
-        </div>
-        <span className="text-sm text-[var(--muted)]">
-          {answered.right}/{answered.total} right this session
-        </span>
-      </div>
-
       {justMastered && (
         <div className="feedback feedback-ok">
           <p className="font-semibold">{title} is solid.</p>
           <p className="text-sm">{need} in a row on questions you&rsquo;d never seen. It&rsquo;s in your review queue now. Keep going to lock it in, or head back.</p>
-          <Link href="/learn" className="underline text-sm">Back to the map</Link>
+          <Link href="/learn" className="underline text-sm">Back to the syllabus</Link>
         </div>
       )}
 
-      <div className="card min-h-[260px]">
+      <div className="min-h-[260px] border-t border-[var(--fg)] pt-5">
         {!q ? (
           <p className="text-[var(--muted)]">Picking a question…</p>
         ) : (
           <div className="space-y-3">
-            <p className="text-xs uppercase tracking-widest text-[var(--muted)] flex justify-between gap-2">
+            <p className="tb-label flex justify-between gap-2">
               <span>{q.isTarget ? title : `Mixing in: ${q.title}`}</span>
-              {q.level && <span title="Difficulty adapts to how you're doing">{["", "● Easy", "●● Medium", "●●● Hard"][q.level]}</span>}
+              {q.level && <span title="Difficulty adapts to how you're doing">Level {["", "I", "II", "III"][q.level]}</span>}
             </p>
             <Question key={q.item.id} nodeId={q.nodeId} item={q.item} retry tutor={tutor} onGraded={onGraded} />
           </div>
         )}
       </div>
 
-      <div className="flex justify-end">
+      {/* The task bar: progress towards mastery on the left, the next step on the right. */}
+      <div className="sticky bottom-0 z-40 flex flex-wrap items-center justify-between gap-4 border-t border-[var(--rule)] bg-[var(--bg)] py-3">
+        <div className="flex items-center gap-3 text-sm">
+          <span className="font-medium">{mastered ? "Mastered" : `Get ${need} in a row`}</span>
+          <span className="flex items-center gap-1.5" role="img" aria-label={`${Math.min(streak, need)} of ${need} in a row`}>
+            {Array.from({ length: need }, (_, i) => (
+              <span key={i} className={`h-2.5 w-2.5 rounded-full border ${i < streak || mastered ? "border-[var(--solid)] bg-[var(--solid)]" : "border-[var(--rule)]"}`} />
+            ))}
+          </span>
+          <span className="hidden text-[var(--muted)] sm:inline">
+            · {answered.right} of {answered.total} right this session
+          </span>
+        </div>
         <button
           type="button"
           className="btn"
@@ -91,7 +91,7 @@ export function PracticeSession({ nodeId, title, alreadySolid, tutor, need }: { 
             load(i);
           }}
         >
-          Next question →
+          Next question
         </button>
       </div>
     </div>

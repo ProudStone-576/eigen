@@ -7,6 +7,10 @@ import { loadProgress, statusIn, unlocked } from "@/lib/learning/progress";
 import { PRACTICE_STREAK } from "@/lib/learning/rules";
 import { tutorEnabled } from "@/lib/tutor";
 import { PracticeSession } from "./PracticeSession";
+import { ChapterContents } from "@/components/course/ChapterContents";
+import { LessonFrame } from "@/components/course/LessonFrame";
+import type { CellState } from "@/components/course/Mastery";
+import { locate } from "@/lib/content/numbering";
 
 export async function generateMetadata({ params }: { params: Promise<{ nodeId: string }> }) {
   const node = getNode((await params).nodeId);
@@ -24,31 +28,41 @@ export default async function PracticePage({ params }: { params: Promise<{ nodeI
     return (
       <div className="card max-w-lg mx-auto text-center space-y-4">
         <p>Land the concepts this builds on first.</p>
-        <Link href="/learn" className="btn">Back to the map</Link>
+        <Link href="/learn" className="btn">Back to the syllabus</Link>
       </div>
     );
   }
-  const status = statusIn(progress)(node.id);
+  const status = statusIn(progress);
+  const now = status(node.id);
   const held = progress.get(node.id);
+  const at = locate(node.id)!;
+  const openAll = opensEverySection(ctx.role, user.platformAdmin);
+  const state = (id: string): CellState => (unlocked(id, progress, openAll) ? status(id) : "LOCKED");
   return (
-    <div className="max-w-2xl mx-auto space-y-6">
-      <div>
-        <p className="text-sm uppercase tracking-widest text-[var(--accent)]">Practice until it clicks</p>
-        <h1 className="text-3xl font-extrabold">{node.title}</h1>
-        <p className="text-[var(--muted)] mt-1">
-          Fresh questions every time, mixed with the ideas this one is built on. Get {PRACTICE_STREAK} in a row on {node.title.toLowerCase()} and
-          it&rsquo;s yours.
-        </p>
-        {status === "MISCONCEPTION" && held?.misconceptionId && (
-          <p className="feedback feedback-warn mt-3 text-sm">
-            Working on: {node.misconceptions[held.misconceptionId] ?? "a common mix-up"} The questions are chosen to catch exactly that.
+    <LessonFrame panel={<ChapterContents unit={at.unit} node={node} state={state} counts={`Practice: fresh questions, mixed with the sections ${node.title.toLowerCase()} builds on.`} />}>
+      <div className="space-y-6">
+        <div>
+          <p className="tb-label">
+            Practice · {at.number}
           </p>
-        )}
+          <h1 className="mt-2 font-serif text-[2.4rem] leading-tight font-semibold">{node.title}</h1>
+          <p className="mt-2 font-serif text-lg text-[var(--muted)]">
+            New questions every time, mixed with the ideas this one is built on. Get {PRACTICE_STREAK} in a row on {node.title.toLowerCase()} and it is mastered.
+          </p>
+          {now === "MISCONCEPTION" && held?.misconceptionId && (
+            <p className="feedback feedback-warn mt-3 text-sm">
+              Working on: {node.misconceptions[held.misconceptionId] ?? "a common mix-up"} The questions are chosen to catch exactly that.
+            </p>
+          )}
+        </div>
+        <PracticeSession nodeId={node.id} title={node.title} alreadySolid={now === "SOLID"} tutor={tutorEnabled()} need={PRACTICE_STREAK} />
+        <div className="border-t border-[var(--border)] pt-4 text-sm">
+          <p className="tb-label">Related</p>
+          <Link href={`/learn/${node.id}`} className="mt-1 inline-block hover:text-[var(--accent)]">
+            Read {at.number} {node.title} again
+          </Link>
+        </div>
       </div>
-      <PracticeSession nodeId={node.id} title={node.title} alreadySolid={status === "SOLID"} tutor={tutorEnabled()} need={PRACTICE_STREAK} />
-      <p className="text-sm text-[var(--muted)]">
-        Stuck on the idea itself? <Link href={`/learn/${node.id}`} className="underline">Re-run the lesson</Link>.
-      </p>
-    </div>
+    </LessonFrame>
   );
 }
